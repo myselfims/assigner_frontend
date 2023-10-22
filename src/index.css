@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide x-axis grid lines */
+.chartjs-wrapper .chartjs-x-axis {
+    display: none;
+  }
+  
+  /* Hide y-axis grid lines */
+  .chartjs-wrapper .chartjs-y-axis {
+    display: none;
+  }
+  
