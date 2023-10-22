@@ -26,14 +26,7 @@ export const fetchData = async (endpoint) => {
   return request
 };
 
-let data = {
-  name : 'imran'
-}
 
-const submit = async (endpoint,data)=>{
-  let res = await axios.post(endpoint,data)
-  console.log(res)
-}
 
 export const postData = async (endpoint, data) => {
 

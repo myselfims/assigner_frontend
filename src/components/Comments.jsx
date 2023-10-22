@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { baseUrl, fetchData, postData } from "../api";
+import { baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { addComment } from "../store/features/taskDetailsSlice";
 import { BsFillSendFill } from "react-icons/bs";
 import { io } from "socket.io-client";
-import { baseUrl } from "../api";
 import Loader from "./Loader";
 
 const Comments = () => {
