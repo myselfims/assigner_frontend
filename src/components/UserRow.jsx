@@ -10,6 +10,7 @@ const UserRow = ({user}) => {
   const dispatch = useDispatch()
   const [isAdmin, setAdmin] = useState(user.isAdmin)
   const [isAdminValue, setAdminValue] = useState(user.isAdmin)
+  const {tasks} = useSelector(state=>state.tasks)
   
 
   const handleBtns = (value)=>{
@@ -41,7 +42,7 @@ const UserRow = ({user}) => {
       </td>
       <td className="border-2 p-2">
         <p className="text-center border rounded-full bg-yellow-300">
-          10
+          {tasks?.filter((item)=>item.assignedToId == user.id).length}
         </p>
       </td>
       <td className="border-2">
