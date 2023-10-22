@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentPage, setDarkMode } from '../store/features/appGlobalSlice'
-import ToggleBtn from '../components/toggleBtn'
+import ToggleBtn from '../components/ToggleBtn'
 
 const Settings = () => {
     const dispatch = useDispatch()
