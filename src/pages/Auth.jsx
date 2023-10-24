@@ -138,7 +138,7 @@ const Auth = ({ page }) => {
             {error ? <p className="text-red-500">{error}</p> : null}
           </div>
           <div className="rounded flex flex-col items-center bg-[#FFFFFF] ">
-            <form onSubmit={handleSubmit}>
+            <form className="w-full" onSubmit={handleSubmit}>
               {page == "signup" ? (
                 <div>
                   <p>Name</p>
@@ -146,7 +146,7 @@ const Auth = ({ page }) => {
                     value={values.name}
                     name="name"
                     type="text"
-                    className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2 h-[43.91px] p-3 outline-none ${
+                    className={`rounded-xl bg-[#F5F5F5] w-full mt-2 h-[43.91px] p-3 outline-none ${
                       errors.name && touched.name
                         ? "border-red-300 border-2"
                         : null
@@ -165,7 +165,7 @@ const Auth = ({ page }) => {
                   value={values.email}
                   name="email"
                   type="email"
-                  className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2 h-[43.91px] p-3 outline-none ${
+                  className={`rounded-xl bg-[#F5F5F5] w-full mt-2 h-[43.91px] p-3 outline-none ${
                     errors.email && touched.email
                       ? "border-red-300 border-2"
                       : null
@@ -183,7 +183,7 @@ const Auth = ({ page }) => {
                   value={values.password}
                   name="password"
                   type="password"
-                  className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2  h-[43.91px] p-3 outline-none ${
+                  className={`rounded-xl bg-[#F5F5F5] w-full mt-2  h-[43.91px] p-3 outline-none ${
                     errors.password && touched.password
                       ? "border-red-300 border-2"
                       : null
