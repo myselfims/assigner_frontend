@@ -154,7 +154,7 @@ const Modal = () => {
                   ></textarea>
                 </div>
 
-                <div className="my-[24px] flex justify-between">
+                <div className="my-[24px] max-sm:flex-col flex justify-between">
                   <div className="flex flex-col">
                     <label htmlFor="deadline">Deadline</label>
                     <input
