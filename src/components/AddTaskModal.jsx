@@ -56,7 +56,7 @@ const AddTaskModal = ({ setModal, activeTask }) => {
 
   return (
     <div className="w-screen absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
-      <div className="main max-sm:w-96 w-[544px] bg-[#FFFFFF] rounded-lg ">
+      <div className="main max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg ">
         <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
           <h1 className="text-[20px] ">Add New Task</h1>
           <button

@@ -55,14 +55,14 @@ const Tasks = ({ setCurrent }) => {
   return (
     <div className="w-full">
       <div className="head max-sm:flex-col flex justify-between items-center">
-        <div className="flex justify-between">
+        <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
           <h1>
             You have total <strong>{tasks?.length}</strong> tasks
           </h1>
           {getAuthInfo().isAdmin ? (
             <button
               onClick={() => setAddTask(true)}
-              className="p-2 max-sm:flex hidden absolute right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
+              className="p-2 max-sm:flex hidden right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
             >
               Add task
             </button>
