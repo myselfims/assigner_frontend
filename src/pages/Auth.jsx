@@ -137,7 +137,7 @@ const Auth = ({ page }) => {
           <div className="error flex justify-center">
             {error ? <p className="text-red-500">{error}</p> : null}
           </div>
-          <div className="rounded flex flex-col items-center bg-[#FFFFFF] ">
+          <div className="rounded  max-sm:text-xs flex flex-col items-center bg-[#FFFFFF] ">
             <form className="w-full" onSubmit={handleSubmit}>
               {page == "signup" ? (
                 <div>
