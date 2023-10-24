@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading, setTasks } from '../store/features/tasksSlice';
 import { setCurrentPage } from '../store/features/appGlobalSlice';
 import SearchBar from '../components/SearchBar';
+import TaskCard from '../components/TaskCard';
 
 const Tasks = ({setCurrent}) => {
   const dispatch = useDispatch()
@@ -61,7 +62,7 @@ const Tasks = ({setCurrent}) => {
         </div>
       </div>
       <div className="flex flex-col my-4">
-        <table className='table-auto max-sm:text-xs w-full' >
+        <table className='table-auto max-sm:hidden max-sm:text-xs w-full' >
           <thead className='static'>
             <tr className='bg-blue-100'>
               <th className='border-2 border-slate-400 p-2 w-[600px]'>Title</th>
@@ -71,12 +72,16 @@ const Tasks = ({setCurrent}) => {
             </tr>
           </thead>
           <tbody>
-            
             {tasks?.map((item)=>{
               return <TaskRow handleModal={handleModal} key={item.id} task={item}/>
             })}
           </tbody>
         </table>
+        <div className='max-sm:flex hidden'>
+          {tasks?.map((task)=>{
+            return <TaskCard key={task.id} task={task}/>
+          })}
+        </div>
         {loading?
         <div className="flex my-3 justify-center">
           <Loader/>
