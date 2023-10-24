@@ -5,11 +5,16 @@ import { useFormik } from "formik";
 import { fetchData, updateData } from "../api";
 import { setName, setUser } from "../store/features/userDetailsSlice";
 import { storage } from "../firebase";
-import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import { v4 } from "uuid";
 import Loader from "../components/Loader";
 import { setLoading } from "../store/features/userDetailsSlice";
-import Compressor from 'compressorjs'
+import Compressor from "compressorjs";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -17,7 +22,7 @@ const Profile = () => {
   const [name, setName] = useState(user?.name);
   const [password, setPassword] = useState(user?.password);
   const [avatar, setAvatar] = useState(null);
-  const [updateBtn,setUpdateBtn] = useState(false)
+  const [updateBtn, setUpdateBtn] = useState(false);
 
   useEffect(() => {
     dispatch(setCurrentPage("Profile"));
@@ -28,25 +33,27 @@ const Profile = () => {
     });
   }, []);
 
-  const handleUpdate = ()=>{
-    setUpdateBtn(true)
-    updateData(`/users/${user.id}`,{name,password}).then((res)=>{
-      dispatch(setUser(res.data))
-      setUpdateBtn(false)
-      dispatch(setAlert({alert:true,type:'success',message:'Profile updated!'}))
-    })
-  }
+  const handleUpdate = () => {
+    setUpdateBtn(true);
+    updateData(`/users/${user.id}`, { name, password }).then((res) => {
+      dispatch(setUser(res.data));
+      setUpdateBtn(false);
+      dispatch(
+        setAlert({ alert: true, type: "success", message: "Profile updated!" })
+      );
+    });
+  };
 
   const uploadAvatar = (e) => {
     setAvatar(e.target.files[0]);
     if (avatar == null) return;
     dispatch(setLoading(true));
     const imageRef = ref(storage, `avatars/${avatar.name + v4()}`);
-    if (user.avatar){
-      let avatarRef = ref(storage,user.avatar)
-      deleteObject(avatarRef).then((res)=>{
-        console.log(res)
-      })
+    if (user.avatar) {
+      let avatarRef = ref(storage, user.avatar);
+      deleteObject(avatarRef).then((res) => {
+        console.log(res);
+      });
     }
 
     new Compressor(avatar, {
@@ -54,7 +61,7 @@ const Profile = () => {
       success(result) {
         uploadBytes(imageRef, result).then((res) => {
           getDownloadURL(res.ref).then((url) => {
-            updateData(`/users/${user.id}/`, { avatar : url }).then((res) => {
+            updateData(`/users/${user.id}/`, { avatar: url }).then((res) => {
               dispatch(setLoading(false));
               dispatch(setUser(res.data));
             });
@@ -65,12 +72,11 @@ const Profile = () => {
         console.log(err.message);
       },
     });
-
   };
 
   return (
     <div className="w-full flex justify-center">
-      <div className="border-2 rounded p-4">
+      <div className="border-2 max-sm:w-screen rounded p-4">
         <div className="head flex justify-center">
           <label htmlFor="file">
             <div
@@ -103,9 +109,9 @@ const Profile = () => {
             <label htmlFor="">Name</label>
             <input
               value={name}
-              className="border-2 w-96 rounded p-2 bg-white"
+              className="border-2 w-full rounded p-2 bg-white"
               type="text"
-              onChange={(e)=>setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="flex my-4 flex-col">
@@ -114,7 +120,7 @@ const Profile = () => {
               disabled
               value={user?.email}
               readOnly
-              className="border-2 cursor-no-drop w-96 rounded p-2 bg-white"
+              className="border-2 cursor-no-drop w-full rounded p-2 bg-white"
               type="text"
             />
           </div>
@@ -122,8 +128,8 @@ const Profile = () => {
             <label htmlFor="">Password</label>
             <input
               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
-              className="border-2 w-96 rounded p-2 bg-white"
+              onChange={(e) => setPassword(e.target.value)}
+              className="border-2 w-full rounded p-2 bg-white"
               type="password"
             />
           </div>
@@ -140,7 +146,11 @@ const Profile = () => {
             )}
           </div>
           <div className="my-5">
-            <button disabled={updateBtn} onClick={handleUpdate} className="w-full bg-blue-500 text-white text-center font-bold p-2 rounded">
+            <button
+              disabled={updateBtn}
+              onClick={handleUpdate}
+              className="w-full bg-blue-500 text-white text-center font-bold p-2 rounded"
+            >
               Update
             </button>
           </div>
