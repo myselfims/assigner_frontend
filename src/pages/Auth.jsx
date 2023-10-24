@@ -9,54 +9,67 @@ import { BiLogoDiscord } from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { getAuthInfo, postData } from "../api";
 import { loginSchema, signupSchema } from "../validation/validation_schema";
-import { useDispatch } from "react-redux";
+import Loader from "../components/Loader";
 
 const Auth = ({ page }) => {
   const navigate = useNavigate();
-  const [loader, setLoader] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const dispatch = useDispatch()
+
   const initialValues = {
-    login : {
+    login: {
       email: "",
       password: "",
     },
-    signup : {
-      name : '',
+    signup: {
+      name: "",
       email: "",
       password: "",
-    }
-  }
+    },
+  };
 
-  const { values, errors, touched,resetForm, handleChange, handleBlur, handleSubmit,setValues } =
-    useFormik({
-      initialValues: initialValues[page],
-      validationSchema : page == "login" ? loginSchema : signupSchema,
-      onSubmit: (data) => {
-        postData(page == "login" ? "/login/" : "/users/", data)
-          .then((res) => {
-            setError(null);
-            console.log(res.data)
-            localStorage.setItem("auth_info", JSON.stringify(res.data));
-            navigate("/");
-          })
-          .catch((er) => {
-            console.log(er)
-            setError(er.response.data);
-          });
-      },
-    });
-
+  const {
+    values,
+    errors,
+    touched,
+    resetForm,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    setValues,
+  } = useFormik({
+    initialValues: initialValues[page],
+    validationSchema: page == "login" ? loginSchema : signupSchema,
+    onSubmit: (data) => {
+      setLoading(true);
+      postData(page == "login" ? "/login/" : "/users/", data)
+        .then((res) => {
+          setError(null);
+          setLoading(false);
+          localStorage.setItem("auth_info", JSON.stringify(res.data));
+          navigate("/");
+        })
+        .catch((er) => {
+          resetForm();
+          setLoading(false);
+          setError(er.response.data);
+        });
+    },
+  });
 
   useEffect(() => {
-    getAuthInfo().token? navigate("/") : null;
+    setError("");
+    resetForm();
+    getAuthInfo().token ? navigate("/") : null;
   }, [page]);
 
   return (
-    <div key={page} className="w-screen z-20 absolute top-0 left-0 h-screen flex ">
+    <div
+      key={page}
+      className="w-screen z-20 absolute top-0 left-0 h-screen flex "
+    >
       <div className="max-sm:hidden">
         <div className="absolute max-sm:hidden z-0">
           <svg
@@ -100,17 +113,22 @@ const Auth = ({ page }) => {
         </div>
       </div>
       <div className="flex bg-[#F8FAFF] items-center justify-center w-full  h-full ">
-        <div className="absolute max-sm:right-0 right-[204px]">
+        <div className="absolute max-sm:flex hidden items-center w-screen p-3 top-0 left-0 bg-[#4285F4]">
+          <h1 className="font-bold text-xl text-white">Assinger</h1>
+        </div>
+        <div className="absolute max-sm:static right-[204px]">
           <div className="head max-sm:flex max-sm:flex-col items-center">
-            <h1 className="text-4xl font-bold">{page=='login'?'Sign In':'Sign Up'}</h1>
+            <h1 className="text-4xl font-bold">
+              {page == "login" ? "Sign In" : "Sign Up"}
+            </h1>
             <p className="text-base my-1">Sign in to your account</p>
-            <div className="flex my-[29px] justify-between">
-              <button className="w-[197px] h-[32px] rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
+            <div className="flex text-xs my-[29px] justify-between">
+              <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
                 <FcGoogle className="mr-[10px] w-[15px] h-[15px]" />
                 Sign in with Google
               </button>
 
-              <button className="w-[197px] h-[32px] rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
+              <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
                 <AiFillApple className="mr-[10px] w-[15px] h-[15px]" />
                 Sign in with Google
               </button>
@@ -129,12 +147,16 @@ const Auth = ({ page }) => {
                     name="name"
                     type="text"
                     className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2 h-[43.91px] p-3 outline-none ${
-                      errors.name ? "border-red-300 border-2" : null
+                      errors.name && touched.name
+                        ? "border-red-300 border-2"
+                        : null
                     }`}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <p className="text-red-400 mb-[21px]">{errors.name}</p>
+                  <p className="text-red-400 mb-[21px]">
+                    {errors.name && touched.name ? errors.name : null}
+                  </p>
                 </div>
               ) : null}
               <div>
@@ -144,12 +166,16 @@ const Auth = ({ page }) => {
                   name="email"
                   type="email"
                   className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2 h-[43.91px] p-3 outline-none ${
-                    errors.email ? "border-red-300 border-2" : null
+                    errors.email && touched.email
+                      ? "border-red-300 border-2"
+                      : null
                   }`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                <p className="text-red-400 mb-[21px]">{errors.email}</p>
+                <p className="text-red-400 mb-[21px]">
+                  {errors.email && touched.email ? errors.email : null}
+                </p>
               </div>
               <div>
                 <p>Password</p>
@@ -158,12 +184,16 @@ const Auth = ({ page }) => {
                   name="password"
                   type="password"
                   className={`rounded-xl bg-[#F5F5F5] w-[356px] mt-2  h-[43.91px] p-3 outline-none ${
-                    errors.password ? "border-red-300 border-2" : null
+                    errors.password && touched.password
+                      ? "border-red-300 border-2"
+                      : null
                   }`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                <p className="text-red-400 mb-[21px]">{errors.password}</p>
+                <p className="text-red-400 mb-[21px]">
+                  {errors.password && touched.password ? errors.password : null}
+                </p>
               </div>
               <div className="flex w-full flex-col">
                 <a className="text-[#346BD4] mb-[21px]" href="">
@@ -171,9 +201,10 @@ const Auth = ({ page }) => {
                 </a>
                 <button
                   type="submit"
-                  className="w-full font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
+                  className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
                 >
-                  Sign In
+                  {page == "login" ? "Sign In" : "Sign Up "}
+                  {loading ? <Loader /> : null}
                 </button>
               </div>
             </form>
