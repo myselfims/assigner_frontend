@@ -106,7 +106,7 @@ const Tasks = ({ setCurrent }) => {
             })}
           </tbody>
         </table>
-        <div className="max-sm:flex hidden">
+        <div className="max-sm:flex flex-col hidden">
           {tasks?.map((task) => {
             return <TaskCard key={task.id} task={task} />;
           })}
