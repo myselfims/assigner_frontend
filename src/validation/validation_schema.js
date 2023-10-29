@@ -13,7 +13,7 @@ export const signupSchema = Yup.object({
 
 export const TaskSchema = Yup.object({
     title : Yup.string().min(10).required(),
-    description : Yup.string(),
+    description : Yup.string().optional(),
     deadline : Yup.date().required(),
     assignedToId : Yup.number().required()
   })

@@ -12,11 +12,15 @@ import { useFormik } from "formik";
 import { getAuthInfo, postData } from "../api";
 import { loginSchema, signupSchema } from "../validation/validation_schema";
 import Loader from "../components/Loader";
+import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
+import OtpVerifier from "../components/OtpVerifier";
 
 const Auth = ({ page }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false)
+  const [otpVerify, setVerify] = useState(true)
 
   const initialValues = {
     login: {
@@ -49,7 +53,11 @@ const Auth = ({ page }) => {
           setError(null);
           setLoading(false);
           localStorage.setItem("auth_info", JSON.stringify(res.data));
-          navigate("/");
+          if (res.data.isVerified){
+            navigate("/");
+          }else{
+
+          }
         })
         .catch((er) => {
           resetForm();
@@ -112,11 +120,15 @@ const Auth = ({ page }) => {
           </div>
         </div>
       </div>
-      <div className="flex bg-[#F8FAFF] items-center justify-center w-full  h-full ">
+      <div className="form flex bg-[#F8FAFF] items-center justify-center w-full  h-full ">
+        {/* Navbar for mobile */}
         <div className="absolute max-sm:flex hidden items-center w-screen p-3 top-0 left-0 bg-[#4285F4]">
           <h1 className="font-bold text-xl text-white">Assinger</h1>
         </div>
+        {/* Navbar for mobile */}
         <div className="absolute max-sm:static right-[204px]">
+        {otpVerify?<OtpVerifier/>:
+          <div className="form">
           <div className="head max-sm:flex max-sm:flex-col items-center">
             <h1 className="text-4xl font-bold">
               {page == "login" ? "Sign In" : "Sign Up"}
@@ -179,18 +191,22 @@ const Auth = ({ page }) => {
               </div>
               <div>
                 <p>Password</p>
-                <input
-                  value={values.password}
-                  name="password"
-                  type="password"
-                  className={`rounded-xl bg-[#F5F5F5] w-full mt-2  h-[43.91px] p-3 outline-none ${
+                <div className={`rounded-xl bg-[#F5F5F5] w-full mt-2 flex items-center h-[43.91px] p-3 outline-none ${
                     errors.password && touched.password
                       ? "border-red-300 border-2"
                       : null
-                  }`}
+                  }`}>
+                <input
+                  value={values.password}
+                  name="password"
+                  type={showPassword?'text':'password'}
+                  className={`bg-[#F5F5F5] cur w-full outline-none`}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+                {showPassword?<AiFillEyeInvisible className="cursor-pointer" onClick={()=>setShowPassword(false)}/>:<AiFillEye className="cursor-pointer" onClick={()=>setShowPassword(true)}/>}
+                </div>
+                
                 <p className="text-red-400 mb-[21px]">
                   {errors.password && touched.password ? errors.password : null}
                 </p>
@@ -226,6 +242,8 @@ const Auth = ({ page }) => {
               </p>
             )}
           </div>
+
+          </div>}
         </div>
       </div>
     </div>

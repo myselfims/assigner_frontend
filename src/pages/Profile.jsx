@@ -76,7 +76,7 @@ const Profile = () => {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="border-2 max-sm:w-screen rounded p-4">
+      <div className="border-2 w-96 max-sm:w-screen rounded p-4">
         <div className="head flex justify-center">
           <label htmlFor="file">
             <div
