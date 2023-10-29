@@ -20,7 +20,7 @@ const Auth = ({ page }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false)
-  const [otpVerify, setVerify] = useState(true)
+  const [otpVerify, setVerify] = useState(false)
 
   const initialValues = {
     login: {
@@ -47,16 +47,16 @@ const Auth = ({ page }) => {
     initialValues: initialValues[page],
     validationSchema: page == "login" ? loginSchema : signupSchema,
     onSubmit: (data) => {
-      setLoading(true);
+      setLoading(true);``
       postData(page == "login" ? "/login/" : "/users/", data)
         .then((res) => {
           setError(null);
           setLoading(false);
-          localStorage.setItem("auth_info", JSON.stringify(res.data));
           if (res.data.isVerified){
+            localStorage.setItem("auth_info", JSON.stringify(res.data));
             navigate("/");
           }else{
-
+            setVerify(true)
           }
         })
         .catch((er) => {
@@ -127,7 +127,9 @@ const Auth = ({ page }) => {
         </div>
         {/* Navbar for mobile */}
         <div className="absolute max-sm:static right-[204px]">
-        {otpVerify?<OtpVerifier/>:
+        {otpVerify?
+        <OtpVerifier email={values.email}/>
+        :
           <div className="form">
           <div className="head max-sm:flex max-sm:flex-col items-center">
             <h1 className="text-4xl font-bold">

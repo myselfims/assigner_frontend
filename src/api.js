@@ -3,7 +3,8 @@ import axios from "axios";
 
 export const baseUrl = 'https://assignerbackend-production.up.railway.app/'
 
-export const url = "https://assignerbackend-production.up.railway.app/api";
+// export const url = "https://assignerbackend-production.up.railway.app/api";
+export const url = "http://localhost:3000/api";
 
 
 export const getAuthInfo = ()=> {
