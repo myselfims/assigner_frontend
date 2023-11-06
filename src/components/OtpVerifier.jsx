@@ -8,6 +8,7 @@ import {setAlert} from '../store/features/appGlobalSlice'
 const OtpVerifier = ({email}) => {
   const [otp, setOtp] = useState('')
   const [timer,setTimer] = useState(10)
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -16,8 +17,11 @@ const OtpVerifier = ({email}) => {
   const verify = ()=>{
     setLoading(true)
     postData(`/otp/verify/${otp}`,{email}).then((res)=>{
+      console.log(res)
       dispatch(setAlert({alert:true,type:'success',message:'OTP Verified!'}))
       navigate('/')
+    }).catch((er)=>{
+      setError(er)
     })
   }
 
@@ -40,9 +44,6 @@ const OtpVerifier = ({email}) => {
     if (e.target.value.length<=4){
       setOtp(e.target.value)
     }
-    if (e.target.value.length==5){
-      verify()
-    }
   }
 
 
@@ -50,6 +51,7 @@ const OtpVerifier = ({email}) => {
     <div className="rounded border p-4 max-sm:text-xs flex flex-col items-center bg-[#FFFFFF]">
       <div className="head">
         <h1 className="text-2xl">Enter OTP</h1>
+        <p className="text-red-500">{error}</p>
       </div>
       <div className="input my-5">
         <input onChange={handleInput} value={otp} className="w-40 h-12 tracking-[1rem] mx-4 text-center text-xl font-semibold border-2  rounded" type="text" />

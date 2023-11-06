@@ -12,15 +12,16 @@ import { useFormik } from "formik";
 import { getAuthInfo, postData } from "../api";
 import { loginSchema, signupSchema } from "../validation/validation_schema";
 import Loader from "../components/Loader";
-import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import OtpVerifier from "../components/OtpVerifier";
+import InputBox from "../components/InputBox";
 
 const Auth = ({ page }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false)
-  const [otpVerify, setVerify] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [otpVerify, setVerify] = useState(false);
 
   const initialValues = {
     login: {
@@ -42,21 +43,21 @@ const Auth = ({ page }) => {
     handleChange,
     handleBlur,
     handleSubmit,
-    setValues,
   } = useFormik({
     initialValues: initialValues[page],
     validationSchema: page == "login" ? loginSchema : signupSchema,
     onSubmit: (data) => {
-      setLoading(true);``
+      setLoading(true);
+      ``;
       postData(page == "login" ? "/login/" : "/users/", data)
         .then((res) => {
           setError(null);
           setLoading(false);
-          if (res.data.isVerified){
-            localStorage.setItem("auth_info", JSON.stringify(res.data));
+          localStorage.setItem("auth_info", JSON.stringify(res.data));
+          if (res.data.isVerified) {
             navigate("/");
-          }else{
-            setVerify(true)
+          } else {
+            setVerify(true);
           }
         })
         .catch((er) => {
@@ -113,9 +114,12 @@ const Auth = ({ page }) => {
             Assigner.
           </h1>
           <div className="icons w-[300px] absolute justify-between flex left-[144.5px] bottom-[67px]">
-            <AiOutlineGithub className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" />
+            <a target="__blank" href="https://github.com/myselfims"><AiOutlineGithub className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" /></a>
+          
             <AiFillTwitterCircle className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" />
-            <AiFillLinkedin className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" />
+
+            <a target="__blank" href="https://www.linkedin.com/in/shaikh-imran-855b69221/">
+            <AiFillLinkedin className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" /></a>
             <BiLogoDiscord className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" />
           </div>
         </div>
@@ -127,125 +131,117 @@ const Auth = ({ page }) => {
         </div>
         {/* Navbar for mobile */}
         <div className="absolute max-sm:static right-[204px]">
-        {otpVerify?
-        <OtpVerifier email={values.email}/>
-        :
-          <div className="form">
-          <div className="head max-sm:flex max-sm:flex-col items-center">
-            <h1 className="text-4xl font-bold">
-              {page == "login" ? "Sign In" : "Sign Up"}
-            </h1>
-            <p className="text-base my-1">Sign in to your account</p>
-            <div className="flex text-xs my-[29px] justify-between">
-              <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
-                <FcGoogle className="mr-[10px] w-[15px] h-[15px]" />
-                Sign in with Google
-              </button>
+          {otpVerify ? (
+            <OtpVerifier email={values.email} />
+          ) : (
+            <div className="form">
+              <div className="head max-sm:flex max-sm:flex-col items-center">
+                <h1 className="text-4xl font-bold">
+                  {page == "login" ? "Sign In" : "Sign Up"}
+                </h1>
+                <p className="text-base my-1">Sign in to your account</p>
+                <div className="flex text-xs my-[29px] justify-between">
+                  <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
+                    <FcGoogle className="mr-[10px] w-[15px] h-[15px]" />
+                    Sign in with Google
+                  </button>
 
-              <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
-                <AiFillApple className="mr-[10px] w-[15px] h-[15px]" />
-                Sign in with Google
-              </button>
-            </div>
-          </div>
-          <div className="error flex justify-center">
-            {error ? <p className="text-red-500">{error}</p> : null}
-          </div>
-          <div className="rounded  max-sm:text-xs flex flex-col items-center bg-[#FFFFFF] ">
-            <form className="w-full" onSubmit={handleSubmit}>
-              {page == "signup" ? (
-                <div>
-                  <p>Name</p>
-                  <input
-                    value={values.name}
-                    name="name"
-                    type="text"
-                    className={`rounded-xl bg-[#F5F5F5] w-full mt-2 h-[43.91px] p-3 outline-none ${
-                      errors.name && touched.name
-                        ? "border-red-300 border-2"
-                        : null
-                    }`}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  <p className="text-red-400 mb-[21px]">
-                    {errors.name && touched.name ? errors.name : null}
+                  <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
+                    <AiFillApple className="mr-[10px] w-[15px] h-[15px]" />
+                    Sign in with Google
+                  </button>
+                </div>
+              </div>
+              <div className="error flex justify-center">
+                {error ? <p className="text-red-500">{error}</p> : null}
+              </div>
+              <div className="rounded p-2 max-sm:text-xs flex flex-col items-center bg-[#FFFFFF] ">
+                <form className="w-full" onSubmit={handleSubmit}>
+                  {page == "signup" ? (
+                    <div>
+                      <InputBox
+                        name="Name"
+                        handler={{ handleBlur, handleChange }}
+                        handleError={{ touched, errors }}
+                      />
+                    </div>
+                  ) : null}
+                  <div>
+                    <InputBox
+                      name="Email"
+                      handler={{ handleBlur, handleChange }}
+                      handleError={{ touched, errors }}
+                    />
+                  </div>
+                  <div>
+                    <p>Password</p>
+                    <div
+                      className={`rounded-xl bg-[#F5F5F5] w-full mt-2 flex items-center h-[43.91px] p-3 outline-none ${
+                        errors.password && touched.password
+                          ? "border-red-300 border-2"
+                          : null
+                      }`}
+                    >
+                      <input
+                        value={values.password}
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        className={`bg-[#F5F5F5] cur w-full outline-none`}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {showPassword ? (
+                        <AiFillEyeInvisible
+                          className="cursor-pointer"
+                          onClick={() => setShowPassword(false)}
+                        />
+                      ) : (
+                        <AiFillEye
+                          className="cursor-pointer"
+                          onClick={() => setShowPassword(true)}
+                        />
+                      )}
+                    </div>
+
+                    <p className="text-red-400 mb-[21px]">
+                      {errors.password && touched.password
+                        ? errors.password
+                        : null}
+                    </p>
+                  </div>
+                  <div className="flex w-full flex-col">
+                    <a className="text-[#346BD4] mb-[21px]" href="">
+                      Forgot password?
+                    </a>
+                    <button
+                      type="submit"
+                      className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
+                    >
+                      {page == "login" ? "Sign In" : "Sign Up "}
+                      {loading ? <Loader /> : null}
+                    </button>
+                  </div>
+                </form>
+                {page == "login" ? (
+                  <p className="mt-[54px] text-base">
+                    Don't have an account?{" "}
+                    <Link to={"/signup"} className="text-[#346BD4]" href="">
+                      {" "}
+                      Register here{" "}
+                    </Link>
                   </p>
-                </div>
-              ) : null}
-              <div>
-                <p>Email</p>
-                <input
-                  value={values.email}
-                  name="email"
-                  type="email"
-                  className={`rounded-xl bg-[#F5F5F5] w-full mt-2 h-[43.91px] p-3 outline-none ${
-                    errors.email && touched.email
-                      ? "border-red-300 border-2"
-                      : null
-                  }`}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                <p className="text-red-400 mb-[21px]">
-                  {errors.email && touched.email ? errors.email : null}
-                </p>
+                ) : (
+                  <p className="mt-[54px] text-base">
+                    Already have an account?{" "}
+                    <Link to={"/login"} className="text-[#346BD4]" href="">
+                      {" "}
+                      Login here{" "}
+                    </Link>
+                  </p>
+                )}
               </div>
-              <div>
-                <p>Password</p>
-                <div className={`rounded-xl bg-[#F5F5F5] w-full mt-2 flex items-center h-[43.91px] p-3 outline-none ${
-                    errors.password && touched.password
-                      ? "border-red-300 border-2"
-                      : null
-                  }`}>
-                <input
-                  value={values.password}
-                  name="password"
-                  type={showPassword?'text':'password'}
-                  className={`bg-[#F5F5F5] cur w-full outline-none`}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                {showPassword?<AiFillEyeInvisible className="cursor-pointer" onClick={()=>setShowPassword(false)}/>:<AiFillEye className="cursor-pointer" onClick={()=>setShowPassword(true)}/>}
-                </div>
-                
-                <p className="text-red-400 mb-[21px]">
-                  {errors.password && touched.password ? errors.password : null}
-                </p>
-              </div>
-              <div className="flex w-full flex-col">
-                <a className="text-[#346BD4] mb-[21px]" href="">
-                  Forgot password?
-                </a>
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
-                >
-                  {page == "login" ? "Sign In" : "Sign Up "}
-                  {loading ? <Loader /> : null}
-                </button>
-              </div>
-            </form>
-            {page == "login" ? (
-              <p className="mt-[54px] text-base">
-                Don't have an account?{" "}
-                <Link to={"/signup"} className="text-[#346BD4]" href="">
-                  {" "}
-                  Register here{" "}
-                </Link>
-              </p>
-            ) : (
-              <p className="mt-[54px] text-base">
-                Already have an account?{" "}
-                <Link to={"/login"} className="text-[#346BD4]" href="">
-                  {" "}
-                  Login here{" "}
-                </Link>
-              </p>
-            )}
-          </div>
-
-          </div>}
+            </div>
+          )}
         </div>
       </div>
     </div>
