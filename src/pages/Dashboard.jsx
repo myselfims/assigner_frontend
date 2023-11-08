@@ -21,7 +21,6 @@ const Dashboard = () => {
     })
     fetchData('/users/self').then((res)=>{
       dispatch(setUser(res.data))
-      console.log(res.data)
     })
   },[])
   

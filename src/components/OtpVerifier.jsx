@@ -17,7 +17,7 @@ const OtpVerifier = ({email}) => {
   const verify = ()=>{
     setLoading(true)
     postData(`/otp/verify/${otp}`,{email}).then((res)=>{
-      console.log(res)
+  
       dispatch(setAlert({alert:true,type:'success',message:'OTP Verified!'}))
       navigate('/')
     }).catch((er)=>{
