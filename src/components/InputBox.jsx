@@ -1,7 +1,7 @@
 import React from "react";
 
 const InputBox = ({name, value, handler, handleError}) => {
-    console.log(handleError)
+
   return (
     <div>
       <p>{name}</p>

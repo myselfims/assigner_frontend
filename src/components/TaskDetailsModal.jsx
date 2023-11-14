@@ -49,7 +49,7 @@ const Modal = () => {
   useEffect(() => {
     fetchData(`/comments/${task.id}`).then((res) => {
       dispatch(setComments(res.data));
-      console.log(res.data)
+  
     });
   }, []);
 

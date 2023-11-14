@@ -8,15 +8,16 @@ import {AiOutlineClose} from 'react-icons/ai'
 import { Link, useNavigate } from "react-router-dom";
 import { getAuthInfo } from "../api";
 import { useDispatch, useSelector } from "react-redux";
-import { setSidebar } from "../store/features/appGlobalSlice";
+import { setAuthInfo, setSidebar } from "../store/features/appGlobalSlice";
 
 const Navigation = () => {
-  const {currentPage, sidebar} = useSelector(state=>state.globalState)
+  const {currentPage, sidebar, auth_info} = useSelector(state=>state.globalState)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(()=>{
     getAuthInfo().token?null:navigate('/login')
+   
   },[])
   
   return (
@@ -34,7 +35,7 @@ const Navigation = () => {
               <FaTasks className="w-[18px] h-[18px] mr-[20px]" />
               Tasks
             </Link>
-            {getAuthInfo().isAdmin?
+            {auth_info.isAdmin?
             <Link onClick={()=>dispatch(setSidebar(false))} to={'/mnjusers'} className={`flex ${currentPage=='Manage Users'?'font-bold':null} items-center`}>
               <FaUsersGear className="w-[18px] h-[18px] mr-[20px]" />
               Manage Users

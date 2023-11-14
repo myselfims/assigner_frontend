@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const PieChart = () => {
   const {tasks} = useSelector((state) => state.tasks);
 
-  console.log(tasks)
+
   const data = {
     labels: ["Assigned", "In progress", "Done"],
     datasets: [

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../store/features/appGlobalSlice";
-import { fetchData, getAuthInfo, updateData } from "../api";
+import { fetchData, updateData } from "../api";
 import Loader from "../components/Loader";
 import { setAddUserModal, setUsers } from "../store/features/usersSlice";
 import UserRow from "../components/UserRow";
@@ -72,8 +72,18 @@ const ManageUsers = () => {
             {users?.map((item) => {
               return <UserRow key={item.id} user={item} />;
             })}
+            
           </tbody>
         </table>
+        {users.length==0?
+            <div className="flex my-10 flex-col w-full items-center justify-center bg-">
+              <img className="w-40 h-40" src={noDataImage}/>
+
+              <h1 className="text-2xl font-bold">No records found!</h1>
+
+            </div>
+            :null
+          }
         {loading ? (
           <div className="flex my-3 justify-center">
             <Loader />

@@ -23,10 +23,10 @@ const AddUserModal = () => {
         initialValues,
         validationSchema : signupSchema,
         onSubmit : (data)=>{
-            console.log(data)
-            console.log('submitting...')
+            
+            
             postData('/users/',data).then((res)=>{
-                console.log(res.data)
+                
             }).catch((er)=>{
                 dispatch(setAlert({alert:true,type:'success',message:'hello user'}))
             })

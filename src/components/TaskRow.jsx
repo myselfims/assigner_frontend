@@ -7,6 +7,7 @@ const TaskRow = ({ task }) => {
   const user = users.filter((item)=>item.id==task?.assignedById)[0]
   const dispatch = useDispatch()
 
+
   return (
     <tr onClick={()=>dispatch(setActiveTask(task))} className="hover:bg-slate-100 cursor-pointer">
       <td className="border-2 p-2">
@@ -16,7 +17,7 @@ const TaskRow = ({ task }) => {
         <p className="text-center">{new Date(task?.deadline).toDateString()}</p>
       </td>
       <td className="border-2 p-2">
-        <p className={`text-center border rounded-full bg-${task?.status=='Assigned'?'red':task?.status=='In Progress'?'yellow':'green'}-300`}>
+        <p className={`text-center border rounded-full ${task.status=='Assigned'?'bg-red-300':task.status=='Done'?'bg-green-300':'bg-yellow-300'}`}>
           {task?.status}
         </p>
       </td>
@@ -27,7 +28,7 @@ const TaskRow = ({ task }) => {
           className="w-6 h-6 rounded-full"
           alt=""
         />
-        <p className="text-center mx-1">{users.filter((item)=>item.id==task?.assignedById)[0]?.name}</p>
+        <p className="text-center mx-1">{user?.name}</p>
         </div>
       </td>
     </tr>

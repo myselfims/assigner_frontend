@@ -4,7 +4,8 @@ const initialState = {
     currentPage : 'dashboard',
     alert : {alert:false,type:'',message:''},
     darkMode : true,
-    sidebar : false
+    sidebar : false,
+    auth_info : {token:null}
 }
 
 export const appGlobalSlice = createSlice({
@@ -22,9 +23,12 @@ export const appGlobalSlice = createSlice({
         },
         setSidebar : (state, action)=>{
             state.sidebar = action.payload
+        },
+        setAuthInfo : (state, action)=>{
+            state.auth_info = action.payload
         }
     }
 })
 
-export const {setCurrentPage, setAlert, setDarkMode, setSidebar} = appGlobalSlice.actions
+export const {setCurrentPage, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
 export default  appGlobalSlice.reducer

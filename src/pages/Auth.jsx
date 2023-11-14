@@ -9,12 +9,14 @@ import { BiLogoDiscord } from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import { getAuthInfo, postData } from "../api";
 import { loginSchema, signupSchema } from "../validation/validation_schema";
 import Loader from "../components/Loader";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import OtpVerifier from "../components/OtpVerifier";
 import InputBox from "../components/InputBox";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthInfo } from "../store/features/appGlobalSlice";
+import { getAuthInfo, postData } from "../api";
 
 const Auth = ({ page }) => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const Auth = ({ page }) => {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [otpVerify, setVerify] = useState(false);
+  const dispatch = useDispatch()
+  const {auth_info} = useSelector(state=>state.globalState)
 
   const initialValues = {
     login: {
@@ -54,6 +58,8 @@ const Auth = ({ page }) => {
           setError(null);
           setLoading(false);
           localStorage.setItem("auth_info", JSON.stringify(res.data));
+          dispatch(setAuthInfo(res.data))
+          console.log(res)
           if (res.data.isVerified) {
             navigate("/");
           } else {
@@ -63,6 +69,7 @@ const Auth = ({ page }) => {
         .catch((er) => {
           resetForm();
           setLoading(false);
+          console.log(er)
           setError(er.response.data);
         });
     },

@@ -15,15 +15,15 @@ const UserRow = ({user}) => {
 
   const handleBtns = (value)=>{
     setAdminValue(value)
-    console.log(value)
+    
     setConfModal(true)
   }
 
   const adminToggle = (confirmation)=>{
-    console.log(confirmation)
-    // console.log(user.id)
+    
+    // 
     if (confirmation){
-      console.log(isAdmin)
+      
       updateData(`/users/${user.id}`,{isAdmin:isAdminValue})
       .then((res)=>{
         setAdmin(res.data.isAdmin)

@@ -39,7 +39,7 @@ const AddTaskModal = ({ setModal }) => {
         .then((res) => {
           setLoading(false)
           setModal(false);
-          console.log(res.data)
+          
           dispatch(addTask(res.data));
         })
         .catch((error) => {
@@ -51,12 +51,12 @@ const AddTaskModal = ({ setModal }) => {
 
   useEffect(() => {
     fetchData("/users").then((res) => {
-      console.log(res);
+      
       setUsers(res.data);
     });
   }, []);
 
-  console.log(errors);
+  
 
   return (
     <div className="w-screen absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
