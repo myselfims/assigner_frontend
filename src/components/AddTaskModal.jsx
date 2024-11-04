@@ -100,31 +100,39 @@ const AddTaskModal = ({ setModal }) => {
                 ></textarea>
               </div>
               <div className="my-[24px] flex justify-between">
-                <input
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.deadline}
-                  name="deadline"
-                  className={`border ${errors.deadline && touched.deadline? 'border-red-500':null} rounded-md outline-none p-2`}
-                  type="date"
-                />
-                <select
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.assignedToId}
-                  className="border-2 cursor-pointer rounded"
-                  name="assignedToId"
-                  id=""
-                >
-                  <option defaultChecked value="">select user</option>
-                  {users?.map((u) => {
-                    return (
-                      <option className="relative group" value={u?.id}>
-                        {u?.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                <div className="flex flex-col">
+                  <label htmlFor="">Deadline</label>
+                  <input
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.deadline}
+                    name="deadline"
+                    className={`border ${errors.deadline && touched.deadline? 'border-red-500':null} rounded-md outline-none p-2`}
+                    type="date"
+                  />
+                   <label className="text-red-500 my-1" htmlFor="">{errors?.deadline}</label>
+                </div>
+                <div className="flex flex-col">
+                  <label htmlFor="">Assign to</label>
+                  <select
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.assignedToId}
+                    className="border-2 cursor-pointer rounded bg-white p-1"
+                    name="assignedToId"
+                    id=""
+                  >
+                    <option defaultChecked value="">select user</option>
+                    {users?.map((u) => {
+                      return (
+                        <option className="relative group" value={u?.id}>
+                          {u?.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <label className="text-red-500 my-1" htmlFor="">{errors?.assignedToId}</label>
+                </div>
               </div>
               <div className="flex ">
                 <button

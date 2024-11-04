@@ -41,7 +41,7 @@ const Tasks = ({ setCurrent }) => {
   };
 
   useEffect(() => {
-    console.log('auth_info',auth_info);
+    console.log(getAuthInfo());
     dispatch(setCurrentPage("Tasks"));
     dispatch(setLoading(true));
     fetchData("/tasks/")
@@ -58,7 +58,7 @@ const Tasks = ({ setCurrent }) => {
       <div className="head max-sm:flex-col flex justify-between items-center">
         <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
           <h1 className="flex">
-            <strong className="mr-2">{tasks?.length}</strong>Tasks
+            <strong className="mr-2">{tasks?.length}</strong>Task {tasks?.length>1?'s':null}
           </h1>
           {auth_info?.user?.isAdmin ? (
             <button
@@ -73,7 +73,7 @@ const Tasks = ({ setCurrent }) => {
           <div className="taskSearch flex items-center">
             <SearchBar handler={search} />
           </div>
-          {getAuthInfo()?.user?.isAdmin ? (
+          {getAuthInfo()?.isAdmin ? (
             <button
               onClick={() => setAddTask(true)}
               className="p-2 max-sm:hidden absolute right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
@@ -121,7 +121,6 @@ const Tasks = ({ setCurrent }) => {
           {tasks?.map((task) => {
             return <TaskCard key={task.id} task={task} />;
           })}
-          <h1>Hello</h1>
         </div>
         {/* For Mobile */}
         {loading ? (

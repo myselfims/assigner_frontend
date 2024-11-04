@@ -5,7 +5,7 @@ import { LuSettings } from "react-icons/lu";
 import {FaTasks} from 'react-icons/fa';
 import {FaUsersGear} from 'react-icons/fa6'
 import {AiOutlineClose} from 'react-icons/ai'
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAuthInfo } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthInfo, setSidebar } from "../store/features/appGlobalSlice";
@@ -14,21 +14,23 @@ const Navigation = () => {
   const {currentPage, sidebar, auth_info} = useSelector(state=>state.globalState)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const {pathname} = useLocation()
 
   useEffect(()=>{
-    getAuthInfo().token?null:navigate('/login')
-   
+    if (pathname != "/login" && pathname != "/signup" && pathname != '/'){
+      getAuthInfo().token?null:navigate('/login')
+    }
   },[])
   
   return (
-    <div className={`flex z-10 max-sm:absolute top-0 ${sidebar?'max-sm:right-0':'max-sm:right-[1200px]'} transition-all relative`}>
-      <div className="text-white max-sm:w-screen max-sm:h-screen flex flex-col justify-between w-[280px] h-screen rounded-[20px] p-[50px] bg-[#4285F4]">
+    <div className={`flex max-sm:absolute top-0 ${sidebar?'max-sm:right-0':'max-sm:right-[1200px]'} transition-all relative`}>
+      <div className="text-white max-sm:w-screen max-sm:h-screen flex flex-col justify-between w-[300px] h-screen rounded-[20px] p-[50px] bg-[#4285F4]">
         <div className="">
-          <h1 className="text-4xl font-bold">Assigner.</h1>
+          <h1 className="text-4xl font-bold">EasyAssigns</h1>
           <AiOutlineClose onClick={()=>dispatch(setSidebar(false))} className="absolute w-[30px] h-[30px] hidden max-sm:flex right-5 top-5"/>
           <div className="btns my-[60px] h-56 flex text-lg justify-between flex-col">
             <Link onClick={()=>dispatch(setSidebar(false))} to={'/'} className={`flex ${currentPage=='Dashboard'?'font-bold':null} items-center`}>
-              <AiOutlineDashboard className="w-[18px] h-[18px] mr-[20px]" />
+              <AiOutlineDashboard classNam e="w-[18px] h-[18px] mr-[20px]" />
               Dashboard
             </Link>
             <Link onClick={()=>dispatch(setSidebar(false))} to={'/tasks'} className={`flex ${currentPage=='Tasks'?'font-bold':null} items-center`}>

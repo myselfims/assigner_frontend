@@ -14,7 +14,7 @@ const SearchBar = ({handler}) => {
         onKeyDown={(e)=>handler(e.target.value)}
         type="text"
         placeholder="Search tasks..."
-        className="px-3 py-1 rounded-full border-2 outline-blue-200 w-72"
+        className="px-3 py-1 rounded-full border-2 outline-blue-200 w-96"
       />
       <BsSearch className="w-5 mx-4 cursor-pointer hover:opacity-70 h-5 " />
     </div>

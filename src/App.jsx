@@ -4,6 +4,8 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useParams,
+  useLocation,
 
 } from "react-router-dom";
 import Navigation from "./components/Navigation";
@@ -15,22 +17,27 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import TopNav from "./components/TopNav";
 import MobileNav from "./components/MobileNav";
+import LandingPage from "./pages/landing page/LandingPage";
 
 
 function App() {
   const {alert,darkMode} = useSelector(state=>state.globalState)
+  const {pathname} = useLocation()
 
   return (
-    <div className={`flex max-sm:p-[10px] p-[43px] w-screen ${!darkMode?'bg-black text-white':'bg-white text-black'}`}>
-    <Router>
+    <div className={`flex max-sm:p-[10px] w-screen ${!darkMode?'bg-black text-white':'bg-white text-black'}`}>
+
+      {pathname != '/login' && '/signup' && pathname != '/'?
       <div className="nav">
         <Navigation />
         <MobileNav/>
-      </div>
-      <div className="max-sm:my-10 px-[43px] max-sm:p-0 w-full">
+      </div>:null}
+
+      <div className="max-sm:my-10 max-sm:p-0 w-full">
         <TopNav/>
         <Routes>
-          <Route path='/' element={<Dashboard />}/>
+          <Route path='/' element={<LandingPage />}/>
+          <Route path='/dashboard' element={<Dashboard />}/>
           <Route path='/tasks' element={<Tasks />}/>
           <Route path='/login' element={<Auth page='login'/>}/>
           <Route path='/signup' element={<Auth  page='signup'/>}/>
@@ -41,7 +48,6 @@ function App() {
 
       </div>
 
-    </Router>
     {alert.alert?
     <div className="alert absolute w-screen justify-center flex">
       <Alert/>

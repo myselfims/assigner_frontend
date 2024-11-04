@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { BiBell } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { MdLogout } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TopNav = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.currentUser);
+  const {pathname} = useLocation()
 
   const logout = () => {
     localStorage.removeItem("auth_info");
@@ -16,6 +17,8 @@ const TopNav = () => {
 
   const current = useSelector((state) => state.globalState.currentPage);
   return (
+    <>
+      {pathname=='/'? null :
     <div className="head justify-between w-full my-6 flex">
       <h1 className="font-bold text-2xl">{current}</h1>
       <div className="flex items-center">
@@ -50,7 +53,8 @@ const TopNav = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div> }
+    </>
   );
 };
 

@@ -3,14 +3,14 @@ import axios from "axios";
 
 export const baseUrl = 'https://assignerbackend-production.up.railway.app/'
 
-export const url = "https://assignerbackend-production.up.railway.app/api";
-// export const url = "http://localhost:3000/api";
+// export const url = "https://assignerbackend-production.up.railway.app/api";
+export const url = "http://localhost:3000/api";
 
 
 export const getAuthInfo = ()=> {
   try{
     if(JSON.parse( localStorage.getItem('auth_info'))!=null){
-      return JSON.parse( localStorage.getItem('auth_info'))
+      return JSON.parse(localStorage.getItem('auth_info'))
     }else{
       return false
     }

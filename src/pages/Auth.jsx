@@ -67,7 +67,6 @@ const Auth = ({ page }) => {
           }
         })
         .catch((er) => {
-          resetForm();
           setLoading(false);
           console.log(er)
           setError(er.response.data);
@@ -115,10 +114,10 @@ const Auth = ({ page }) => {
         </div>
         <div className="flex items-center h-screen">
           <h1 className="absolute left-[72.99px] top-[59.81px] font-bold text-xl text-white">
-            LOGO
+            a riseims product
           </h1>
-          <h1 className="text-7xl max-sm:hidden font-bold text-white absolute left-[200px]">
-            Assigner.
+          <h1 className="text-7xl max-sm:hidden font-bold text-white absolute left-[100px]">
+            EasyAssigns
           </h1>
           <div className="icons w-[300px] absolute justify-between flex left-[144.5px] bottom-[67px]">
             <a target="__blank" href="https://github.com/myselfims"><AiOutlineGithub className="w-[42px] text-white hover:opacity-70 transition-all cursor-pointer h-[42px]" /></a>
@@ -134,7 +133,7 @@ const Auth = ({ page }) => {
       <div className="form flex bg-[#F8FAFF] items-center justify-center w-full  h-full ">
         {/* Navbar for mobile */}
         <div className="absolute max-sm:flex hidden items-center w-screen p-3 top-0 left-0 bg-[#4285F4]">
-          <h1 className="font-bold text-xl text-white">Assinger</h1>
+          <h1 className="font-bold text-xl text-white">EasyAssigns</h1>
         </div>
         {/* Navbar for mobile */}
         <div className="absolute max-sm:static right-[204px]">

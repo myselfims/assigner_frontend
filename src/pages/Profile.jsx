@@ -52,7 +52,7 @@ const Profile = () => {
     if (user.avatar) {
       let avatarRef = ref(storage, user.avatar);
       deleteObject(avatarRef).then((res) => {
-        console.log(res);
+        dispatch(setAlert(true, "success", "Profile picture updated!"))
       });
     }
 
@@ -88,6 +88,7 @@ const Profile = () => {
                 id="file"
                 className="sr-only"
                 type="file"
+                accept="image/*" // This restricts the input to image files
               />
 
               {loading ? (
@@ -124,15 +125,7 @@ const Profile = () => {
               type="text"
             />
           </div>
-          <div className="flex my-4 flex-col">
-            <label htmlFor="">Password</label>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border-2 w-full rounded p-2 bg-white"
-              type="password"
-            />
-          </div>
+
           <div className="flex justify-between">
             <label htmlFor="">Is Admin</label>
             {user.isAdmin ? (
