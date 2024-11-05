@@ -61,7 +61,7 @@ const Auth = ({ page }) => {
           dispatch(setAuthInfo(res.data))
           console.log(res)
           if (res.data.isVerified) {
-            navigate("/");
+            navigate("/dashboard");
           } else {
             setVerify(true);
           }

@@ -205,13 +205,6 @@ const Modal = () => {
                   </div>
                 </div>
                 <div className="flex flex-col">
-                  <button
-                    type="submit"
-                    className={`rounded-[8px]
-                     w-full flex justify-center items-center font-semibold bg-[#3E84F8] text-white px-[16px] py-[8px]`}
-                  >
-                    Save <FaSave className="mx-3" />
-                  </button>
                   {getAuthInfo().isAdmin ? (
                     <button
                       type="button"

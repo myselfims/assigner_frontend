@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import TopNav from "./components/TopNav";
 import MobileNav from "./components/MobileNav";
 import LandingPage from "./pages/landing page/LandingPage";
+import BaseLayout from "./pages/BaseLayout";
 
 
 function App() {
@@ -34,16 +35,17 @@ function App() {
       </div>:null}
 
       <div className="max-sm:my-10 max-sm:p-0 w-full">
-        <TopNav/>
         <Routes>
           <Route path='/' element={<LandingPage />}/>
-          <Route path='/dashboard' element={<Dashboard />}/>
-          <Route path='/tasks' element={<Tasks />}/>
-          <Route path='/login' element={<Auth page='login'/>}/>
-          <Route path='/signup' element={<Auth  page='signup'/>}/>
-          <Route path='/mnjusers' element={<ManageUsers/>}/>
-          <Route path='/profile' element={<Profile/>}/>
-          <Route path='/settings' element={<Settings/>}/>
+          <Route element={<BaseLayout/>} >
+            <Route path='/dashboard' element={<Dashboard />}/>
+            <Route path='/tasks' element={<Tasks />}/>
+            <Route path='/login' element={<Auth page='login'/>}/>
+            <Route path='/signup' element={<Auth  page='signup'/>}/>
+            <Route path='/mnjusers' element={<ManageUsers/>}/>
+            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/settings' element={<Settings/>}/>
+          </Route>
         </Routes>
 
       </div>

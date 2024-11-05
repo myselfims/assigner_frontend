@@ -7,26 +7,26 @@ import { io } from "socket.io-client";
 import Loader from "./Loader";
 
 const Comments = () => {
-  const {comments,modal} = useSelector((state) => state.taskDetails);
+  const { comments, modal } = useSelector((state) => state.taskDetails);
   const task = useSelector((state) => state.taskDetails.activeTask);
   const { user } = useSelector((state) => state.currentUser);
   const [comment, setComment] = useState("");
   const [commentBtn, setCommentBtn] = useState(false);
   const dispatch = useDispatch();
   const socket = io(baseUrl);
-  
- 
-  
+
   useEffect(() => {
     socket.emit("join:comment", task.id);
-    
+
     // return ()=>{
     //   socket.disconnect()
     // }
   }, []);
 
   socket.on("comment", (data) => {
-    new Audio('https://audio-previews.elements.envatousercontent.com/files/184508/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22D2HAXJZ-new-message-cling.mp3%22').play()
+    new Audio(
+      "https://audio-previews.elements.envatousercontent.com/files/184508/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22D2HAXJZ-new-message-cling.mp3%22"
+    ).play();
     setCommentBtn(false);
     dispatch(addComment(data));
   });
@@ -55,28 +55,20 @@ const Comments = () => {
         })}
         {comments?.length == 0 ? <p>No comments!</p> : null}
       </div>
-      <div className="flex flex-col ">
+      <div className="flex border-2 rounded p-2 my-3">
         <input
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Type your comment here..."
-          className="border-2 rounded p-2 my-3"
+          className="w-full outline-none"
           type="text"
         />
         <button
           disabled={commentBtn}
           onClick={postComment}
-          className="rounded-[8px] w-full flex justify-center items-center font-semibold bg-[#3E84F8] text-white px-[16px] py-[8px]"
+          className="justify-center items-center font-semibold text-[#3E84F8] "
         >
-          {commentBtn ? (
-            <>
-              Commenting... <Loader />
-            </>
-          ) : (
-            <>
-              Comment <BsFillSendFill className="mx-3" />
-            </>
-          )}
+          {commentBtn ? <Loader /> : <BsFillSendFill className="w-6 h-6" />}
         </button>
       </div>
       <div className="comments"></div>
