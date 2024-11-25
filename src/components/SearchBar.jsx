@@ -8,15 +8,15 @@ const SearchBar = ({handler}) => {
     const dispatch = useDispatch()
 
   return (
-    <div className="taskSearch flex items-center">
+    <div className="taskSearch flex items-center px-3 py-1 rounded-xl border-2 w-96 justify-between">
       <input
         onChange={(e)=>setQuery(e.target.value)}
         onKeyDown={(e)=>handler(e.target.value)}
         type="text"
         placeholder="Search tasks..."
-        className="px-3 py-1 rounded-xl border-2 outline-blue-200 w-96"
+        className="w-full outline-none"
       />
-      <BsSearch className="w-5 mx-4 cursor-pointer hover:opacity-70 h-5 " />
+      <BsSearch className="w-5 cursor-pointer hover:opacity-70 h-5 " />
     </div>
   );
 };

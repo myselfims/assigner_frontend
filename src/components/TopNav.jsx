@@ -3,7 +3,7 @@ import { BiBell } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { MdLogout } from "react-icons/md";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const TopNav = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const TopNav = () => {
   return (
     <>
       {pathname=='/'? null :
-    <div className="head justify-between w-full my-6 flex">
+    <div className="head justify-between w-full my-6 flex sticky top-1 bg-white rounded-lg py-2 px-2">
       <h1 className="font-bold text-2xl">{current}</h1>
       <div className="flex items-center">
         <div className=" hidden items-center border-2 px-4 rounded-full">
@@ -30,6 +30,7 @@ const TopNav = () => {
           />
           <BsSearch className="w-[12px] h-[12px] " />
         </div>
+        <Link to={'/share-knowledge'} className="bg-blue-500 text-white p-2 rounded-md">Share Knowledge</Link>
         <div className="flex items-center">
           <BiBell className="mr-[27px] ml-[46px] w-[18px] cursor-pointer h-[20px]" />
           <div

@@ -19,6 +19,9 @@ import TopNav from "./components/TopNav";
 import MobileNav from "./components/MobileNav";
 import LandingPage from "./pages/landing page/LandingPage";
 import BaseLayout from "./pages/BaseLayout";
+import ViewUser from "./pages/view user/ViewUser";
+import ShareKnowledge from "./pages/share knowledge/ShareKnowledge";
+import Projects from "./pages/projects/Projects";
 
 
 function App() {
@@ -29,12 +32,12 @@ function App() {
     <div className={`flex max-sm:p-[10px] w-screen ${!darkMode?'bg-black text-white':'bg-white text-black'}`}>
 
       {pathname != '/login' && '/signup' && pathname != '/'?
-      <div className="nav">
+      <div className="nav static">
         <Navigation />
         <MobileNav/>
       </div>:null}
 
-      <div className="max-sm:my-10 max-sm:p-0 w-full">
+      <div className="max-sm:my-10 max-sm:p-0 w-full h-screen overflow-hidden">
         <Routes>
           <Route path='/' element={<LandingPage />}/>
           <Route element={<BaseLayout/>} >
@@ -45,6 +48,9 @@ function App() {
             <Route path='/mnjusers' element={<ManageUsers/>}/>
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/settings' element={<Settings/>}/>
+            <Route path='/view-user' element={<ViewUser/>}/>
+            <Route path='/share-knowledge' element={<ShareKnowledge/>}/>
+            <Route path='/projects' element={<Projects/>}/>
           </Route>
         </Routes>
 

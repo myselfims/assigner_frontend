@@ -21,9 +21,9 @@ const Navigation = () => {
   const [close, setClose] = useState(false)
 
   useEffect(()=>{
-    if (pathname != "/login" && pathname != "/signup" && pathname != '/'){
-      getAuthInfo().token?null:navigate('/login')
-    }
+    // if (pathname != "/login" && pathname != "/signup" && pathname != '/'){
+    //   getAuthInfo().token?null:navigate('/login')
+    // }
   },[])
   
   return (

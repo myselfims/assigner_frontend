@@ -18,9 +18,25 @@ const Settings = () => {
     }
 
   return (
-    <div className='w-full flex justify-center'>
+    <div className='w-full flex bg-red-300'>
+      <div className="flex flex-col border-2 w-96 rounded p-4">
+        <h5 className='text-slate-700'>Privacy</h5>
+        <div className="flex justify-between my-2">
+            <p>Show online status </p>
+           <ToggleBtn value={darkMode} handler={handleDarkMode}/>
+        </div>
+        <div className="flex justify-between my-2">
+            <p>Private profile</p>
+           <ToggleBtn value={darkMode} handler={handleDarkMode}/>
+        </div>
+        <div className="flex justify-between my-2">
+            <p>Dark Mode </p>
+           <ToggleBtn value={darkMode} handler={handleDarkMode}/>
+        </div>
+      </div>
     <div className='border-2 w-96 rounded p-4'>
-        <div className="flex justify-between">
+      <h5 className='text-slate-700'>Visuals</h5>
+        <div className="flex justify-between my-2">
             <p>Dark Mode </p>
            <ToggleBtn value={darkMode} handler={handleDarkMode}/>
         </div>
