@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
-import TopNav from "../components/TopNav";
+import TopNav from "../components/topNav/TopNav";
 
 const BaseLayout = () => {
   return (
     <div className="p-4">
-        <TopNav/>
+      <TopNav/>
       <Outlet />
     </div>
   );

@@ -65,7 +65,7 @@ const Modal = () => {
   };
 
   return (
-    <div key={task.id} className="w-screen absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
+    <div key={task.id} className="w-screen z-30 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
       <div className="main max-sm:my-8 max-sm:w-screen w-[544px] bg-[rgb(255,255,255)] rounded-lg ">
         <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
           <h1 className="text-[20px] ">Task Details</h1>

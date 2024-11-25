@@ -21,7 +21,7 @@ const Navigation = () => {
   const [close, setClose] = useState(false)
 
   useEffect(()=>{
-    if (pathname != "/login" && pathname != "/signup" && pathname != '/'){
+    if (pathname != "/login" && pathname != "/signup" && pathname != '/' && pathname != '/verify-otp'){
       getAuthInfo().token?null:navigate('/login')
     }
   },[])
@@ -37,7 +37,7 @@ const Navigation = () => {
               <AiOutlineDashboard className="w-[18px] h-[18px] mr-[20px]" />
               Dashboard
             </Link>
-            <Link onClick={()=>dispatch(setSidebar(false))} to={'/tasks'} className={`flex ${currentPage=='Tasks'?'font-bold border rounded-xl':null} p-2 items-center transition-all`}>
+            <Link onClick={()=>dispatch(setSidebar(false))} to={'/action-items'} className={`flex ${currentPage=='Action Items'?'font-bold border rounded-xl':null} p-2 items-center transition-all`}>
               <FaTasks className="w-[18px] h-[18px] mr-[20px]" />
               Action Items
             </Link>
@@ -49,10 +49,6 @@ const Navigation = () => {
             <Link onClick={()=>dispatch(setSidebar(false))} to={'/connect'} className={`flex ${currentPage=='Connect'?'font-bold border rounded-xl':null} p-2 items-center transition-all`}>
               <LuMessagesSquare className="w-[18px] h-[18px] mr-[20px]" />
               Connect
-            </Link>
-            <Link onClick={()=>dispatch(setSidebar(false))} to={'/profile'} className={`flex ${currentPage=='Profile'?'font-bold border rounded-xl':null} p-2 items-center transition-all`}>
-              <FaRegCircleUser className="w-[18px] h-[18px] mr-[20px]" />
-              Profile
             </Link>
             <Link onClick={()=>dispatch(setSidebar(false))} to={'/settings'} className={`flex ${currentPage=='Settings'?'font-bold border rounded-xl':null} p-2 items-center transition-all`}>
               <LuSettings className="w-[18px] h-[18px] mr-[20px]" />

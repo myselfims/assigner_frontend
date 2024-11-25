@@ -31,7 +31,7 @@ const Alert = () => {
     }
 
   return (
-    <div className={`fixed animate-fade bg-${alertTypes[alert.type].color}-500 text-white font-bold rounded flex items-center border-2 p-2 `}>
+    <div className={`fixed z-50 animate-fade bg-${alertTypes[alert.type].color}-500 text-white font-bold rounded flex items-center border-2 p-2 `}>
       <div className='bg-white text-black rounded-full p-2 mr-3'><alertTypes.success.icon className='w-[20px] h-[20px]'/></div>
       <h1>{alert.message}</h1>
     </div>

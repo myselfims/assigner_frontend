@@ -42,7 +42,7 @@ const Tasks = ({ setCurrent }) => {
 
   useEffect(() => {
     console.log(getAuthInfo());
-    dispatch(setCurrentPage("Tasks"));
+    dispatch(setCurrentPage("Action Items"));
     dispatch(setLoading(true));
     fetchData("/tasks/")
       .then((res) => {
