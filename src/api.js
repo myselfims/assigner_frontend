@@ -20,12 +20,28 @@ export const getAuthInfo = ()=> {
 }
 
 
+export const fetchData = async (endpoint, params = {}) => {
+  try {
+    const authInfo = getAuthInfo();
+    if (!authInfo || !authInfo.token) {
+      throw new Error("Authentication token is missing");
+    }
 
-export const fetchData = async (endpoint) => {
-  let config = { headers: {"Authorization" : getAuthInfo().token} }
-  let request = await axios.get(url + endpoint, config);
-  return request
+    const config = {
+      headers: {
+        "Authorization": `${authInfo.token}`,
+      },
+      params, // Pass query parameters here
+    };
+
+    const response = await axios.get(url + endpoint, config);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    return null;
+  }
 };
+
 
 
 

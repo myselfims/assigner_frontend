@@ -13,5 +13,17 @@
   }
   
 *{
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Add this CSS */
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for Webkit browsers */
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none; /* Hides scrollbar for IE/Edge */
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
 }

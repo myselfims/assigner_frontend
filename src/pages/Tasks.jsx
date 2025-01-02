@@ -11,6 +11,7 @@ import { setCurrentPage } from "../store/features/appGlobalSlice";
 import SearchBar from "../components/SearchBar";
 import TaskCard from "../components/TaskCard";
 import { Link } from "react-router-dom";
+import FilterBar from "./tasks/FilterBar";
 
 const Tasks = ({ setCurrent }) => {
   const dispatch = useDispatch();
@@ -43,12 +44,13 @@ const Tasks = ({ setCurrent }) => {
 
   useEffect(() => {
     console.log(getAuthInfo());
-    dispatch(setCurrentPage("Tasks"));
+    dispatch(setCurrentPage("Action Items"));
     dispatch(setLoading(true));
     fetchData("/tasks/")
       .then((res) => {
+        console.log(res)
         dispatch(setLoading(false));
-        dispatch(setTasks(res.data));
+        dispatch(setTasks(res));
       })
       .catch((err) => {
         console.log(err);
@@ -58,10 +60,6 @@ const Tasks = ({ setCurrent }) => {
     <div className="w-full">
       <div className="head max-sm:flex-col flex justify-between items-center w-full">
         <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
-          <h1 className="flex">
-            <strong className="mr-2">{tasks?.length}</strong>Task{" "}
-            {tasks?.length > 1 ? "s" : null}
-          </h1>
           {auth_info?.user?.isAdmin ? (
             <button
               onClick={() => setAddTask(true)}
@@ -71,42 +69,7 @@ const Tasks = ({ setCurrent }) => {
             </button>
           ) : null}
         </div>
-
-        <div className="flex relative justify-center bg-white">
-          <div className="flex">
-            <div className="group cursor-pointer">
-              <div className="w-8 h-8 hover:border-2 border-black bg-purple-700 relative mx-1 p-2 flex justify-center rounded-full items-center">
-                R
-              </div>
-              <div className="absolute bg-white group-hover:flex hidden  rounded-md p-2 flex-col">
-                  <h1 className="text-sm">Imran S</h1>
-                  <Link className="hover:text-blue-700 text-xs text-slate-700">3 Items in progress</Link>
-              </div>
-            </div>
-            <div className="group cursor-pointer">
-              <div className="w-8 h-8 hover:border-2 border-black bg-red-700 relative mx-1 p-2 flex justify-center rounded-full items-center">
-                M
-              </div>
-              <div className="absolute bg-white group-hover:flex hidden  rounded-md p-2 flex-col">
-                  <h1 className="text-sm">Shubham S</h1>
-                  <Link to={'/view-user'} className="hover:text-blue-700 text-xs text-slate-700">3 Items in progress</Link>
-              </div>
-            </div>
-          </div>
-          <div className="taskSearch flex items-center">
-            <SearchBar handler={search} />
-          </div>
-        </div>
-        <div className="">
-          {getAuthInfo()?.isAdmin ? (
-            <button
-              onClick={() => setAddTask(true)}
-              className="p-2 max-sm:hidden absolute right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
-            >
-              Add task
-            </button>
-          ) : null}
-        </div>
+        <FilterBar />
       </div>
       <div className="flex flex-col my-4">
         <table className="table-auto max-sm:hidden max-sm:text-xs w-full">
@@ -132,7 +95,7 @@ const Tasks = ({ setCurrent }) => {
             })}
           </tbody>
         </table>
-        {tasks.length == 0 ? (
+        {tasks?.length == 0 ? (
           <div className="flex my-10 flex-col w-full items-center justify-center bg-">
             <img className="w-40 h-40" src={noDataImage} />
 

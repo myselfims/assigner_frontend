@@ -11,8 +11,9 @@ const SearchBar = ({handler}) => {
     <div className="taskSearch flex items-center px-3 py-1 rounded-xl border-2 w-96 justify-between">
       <input
         onChange={(e)=>setQuery(e.target.value)}
-        onKeyDown={(e)=>handler(e.target.value)}
+        onKeyDown={(e)=>handler(query)}
         type="text"
+        value={query}
         placeholder="Search tasks..."
         className="w-full outline-none"
       />

@@ -72,7 +72,7 @@ const LandingPage = () => {
                   index % 2 == 0 ? null : "flex-row-reverse"
                 }`}
               >
-                <img src={p?.svg} className="w-8/12" alt="" />
+                <img src={p?.svg} className="w-6/12" alt="" />
                 <div className="w-full mx-8">
                   <h1 className="text-4xl font-semibold">{p?.title}</h1>
                   <p className="text-2xl leading-10 my-4">{p?.description}</p>

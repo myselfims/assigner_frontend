@@ -1,23 +1,35 @@
-import React from 'react'
-import { FaUsers } from "react-icons/fa";
+import React from 'react';
 
-const ProjectCard = () => {
+const ProjectCard = ({ project }) => {
+  const { name, lead, teamSize, startDate, status, priority, description, progress } = project;
+
   return (
-    <div className="border-2 w-72 p-2 rounded-lg hover:shadow-blue-300 cursor-pointer shadow-lg">
-    <div className="header flex justify-between">
-      <div className="">
-        <h1 className='font-semibold text-2xl'>ViziSmart</h1>
-        <div className="flex">
-          <div className="w-5 h-5 hover:border-2 border-black bg-red-700 mx-1 p-2 flex justify-center rounded-full items-center text-xs">
-              M
-            </div>
-            <p className="text-sm">Karan Khan</p>
+    <div className="max-w-sm p-4 bg-white rounded-lg shadow-md border border-gray-200">
+      <h2 className="text-xl font-bold text-gray-800">{name}</h2>
+      <p className="text-gray-600 text-sm">Lead: {lead}</p>
+      <p className="text-gray-600 text-sm">Team Size: {teamSize}</p>
+      <p className="text-gray-600 text-sm">Started: {startDate}</p>
+      <p className={`text-sm font-medium mt-2 ${status === 'Ongoing' ? 'text-blue-500' : status === 'Completed' ? 'text-green-500' : 'text-red-500'}`}>
+        Status: {status}
+      </p>
+      <p className={`text-sm font-medium ${priority === 'High' ? 'text-red-500' : priority === 'Medium' ? 'text-yellow-500' : 'text-green-500'}`}>
+        Priority: {priority}
+      </p>
+      <p className="text-gray-600 mt-2 text-sm">{description}</p>
+      <div className="mt-4">
+        <div className="flex items-center justify-between text-gray-600 text-sm">
+          <span>Progress</span>
+          <span>{progress}%</span>
+        </div>
+        <div className="w-full bg-gray-200 h-2 rounded-full mt-1">
+          <div
+            className="h-2 rounded-full bg-blue-500"
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
       </div>
-      <button className='flex justify-center items-center'><FaUsers className='w-5 h-5 mr-1'/> 22</button>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default ProjectCard
+export default ProjectCard;

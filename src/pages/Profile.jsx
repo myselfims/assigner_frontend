@@ -27,9 +27,9 @@ const Profile = () => {
   useEffect(() => {
     dispatch(setCurrentPage("Profile"));
     fetchData(`/users/self`).then((res) => {
-      setName(res.data.name);
-      setPassword(res.data.password);
-      dispatch(setUser(res.data));
+      setName(res.name);
+      setPassword(res.password);
+      dispatch(setUser(res));
     });
   }, []);
 
@@ -95,8 +95,8 @@ const Profile = () => {
                 <Loader />
               ) : (
                 <>
-                  {user.avatar ? (
-                    <img src={user.avatar} alt="" />
+                  {user?.avatar ? (
+                    <img src={user?.avatar} alt="" />
                   ) : (
                     <h1 className="font-bold text-2xl">I</h1>
                   )}
@@ -128,7 +128,7 @@ const Profile = () => {
 
           <div className="flex justify-between">
             <label htmlFor="">Is Admin</label>
-            {user.isAdmin ? (
+            {user?.isAdmin ? (
               <h1 className="w-12 bg-green-500 rounded text-center flex items-center text-white justify-center font-bold">
                 True
               </h1>

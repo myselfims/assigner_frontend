@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { addTask } from "../store/features/tasksSlice";
 import { setAlert } from "../store/features/appGlobalSlice";
 import Loader from '../components/Loader'
+import InputField from "./InputField";
+import UsersDropdown from "./UsersDropdown";
 
 const initialValues = {
   title: "",
@@ -59,8 +61,8 @@ const AddTaskModal = ({ setModal }) => {
   
 
   return (
-    <div className="w-screen absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
-      <div className="main max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg ">
+    <div className="w-screen z-40 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
+      <div className="main overflow-y-scroll max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg ">
         <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
           <h1 className="text-[20px] ">Add New Task</h1>
           <button
@@ -74,18 +76,18 @@ const AddTaskModal = ({ setModal }) => {
 
         <div className="p-[24px]">
           <form onSubmit={handleSubmit}>
-            <div className="details my-4">
+            <div className="details my-2">
               <div className="my-1 flex flex-col">
                 <p>Title</p>
-                <input
-                  name="title"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.title}
-                  placeholder="Eg. John Doe"
-                  className={`border ${errors.title && touched.title? 'border-red-500':null} rounded-md outline-none p-2`}
-                  type="text"
-                />
+               <InputField 
+                name={'title'}
+                placeholder={'Enter title'}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.title}
+                error={errors.title}
+                touched={touched.title}
+               />
               </div>
               <div className="my-[24px] flex flex-col">
                 <label htmlFor="">Description (Optional) </label>
@@ -102,35 +104,21 @@ const AddTaskModal = ({ setModal }) => {
               <div className="my-[24px] flex justify-between">
                 <div className="flex flex-col">
                   <label htmlFor="">Deadline</label>
-                  <input
-                    onChange={handleChange}
+                  <InputField 
+                    name={'deadline'}
+                    placeholder={''}
                     onBlur={handleBlur}
+                    onChange={handleChange}
                     value={values.deadline}
-                    name="deadline"
-                    className={`border ${errors.deadline && touched.deadline? 'border-red-500':null} rounded-md outline-none p-2`}
+                    error={errors.deadline}
+                    touched={touched.deadline}
                     type="date"
                   />
                    <label className="text-red-500 my-1" htmlFor="">{errors?.deadline}</label>
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="">Assign to</label>
-                  <select
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.assignedToId}
-                    className="border-2 cursor-pointer rounded bg-white p-1"
-                    name="assignedToId"
-                    id=""
-                  >
-                    <option defaultChecked value="">select user</option>
-                    {users?.map((u) => {
-                      return (
-                        <option className="relative group" value={u?.id}>
-                          {u?.name}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <UsersDropdown />
                   <label className="text-red-500 my-1" htmlFor="">{errors?.assignedToId}</label>
                 </div>
               </div>
