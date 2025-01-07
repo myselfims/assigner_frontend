@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ProjectCard from "./ProjectCard";
 import AgileProjectCard from "./AgileProjectCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,49 +6,91 @@ import { setCurrentPage } from "../../store/features/appGlobalSlice";
 import SearchBar from "../../components/SearchBar";
 import { Link } from "react-router-dom";
 import { fetchData } from "../../api";
+import debounce from "lodash/debounce";
+import AgileProjectCardSkeleton from "./AgileProjectCardSkeleton";
+import Dropdown from "../../components/Dropdown";
 
 const Projects = () => {
   const dispatch = useDispatch();
   const [projects, setProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     dispatch(setCurrentPage("Projects"));
-    fetchData("/projects").then((res) => {
-      console.log(res);
-      setProjects(res);
-    });
-  }, []);
+    setLoading(true);
+    fetchData("/projects")
+      .then((res) => {
+        setTimeout(() => {
+          setLoading(false);
+          setProjects(res || []);
+          setFilteredProjects(res || []);
+        }, 1000);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [dispatch]);
 
-  useEffect(() => {
-    setFilteredProjects(projects);
-  }, [projects]);
+  const handler = useCallback(
+    debounce((query) => {
+      if (!query?.trim()) {
+        setFilteredProjects(projects || []);
+        return;
+      }
 
-  const handler = (query) => {
-    let filtered = projects?.filter((p) =>
-      p.name.toLowerCase().includes(query.toLowerCase())
+      const lowerCaseQuery = query.toLowerCase();
+      const filtered = projects.filter((project) =>
+        project?.name?.toLowerCase().includes(lowerCaseQuery)
+      );
+
+      setFilteredProjects(filtered || []);
+    }, 300),
+    [projects]
+  );
+
+  const sortByPriority = (selectedPriorities) => {
+    console.log(selectedPriorities); // Log the selected priorities
+    if (!selectedPriorities || selectedPriorities.length === 0) {
+      // If no priorities are selected, show all projects
+      setFilteredProjects(projects);
+      return;
+    }
+  
+    const filtered = projects.filter((project) =>
+      selectedPriorities.some(
+        (priority) => project?.priority?.toLowerCase() === priority.toLowerCase()
+      )
     );
+  
+    console.log(filtered); // Log the filtered projects
     setFilteredProjects(filtered);
   };
 
+  useEffect(()=>{
+    console.log(filteredProjects)
+  },[filteredProjects])
+  
+
   return (
     <div>
-      <div className="header w-full flex justify-center mb-4">
-        <div className=""></div>
-        <SearchBar handler={handler} />
-        <div className="">
-          <select
-            className="border-2 px-4 h-full mx-4 rounded-md"
-            name=""
-            id=""
-          >
-            <option defaultChecked value="">
-              Priority
-            </option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
+      <div className="header w-full flex mb-4 justify-between items-center">
+        <div className="flex items-center">
+          <SearchBar handler={handler} />
+          <div>
+            <Dropdown
+              label={'Filter by Priority'}
+              onSelect={(e) => sortByPriority(e)}
+              allowMultiple={true}
+              options={[
+                { label: "Low", value: "low" },
+                { label: "Medium", value: "medium" },
+                { label: "High", value: "high" },
+              ]}
+              className={'mx-4'}
+            />
+          </div>
         </div>
         <Link
           to={"/add-project"}
@@ -58,9 +100,13 @@ const Projects = () => {
         </Link>
       </div>
       <div className="w-full grid grid-cols-3 gap-4">
-        {filteredProjects?.map((project, index) => (
-          <AgileProjectCard key={index} project={project} />
-        ))}
+        {loading
+          ? Array(3)
+              .fill()
+              .map((_, index) => <AgileProjectCardSkeleton key={index} />)
+          : filteredProjects?.map((project, index) => (
+              <AgileProjectCard key={index} project={project} />
+            ))}
       </div>
     </div>
   );

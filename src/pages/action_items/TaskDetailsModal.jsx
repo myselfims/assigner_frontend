@@ -9,16 +9,16 @@ import {
   getAuthInfo,
   postData,
   updateData,
-} from "../api";
-import Loader from "./Loader";
+} from "../../api";
+import { motion } from "motion/react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTask, setTasks } from "../store/features/tasksSlice";
-import ConfirmModal from "./ConfirmModal";
-import Comments from "./Comments";
-import { setComments, setModal } from "../store/features/taskDetailsSlice";
+import { removeTask, setTasks } from "../../store/features/tasksSlice";
+import ConfirmModal from "../../components/ConfirmModal";
+import Comments from "../../components/Comments";
+import { setComments, setModal } from "../../store/features/taskDetailsSlice";
 import { useFormik } from "formik";
-import { TaskSchema } from "../validation/validation_schema";
-import { setAlert } from "../store/features/appGlobalSlice";
+import { TaskSchema } from "../../validation/validation_schema";
+import { setAlert } from "../../store/features/appGlobalSlice";
 
 const Modal = () => {
   const [currentForm, setCurrentForm] = useState("details");
@@ -34,22 +34,25 @@ const Modal = () => {
     validationSchema: TaskSchema,
     onSubmit: (data) => {
       updateData(`/tasks/${task.id}/`, data).then((res) => {
-        dispatch(setAlert({alert:true,type:'success',message:'Successfully updated!'}))
-        fetchData('/tasks/').then((res)=>{
-          dispatch(setTasks(res.data))
-        })
+        dispatch(
+          setAlert({
+            alert: true,
+            type: "success",
+            message: "Successfully updated!",
+          })
+        );
+        fetchData("/tasks/").then((res) => {
+          dispatch(setTasks(res.data));
+        });
       });
     },
   });
 
-  const closeModal = ()=>{
-
-  }
+  const closeModal = () => {};
 
   useEffect(() => {
     fetchData(`/comments/${task.id}`).then((res) => {
       dispatch(setComments(res.data));
-  
     });
   }, []);
 
@@ -65,10 +68,16 @@ const Modal = () => {
   };
 
   return (
-    <div key={task.id} className="w-screen z-30 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
+      transition={{ duration: 0.5 }}
+      key={task.id}
+      className="w-screen z-30 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
+    >
       <div className="main max-sm:my-8 max-sm:w-screen w-[544px] bg-[rgb(255,255,255)] rounded-lg ">
         <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
-          <h1 className="text-[20px] ">Task Details</h1>
+          <h1 className="text-[20px] ">{task?.title}</h1>
           <button
             onClick={() => dispatch(setModal(false))}
             className="text-[#999CA0] hover:opacity-70"
@@ -118,7 +127,7 @@ const Modal = () => {
                 <div className="my-1 flex flex-col">
                   {!edit ? (
                     <div className="flex justify-between">
-                      <h1 className="font-bold text-2xl">{task?.title}</h1>
+                      <h1 className="font-semibold text-2xl">{task?.title}</h1>
                       {getAuthInfo.isAdmin ? (
                         <button
                           onClick={() => setEdit(true)}
@@ -198,7 +207,7 @@ const Modal = () => {
                       name="status"
                       id=""
                     >
-                      <option value={'Assigned'}>Assigned</option>
+                      <option value={"Assigned"}>Assigned</option>
                       <option value="In progress">In progress</option>
                       <option value="Done">Done</option>
                     </select>
@@ -229,7 +238,7 @@ const Modal = () => {
           confirm={deleteTask}
         />
       ) : null}
-    </div>
+    </motion.div>
   );
 };
 

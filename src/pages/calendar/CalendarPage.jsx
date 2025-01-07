@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AddReminderModal from "./AddReminderModal";
 import Calendar from "./Calendar";
 import ViewDayDetailsModal from "./ViewDayDetailsModal";
+import { FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 const CalendarPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +40,7 @@ const CalendarPage = () => {
           className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={handlePreviousMonth}
         >
-          Previous
+          <FaArrowLeft />
         </button>
         <h1 className="text-2xl font-bold">
           {formatMonthYear(currentDate)}
@@ -47,7 +49,7 @@ const CalendarPage = () => {
           className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={handleNextMonth}
         >
-          Next
+          <FaArrowRight />
         </button>
       </div>
       <Calendar date={currentDate} toggleModal={toggleModal} />

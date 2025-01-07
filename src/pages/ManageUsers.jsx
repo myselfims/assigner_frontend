@@ -39,7 +39,7 @@ const ManageUsers = () => {
     <div className="w-full">
       <div className="head flex max-sm:flex-col justify-between items-center">
         <h1>
-          You have total <strong>{users.length}</strong> Users
+          You have total <strong>{users?.length}</strong> Users
         </h1>
         <div className="flex relative w-full justify-center">
           <SearchBar handler={search} />
@@ -75,7 +75,7 @@ const ManageUsers = () => {
             
           </tbody>
         </table>
-        {users.length==0?
+        {users?.length==0?
             <div className="flex my-10 flex-col w-full items-center justify-center bg-">
               <img className="w-40 h-40" src={noDataImage}/>
 

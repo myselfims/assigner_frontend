@@ -1,10 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveTask } from "../store/features/taskDetailsSlice";
+import { setActiveTask } from "../../store/features/taskDetailsSlice";
 
 const TaskCard = ({task}) => {
     const {users} = useSelector(state=>state.users)
-    const user = users.filter((item)=>item.id==task.assignedById)[0]
+    const user = users?.filter((item)=>item.id==task.assignedById)[0]
     const dispatch = useDispatch()
   return (
     <div onClick={()=>dispatch(setActiveTask(task))}  className="task-card border rounded-md my-4 p-2 w-full">

@@ -19,6 +19,8 @@ import { setAuthInfo } from "../../store/features/appGlobalSlice";
 import { getAuthInfo, postData } from "../../api";
 import SignupLogin from "./SignupLogin";
 import ForgotPassword from "./ForgotPassword";
+import RoleSelection from "./RoleSelection";
+import IndustrySelection from "./IndustrySelection";
 
 const Auth = ({page}) => {
 
@@ -33,16 +35,18 @@ const Auth = ({page}) => {
     '/login' : <SignupLogin />,
     '/signup' : <SignupLogin />,
     '/verify-otp' : <OtpVerifier email={'imrans@64-squares.com'} />,
-    '/forgot-password' : <ForgotPassword />
+    '/forgot-password' : <ForgotPassword />,
+    '/role-selection' : <RoleSelection />,
+    '/industry-selection' : <IndustrySelection />
   }
 
   return (
     <div
       key={page}
-      className="w-screen z-20 absolute top-0 left-0 h-screen flex "
+      className="w-screen z-20 top-0 left-0 h-screen flex bg-[#F8FAFF]"
     >
-      <div className="max-sm:hidden">
-        <div className="absolute max-sm:hidden z-0">
+      <div className="max-sm:hidden w-full">
+        <div className="absolute max-sm:hidden z-0 ">
           <svg
             className="h-screen"
             xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +72,7 @@ const Auth = ({page}) => {
             </defs>
           </svg>
         </div>
-        <div className="flex items-center h-screen">
+        <div className="flex items-center h-screen ">
           <h1 className="absolute left-[72.99px] top-[59.81px] font-bold text-xl text-white">
             a riseims product
           </h1>
@@ -93,7 +97,7 @@ const Auth = ({page}) => {
           <h1 className="font-bold text-xl text-white">EasyAssigns</h1>
         </div>
         {/* Navbar for mobile */}
-        <div className="absolute max-sm:static right-[204px]">
+        <div className=" max-sm:static right-[204px]">
          
             {pages[pathname]}
    

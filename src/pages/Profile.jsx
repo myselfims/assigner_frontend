@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { setAlert, setCurrentPage } from "../store/features/appGlobalSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useFormik } from "formik";
 import { fetchData, updateData } from "../api";
 import { setName, setUser } from "../store/features/userDetailsSlice";
 import { storage } from "../firebase";
@@ -15,6 +14,8 @@ import { v4 } from "uuid";
 import Loader from "../components/Loader";
 import { setLoading } from "../store/features/userDetailsSlice";
 import Compressor from "compressorjs";
+import IndustrySelection from "../pages/authentication/IndustrySelection"; // Assuming IndustrySelect is in the same directory
+import { FaRegAddressCard } from "react-icons/fa";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -80,23 +81,21 @@ const Profile = () => {
         <div className="head flex justify-center">
           <label htmlFor="file">
             <div
-              className="w-[60px] overflow-hidden group cursor-pointer bg-center bg-no-repeat bg-cover rounded-full h-[60px] flex items-center justify-center bg-gradient-to-t from-blue-500 to-blue-300 text-white font-serif
-              "
+              className="w-[60px] overflow-hidden group cursor-pointer bg-center bg-no-repeat bg-cover rounded-full h-[60px] flex items-center justify-center bg-gradient-to-t from-blue-500 to-blue-300 text-white font-serif"
             >
               <input
                 onChange={uploadAvatar}
                 id="file"
                 className="sr-only"
                 type="file"
-                accept="image/*" // This restricts the input to image files
+                accept="image/*"
               />
-
               {loading ? (
                 <Loader />
               ) : (
                 <>
                   {user?.avatar ? (
-                    <img src={user?.avatar} alt="" />
+                    <img src={user?.avatar} alt="Avatar" />
                   ) : (
                     <h1 className="font-bold text-2xl">I</h1>
                   )}
@@ -105,39 +104,44 @@ const Profile = () => {
             </div>
           </label>
         </div>
-        <div className="body">
-          <div className="flex my-4 flex-col">
-            <label htmlFor="">Name</label>
+        <div className="body space-y-4">
+          <div className="flex justify-between">
+            <label>Name</label>
             <input
               value={name}
-              className="border-2 w-full rounded p-2 bg-white"
+              className="border-2 w-48 rounded p-2 bg-white"
               type="text"
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex my-4 flex-col">
-            <label htmlFor="">Email</label>
+
+          <div className="flex justify-between">
+            <label>Email</label>
             <input
               disabled
               value={user?.email}
               readOnly
-              className="border-2 cursor-no-drop w-full rounded p-2 bg-white"
+              className="border-2 w-48 cursor-no-drop rounded p-2 bg-white"
               type="text"
             />
           </div>
 
           <div className="flex justify-between">
-            <label htmlFor="">Is Admin</label>
-            {user?.isAdmin ? (
-              <h1 className="w-12 bg-green-500 rounded text-center flex items-center text-white justify-center font-bold">
-                True
-              </h1>
-            ) : (
-              <h1 className="w-12 bg-red-500 rounded text-center flex items-center text-white justify-center font-bold">
-                False
-              </h1>
-            )}
+            <label>Role Type</label>
+            <h1 className="w-24 bg-blue-500 rounded text-center text-white font-bold">
+              {user?.role || "N/A"}
+            </h1>
           </div>
+
+        
+
+          <div className="flex justify-between">
+            <label>Subscription Plan</label>
+            <h1 className="w-24 bg-green-500 rounded text-center text-white font-bold">
+              {user?.subscriptionPlan || "Free"}
+            </h1>
+          </div>
+
           <div className="my-5">
             <button
               disabled={updateBtn}
@@ -147,8 +151,13 @@ const Profile = () => {
               Update
             </button>
           </div>
+          
         </div>
       </div>
+      <div className="flex justify-between">
+            <label>Industry</label>
+            <IndustrySelection selectedIndustries={user?.industries} />
+          </div>
     </div>
   );
 };

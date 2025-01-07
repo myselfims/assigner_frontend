@@ -1,41 +1,60 @@
-import React, { useEffect, useState } from 'react'
-import {TiTickOutline} from 'react-icons/ti'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect } from 'react';
+import { TiTickOutline } from 'react-icons/ti';
+import { AiOutlineWarning } from 'react-icons/ai';
+import { MdOutlineDangerous } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAlert } from '../store/features/appGlobalSlice';
-import {AiOutlineWarning} from 'react-icons/ai'
-import {MdOutlineDangerous} from 'react-icons/md'
+import { motion } from 'framer-motion';
 
 const Alert = () => {
-    const dispatch = useDispatch()
-    const {alert} = useSelector(state=>state.globalState)
+  const dispatch = useDispatch();
+  const { alert } = useSelector((state) => state.globalState);
 
-    useEffect(()=>{
-        setTimeout(() => {
-            dispatch(setAlert({alert:false,type:'',message:''}))
-        }, 2000);
-    })
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(setAlert({ alert: false, type: '', message: '' }));
+    }, 3000);
 
-    const alertTypes = {
-      success : {
-        color : 'green',
-        icon : TiTickOutline
-      },
-      warn : {
-        color : 'yellow',
-        icon : AiOutlineWarning
-      },
-      danger : {
-        color : 'red',
-        icon : MdOutlineDangerous
-      }
-    }
+    return () => clearTimeout(timer); // Clear timeout if the component unmounts
+  }, [alert, dispatch]);
+
+  const alertTypes = {
+    success: {
+      color: 'bg-green-400',
+      icon: TiTickOutline,
+      borderColor: 'border-green-600',
+    },
+    warn: {
+      color: 'bg-yellow-300',
+      icon: AiOutlineWarning,
+      borderColor: 'border-yellow-500',
+    },
+    danger: {
+      color: 'bg-red-400',
+      icon: MdOutlineDangerous,
+      borderColor: 'border-red-600',
+    },
+  };
+
+  if (!alert.alert) return null;
+
+  const AlertIcon = alertTypes[alert.type]?.icon;
 
   return (
-    <div className={`fixed z-50 animate-fade bg-${alertTypes[alert.type].color}-500 text-white font-bold rounded flex items-center border-2 p-2 `}>
-      <div className='bg-white text-black rounded-full p-2 mr-3'><alertTypes.success.icon className='w-[20px] h-[20px]'/></div>
-      <h1>{alert.message}</h1>
-    </div>
-  )
-}
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.5 }}
+      className={`fixed bottom-4 right-4 flex items-center p-4 rounded-lg shadow-lg 
+        ${alertTypes[alert.type]?.color} ${alertTypes[alert.type]?.borderColor} border-2`}
+    >
+      <div className="flex items-center justify-center bg-white text-black rounded-full p-2 mr-3">
+        {AlertIcon && <AlertIcon className="w-6 h-6" />}
+      </div>
+      <h1 className="text-white font-semibold">{alert.message}</h1>
+    </motion.div>
+  );
+};
 
-export default Alert
+export default Alert;

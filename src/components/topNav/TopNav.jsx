@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiBell } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { useSelector } from "react-redux";
@@ -12,11 +12,27 @@ const TopNav = () => {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [notiDropdown, setNotiDropdown] = useState(false);
+  const dropdownRef = useRef()
 
   const logout = () => {
     localStorage.removeItem("auth_info");
     navigate("/login");
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  
 
   const current = useSelector((state) => state.globalState.currentPage);
   return (
@@ -40,8 +56,8 @@ const TopNav = () => {
                   <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
 
                 </div>
-                  {notiDropdown?
-                <NotificationsDropdown />:null}
+                  {notiDropdown &&
+                <NotificationsDropdown setNotiDropdown={setNotiDropdown}/>}
               </div>
 
               <div
@@ -57,7 +73,7 @@ const TopNav = () => {
               </div>
 
               {isOpen && (
-                <div className="absolute top-8 right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+                <div ref={dropdownRef} className="absolute top-8 right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                 <ul className="py-1 text-gray-700 w-full">
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer w-full flex items-center">
                     <Link to={'/profile'} className="w-full h-full block text-left">

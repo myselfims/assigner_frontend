@@ -7,7 +7,7 @@ import Loader from "./Loader";
 const UserSearchBox = ({ onSelect }) => {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const [selectedUsers, setselectedUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // Handle input change and fetch users
@@ -35,15 +35,17 @@ const UserSearchBox = ({ onSelect }) => {
 
   // Handle user selection
   const handleSelectUser = (user) => {
-    setselectedUsers([...selectedUsers, user]);
+    let newList = [...selectedUsers, user]
+    setSelectedUsers(newList);
     setQuery(""); // Show the selected user's name in the input field
     setUsers([]); // Clear suggestions
-    onSelect(selectedUsers); // Pass selected user back to parent component
+    onSelect(newList); // Pass selected user back to parent component
   };
 
   const removeUser = (id) => {
     let removedList = selectedUsers?.filter((u) => u.id !== id);
-    setselectedUsers(removedList);
+    setSelectedUsers(removedList);
+    onSelect(removedList)
   };
 
   return (

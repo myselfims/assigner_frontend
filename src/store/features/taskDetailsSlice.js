@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     modal : false,
     activeTask : {},
-    comments : []
+    comments : [],
+    selectedStatusOptions : []
 }
 
 export const taskDetailsSlice = createSlice({
@@ -22,10 +23,11 @@ export const taskDetailsSlice = createSlice({
         },
         setModal : (state,action)=>{
             state.modal = action.payload
-        }
+        },
+     
         
     }
 })
 
-export const {setActiveTask,setComments,addComment,removeComment,setModal} = taskDetailsSlice.actions
+export const {setActiveTask,setComments,addComment,removeComment,setModal, setSelectedStatusOptions} = taskDetailsSlice.actions
 export default taskDetailsSlice.reducer

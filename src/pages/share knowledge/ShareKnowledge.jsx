@@ -1,20 +1,38 @@
-import React from 'react'
+// import React, { useState } from 'react';
+// import { Editor } from 'react-draft-wysiwyg';
+// import { EditorState } from 'draft-js';
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-const ShareKnowledge = () => {
-  return (
-    <div className='w-full bg-red-700'>
+// const ShareKnowledge = () => {
+//   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-        <div className="header">
-            <div className="">
-                <input type="text" placeholder='Title' className='w-full outline-none p-2 border border-blue-400 rounded-lg'/>
-            </div>
-        </div>
-        <div className="body my-4">
-            <textarea className='w-full outline-none p-2 border h-96 border-blue-400 rounded-lg h-6/12' name="" id=""></textarea>
-        </div>
-      
-    </div>
-  )
-}
+//   const onEditorStateChange = (newState) => {
+//     setEditorState(newState);
+//   };
 
-export default ShareKnowledge
+//   return (
+//     <div className="w-full bg-gray-100 p-6 rounded-lg shadow-lg">
+//       {/* Header Section */}
+//       <div className="header flex justify-between items-center mb-4">
+//         <input
+//           type="text"
+//           placeholder="Enter Title"
+//           className="w-full outline-none p-3 border border-blue-400 rounded-lg text-lg"
+//         />
+//       </div>
+
+//       {/* Body Section with TextEditor */}
+//       <div className="body mb-4">
+//         <Editor
+//           editorState={editorState}
+//           onEditorStateChange={onEditorStateChange}
+//           wrapperClassName="demo-wrapper"
+//           editorClassName="demo-editor"
+//           toolbarClassName="demo-toolbar"
+//         />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ShareKnowledge;

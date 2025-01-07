@@ -30,6 +30,8 @@ const Navigation = () => {
       pathname != "/login" &&
       pathname != "/signup" &&
       pathname != "/" &&
+      pathname != "/role-selection" &&
+      pathname != "/industry-selection" &&
       pathname != "/verify-otp"
     ) {
       getAuthInfo().token ? null : navigate("/login");
