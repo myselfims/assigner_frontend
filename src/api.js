@@ -1,24 +1,33 @@
 import axios from "axios";
+// Replace with your actual alert slice path
+import {store} from "./store/store"; // Import your Redux store
+import { setAlert } from "./store/features/appGlobalSlice";
 
-
-export const baseUrl = 'https://assignerbackend-production.up.railway.app/'
+export const baseUrl = 'https://assignerbackend-production.up.railway.app/';
 
 // export const url = "https://assignerbackend-production.up.railway.app/api";
 export const url = "http://localhost:3000/api";
 
-
-export const getAuthInfo = ()=> {
-  try{
-    if(JSON.parse( localStorage.getItem('auth_info'))!=null){
-      return JSON.parse(localStorage.getItem('auth_info'))
-    }else{
-      return false
-    }
-  }catch{
-    return false
+export const getAuthInfo = () => {
+  try {
+    const authInfo = JSON.parse(localStorage.getItem("auth_info"));
+    return authInfo ? authInfo : false;
+  } catch {
+    return false;
   }
-}
+};
 
+const handleError = (error) => {
+  const { dispatch } = store; // Access dispatch from the store
+  console.log("Handling the error")
+  console.log(error.status)
+  if (error?.status === 500) {
+    console.log("Dispatch shoudl run now")
+    dispatch(setAlert({alert:true, message: "Our servers are temporarily down. Please try again later.", type: "danger" }));
+  }
+  console.error("Error:", error.message);
+  return null;
+};
 
 export const fetchData = async (endpoint, params = {}) => {
   try {
@@ -29,7 +38,7 @@ export const fetchData = async (endpoint, params = {}) => {
 
     const config = {
       headers: {
-        "Authorization": `${authInfo.token}`,
+        Authorization: `${authInfo.token}`,
       },
       params, // Pass query parameters here
     };
@@ -37,44 +46,45 @@ export const fetchData = async (endpoint, params = {}) => {
     const response = await axios.get(url + endpoint, config);
     return response.data;
   } catch (error) {
-    console.error("Error fetching data:", error.message);
-    return null;
+    return handleError(error);
   }
 };
 
-
-
-
 export const postData = async (endpoint, data) => {
-
-    let request = await axios.post(url + endpoint, data,{
+  try {
+    const request = await axios.post(url + endpoint, data, {
       headers: {
-        "Authorization": getAuthInfo().token,
+        Authorization: getAuthInfo().token,
       },
     });
     return request;
-
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 export const updateData = async (endpoint, data) => {
-
-    let request = await axios.patch(url + endpoint, data,{
+  try {
+    const request = await axios.patch(url + endpoint, data, {
       headers: {
-        "Authorization": getAuthInfo().token,
+        Authorization: getAuthInfo().token,
       },
     });
-    console.log('updating..')
     return request;
-
+  } catch (error) {
+    return handleError(error);
+  }
 };
 
 export const deleteData = async (endpoint) => {
-
-    let request = await axios.delete(url + endpoint,{
+  try {
+    const request = await axios.delete(url + endpoint, {
       headers: {
-        "Authorization": getAuthInfo().token,
+        Authorization: getAuthInfo().token,
       },
     });
     return request;
-
+  } catch (error) {
+    return handleError(error);
+  }
 };

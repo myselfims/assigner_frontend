@@ -11,6 +11,7 @@ const TaskRow = ({ task }) => {
   const user = users?.filter((item) => item.id == item?.assignedById)[0];
   const [item, setItem] = useState(task);
   const dispatch = useDispatch();
+  console.log(item)
 
   const updateStatus = (status) => {
     status = status[0];

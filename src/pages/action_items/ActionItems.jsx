@@ -15,6 +15,7 @@ import FilterBar from "./FilterBar";
 import ItemCard from "./ItemCard";
 import SprintTable from "./SprintTable";
 import SprintTableSkeleton from "./skeletons/SprintTableSkeleton";
+import AddSprintModal from "./AddSprintModal";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
@@ -24,6 +25,9 @@ const ActionItems = ({ setCurrent }) => {
   const { auth_info } = useSelector((state) => state.globalState);
   const { projectId } = useParams();
   const [loading, setLoading] = useState(false);
+  const [currentSprint, setCurrentSprint] = useState(null)
+  const [addSprintModal, setAddSprintModal] = useState(false)
+  const [sprints, setSprints] = useState([])
 
   const handleModal = (task) => {
     setModal(true);
@@ -51,10 +55,10 @@ const ActionItems = ({ setCurrent }) => {
     console.log(getAuthInfo());
     dispatch(setCurrentPage("Action Items"));
     setLoading(true);
-    fetchData(`/tasks/${projectId}`)
+    fetchData(`/sprints/project/${projectId}/`)
       .then((res) => {
         console.log(res);
-        dispatch(setTasks(res));
+        setSprints(res);
         setTimeout(() => {
           setLoading(false);
         }, 1000);
@@ -72,14 +76,14 @@ const ActionItems = ({ setCurrent }) => {
         <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
           {auth_info?.user?.isAdmin ? (
             <button
-              onClick={() => setAddTask(true)}
+              onClick={() => setAddSprintModal(true)}
               className="p-2 max-sm:flex hidden right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
             >
               Start Sprint
             </button>
           ) : null}
         </div>
-        <FilterBar tasks={tasks} setAddTask={setAddTask} />
+        <FilterBar tasks={tasks} setAddTask={setAddSprintModal} />
       </div>
 
       {loading && (
@@ -93,13 +97,14 @@ const ActionItems = ({ setCurrent }) => {
         ? Array(3)
             .fill()
             .map((_, index) => <SprintTableSkeleton key={index} />)
-        : [0]?.map((project, index) => (
-          <SprintTable handleModal={handleModal} />
+        : sprints?.map((sprint, index) => (
+          <SprintTable sprint={sprint} handleModal={handleModal} setAddTask={setAddTask} setCurrentSprint={setCurrentSprint}/>
           ))}
 
       <AnimatePresence>
         {detailsModal && <Modal />}
-        {addtask && <AddTaskModal setModal={setAddTask} />}
+        {addtask && <AddTaskModal setModal={setAddTask} sprint={currentSprint}/>}
+        {addSprintModal && <AddSprintModal setModal={setAddSprintModal} />}
       </AnimatePresence>
     </div>
   );

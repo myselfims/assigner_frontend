@@ -14,7 +14,7 @@ const Dropdown = ({
   const [dropdownWidth, setDropdownWidth] = useState("auto");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const dropdownRef = useRef();
-
+  console.log(label)
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleOptionClick = (value) => {
@@ -29,8 +29,11 @@ const Dropdown = ({
   };
 
   useEffect(() => {
-    onSelect(selectedOptions);
-  }, [selectedOptions]);
+    if (selectedOptions.length > 0) { // Ensure there are selected options before calling onSelect
+      onSelect(selectedOptions);
+      console.log("Options selected:", selectedOptions);
+    }
+  }, [selectedOptions, onSelect]);
 
   useEffect(() => {
     if (dropdownRef.current) {

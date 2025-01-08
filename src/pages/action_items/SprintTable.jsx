@@ -9,43 +9,48 @@ import noDataImage from "../../assets/no data.png";
 import Loader from "../../components/Loader";
 import TaskCard from "./TaskCard";
 
-const SprintTable = ({handleModal}) => {
-    const dispatch = useDispatch();
-    const {selectedStatusOptions} = useSelector(state => state.tasks)
-    const {projectId} = useParams();
-    const [items, setItems] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [filteredItems, setFilteredItems] = useState(items)
+const SprintTable = ({sprint, handleModal, setAddTask, setCurrentSprint }) => {
+  const dispatch = useDispatch();
+  const { selectedStatusOptions } = useSelector((state) => state.tasks);
+  const { projectId } = useParams();
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [filteredItems, setFilteredItems] = useState(items);
 
-    useEffect(() => {
-      console.log("selectedStatusOptions", selectedStatusOptions);
-    
-      // Filter items based on selectedStatusOptions
-      let filtered = items.filter((item) => 
-        selectedStatusOptions.length === 0 || selectedStatusOptions.includes(item.status.toLowerCase())
-      );
-    
-      // Perform any state updates or operations with the filtered items
-      setFilteredItems(filtered); // Assuming you have a state like `filteredItems`
-    }, [selectedStatusOptions, items]); // Add `items` as a dependency if it can change
-    
+  useEffect(() => {
+    console.log("selectedStatusOptions", selectedStatusOptions);
 
-useEffect(() => {
+    // Filter items based on selectedStatusOptions
+    let filtered = items.filter(
+      (item) =>
+        selectedStatusOptions.length === 0 ||
+        selectedStatusOptions.includes(item.status.toLowerCase())
+    );
+
+    // Perform any state updates or operations with the filtered items
+    setFilteredItems(filtered); // Assuming you have a state like `filteredItems`
+  }, [selectedStatusOptions, items]); // Add `items` as a dependency if it can change
+
+  useEffect(() => {
     console.log(getAuthInfo());
     setLoading(true);
     fetchData(`/tasks/${projectId}`)
       .then((res) => {
-        console.log(res)
-        setLoading(false)
+        console.log(res);
+        setLoading(false);
         setItems(res);
       })
       .catch((err) => {
         console.log(err);
-        dispatch(setAlert({alert: true, message : err.error, type:"danger"}))
+        dispatch(setAlert({ alert: true, message: err.error, type: "danger" }));
         setItems([]);
       });
   }, []);
 
+  const handleAddItem = ()=>{
+    setCurrentSprint(sprint)
+    setAddTask(true)
+  }
 
   return (
     <div className="flex flex-col my-6 p-4 bg-slate-200 rounded-lg">
@@ -53,8 +58,14 @@ useEffect(() => {
         <thead className="static rounded-md ">
           <tr>
             <th className="rounded-lg font-semibold" colSpan={6}>
-              <div className="w-full h-full font-semibold">
-                <h1>Sprint 1</h1>
+              <div className="w-full h-full font-semibold flex justify-between items-center relative">
+                <div className="flex flex-col items-center w-full mx-auto absolute text-center transform -translate-x-0/2">
+                  <h1 className="font-semibold">
+                    {sprint?.title}
+                  </h1>
+                  <p className="text-sm text-slate-700">{sprint?.description}</p>
+                </div>
+                <button onClick={handleAddItem} className="ml-auto z-10">Add Item</button>
               </div>
             </th>
           </tr>

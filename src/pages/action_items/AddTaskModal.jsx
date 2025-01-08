@@ -20,7 +20,7 @@ const initialValues = {
   assignedToId: "",
 };
 
-const AddTaskModal = ({ setModal }) => {
+const AddTaskModal = ({ setModal, sprint=null }) => {
   const dispatch = useDispatch();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false)
@@ -42,6 +42,7 @@ const AddTaskModal = ({ setModal }) => {
     onSubmit: (data) => {
       setLoading(true)
       data['projectId'] = projectId
+      data['sprintId'] = sprint?.id
       postData(`/tasks/`, data)
         .then((res) => {
           setLoading(false)
@@ -83,7 +84,7 @@ const AddTaskModal = ({ setModal }) => {
         exit={{ scale : 0 }}
         className="main overflow-y-scroll scrollbar-none max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg ">
           <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
-            <h1 className="text-[20px] ">Add New Task</h1>
+            <h1 className="text-[20px] ">{sprint?.title ? sprint?.title : "Add new task"}</h1>
             <button
               onClick={() => setModal(false)}
               className="text-[#999CA0] hover:opacity-70"
