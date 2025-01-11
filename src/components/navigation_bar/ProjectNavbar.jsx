@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { setSidebar } from "../../store/features/appGlobalSlice";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { FaTasks, FaUsersCog } from "react-icons/fa";
 import { LuMessageSquare, LuSettings, LuClipboard } from "react-icons/lu";
 import { IoIosCalendar } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
 
 const ProjectNavBar = () => {
-  const { currentPage, sidebar, auth_info } = useSelector(
-    (state) => state.globalState
-  );
+  const { projectId } = useParams();
+  const { pathname } = useLocation();
   const dispatch = useDispatch();
 
-  // const [isMounted, setIsMounted] = useState(false);
-
-  // useEffect(() => {
-  //   setIsMounted(true);
-  //   return () => setIsMounted(false);
-  // }, []);
+  const isActive = (path) => pathname === path;
 
   return (
     <AnimatePresence>
@@ -38,7 +32,7 @@ const ProjectNavBar = () => {
         }}
         className={`btns my-[60px] h-auto flex text-sm justify-between flex-col space-y-4`}
       >
-        <div className="flex items-start flex-col justify-between p-2 rounded-md bg-slate-700  shadow-md">
+        <div className="flex items-start flex-col justify-between p-2 rounded-md bg-slate-700 shadow-md">
           <Link
             to="/projects"
             className="flex items-center text-md font-semibold text-blue-400 hover:text-blue-700"
@@ -53,7 +47,7 @@ const ProjectNavBar = () => {
           onClick={() => dispatch(setSidebar(false))}
           to={"/projects/overview"}
           className={`flex ${
-            currentPage === "Overview" ? "font-bold border rounded-xl" : null
+            isActive("/projects/overview") ? "font-bold border rounded-xl" : ""
           } p-2 items-center transition-all`}
         >
           <AiOutlineDashboard className="w-[20px] h-[20px] mr-[15px]" />
@@ -61,11 +55,11 @@ const ProjectNavBar = () => {
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
-          to={"/project/2/action-items"}
+          to={`/project/${projectId}/action-items`}
           className={`flex ${
-            currentPage === "Action Items"
+            isActive(`/project/${projectId}/action-items`)
               ? "font-bold border rounded-xl"
-              : null
+              : ""
           } p-2 items-center transition-all`}
         >
           <FaTasks className="w-[20px] h-[20px] mr-[15px]" />
@@ -73,11 +67,11 @@ const ProjectNavBar = () => {
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
-          to={"/projects/team-members"}
+          to={`/project/${projectId}/team-members`}
           className={`flex ${
-            currentPage === "Team Members"
+            isActive(`/project/${projectId}/team-members`)
               ? "font-bold border rounded-xl"
-              : null
+              : ""
           } p-2 items-center transition-all`}
         >
           <FaUsersCog className="w-[20px] h-[20px] mr-[15px]" />
@@ -87,7 +81,7 @@ const ProjectNavBar = () => {
           onClick={() => dispatch(setSidebar(false))}
           to={"/projects/chat"}
           className={`flex ${
-            currentPage === "Chat Group" ? "font-bold border rounded-xl" : null
+            isActive("/projects/chat") ? "font-bold border rounded-xl" : ""
           } p-2 items-center transition-all`}
         >
           <LuMessageSquare className="w-[20px] h-[20px] mr-[15px]" />
@@ -95,9 +89,11 @@ const ProjectNavBar = () => {
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
-          to={"/project/2/calendar"}
+          to={`/project/${projectId}/calendar`}
           className={`flex ${
-            currentPage === "Calendar" ? "font-bold border rounded-xl" : null
+            isActive(`/project/${projectId}/calendar`)
+              ? "font-bold border rounded-xl"
+              : ""
           } p-2 items-center transition-all`}
         >
           <IoIosCalendar className="w-[20px] h-[20px] mr-[15px]" />
@@ -107,7 +103,7 @@ const ProjectNavBar = () => {
           onClick={() => dispatch(setSidebar(false))}
           to={"/projects/settings"}
           className={`flex ${
-            currentPage === "Settings" ? "font-bold border rounded-xl" : null
+            isActive("/projects/settings") ? "font-bold border rounded-xl" : ""
           } p-2 items-center transition-all`}
         >
           <LuSettings className="w-[20px] h-[20px] mr-[15px]" />
@@ -117,7 +113,7 @@ const ProjectNavBar = () => {
           onClick={() => dispatch(setSidebar(false))}
           to={"/projects/reports"}
           className={`flex ${
-            currentPage === "Reports" ? "font-bold border rounded-xl" : null
+            isActive("/projects/reports") ? "font-bold border rounded-xl" : ""
           } p-2 items-center transition-all`}
         >
           <LuClipboard className="w-[20px] h-[20px] mr-[15px]" />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveTask } from "../../store/features/taskDetailsSlice";
 import Dropdown from "../../components/Dropdown";
@@ -8,41 +8,40 @@ import { updateData } from "../../api";
 
 const TaskRow = ({ task }) => {
   const { users } = useSelector((state) => state.users);
-  const user = users?.filter((item) => item.id == item?.assignedById)[0];
+  const user = useMemo(
+    () => users?.filter((item) => item.id == task?.assignedById)[0],
+    [users, task?.assignedById]
+  );
+
   const [item, setItem] = useState(task);
   const dispatch = useDispatch();
-  console.log(item)
 
   const updateStatus = (status) => {
     status = status[0];
-    console.log(status);
-    updateData(`/tasks/${task.id}/`, {"status" : status}).then((res) => {
+    updateData(`/tasks/${task.id}/`, { status }).then((res) => {
       dispatch(
         setAlert({
           alert: true,
           type: "success",
           message: "Successfully updated!",
         })
-      )
-      setItem({ ...item, status: status });
+      );
+      setItem({ ...item, status });
     });
   };
 
   return (
-    <tr className="hover:bg-slate-100 cursor-pointer">
-      <td className=" p-2">
-        <h1 className="">{item?.id}</h1>
+    <tr key={item.id} className="hover:bg-slate-100 cursor-pointer relative">
+      <td className="text-center py-2">
+        <h1>{item?.id}</h1>
       </td>
-      <td onClick={() => dispatch(setActiveTask(item))} className=" p-2">
+      <td onClick={() => dispatch(setActiveTask(item))} className="">
         <h1 className="font-semibold">{item?.title}</h1>
       </td>
-      <td className=" p-2">
-        <p className="">{new Date(item?.deadline).toDateString()}</p>
+      <td className="">
+        <p>{new Date(item?.deadline).toDateString()}</p>
       </td>
-      <td className=" p-2">
-        {/* <p className={`text-center border rounded-full ${task.status=='Assigned'?'bg-red-300':task.status=='Done'?'bg-green-300':'bg-yellow-300'}`}>
-          {item?.status}
-        </p> */}
+      <td className="">
         <Dropdown
           label={item?.status}
           selectedColor={"bg-white"}
@@ -52,17 +51,18 @@ const TaskRow = ({ task }) => {
             { label: "To Do", value: "to-do" },
             { label: "To Do", value: "to-do" },
           ]}
-          onSelect={(e)=>updateStatus(e)}
+          onSelect={updateStatus}
+          className={'py-[5px]'}
         />
       </td>
-      <td className=" p-2">
+      <td className="">
         <div className="flex items-center">
           <img src={user?.avatar} className="w-6 h-6 rounded-full" alt="" />
-          <p className="text-center mx-1">{user?.name}</p>
+          <p className="text-center mx-1">{task?.createdBy}</p>
         </div>
       </td>
     </tr>
   );
 };
 
-export default TaskRow;
+export default React.memo(TaskRow);

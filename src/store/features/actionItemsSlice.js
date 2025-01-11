@@ -3,15 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     tasks : [],
     loading : false,
-    selectedStatusOptions : []
+    selectedStatusOptions : [],
+    searchQuery : '',
 }
 
-export const tasksSlice = createSlice({
-    name :'tasks',
+export const actionItemsSlice = createSlice({
+    name :'actionItems',
     initialState,
     reducers : {
         setTasks : (state, action)=>{
             state.tasks = action.payload
+        },
+        setSearchQuery : (state, action)=>{
+            state.searchQuery = action.payload
         },
         addTask : (state, action)=>{
             state.tasks.push(action.payload)
@@ -35,5 +39,5 @@ export const tasksSlice = createSlice({
 })
 
 
-export const {setTasks, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions} = tasksSlice.actions
-export default tasksSlice.reducer
+export const {setTasks, setSearchQuery, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions} = actionItemsSlice.actions
+export default actionItemsSlice.reducer

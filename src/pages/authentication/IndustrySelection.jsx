@@ -50,7 +50,7 @@ const IndustrySelection = () => {
               key={industry.id}
               className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all ${
                 selectedIndustries.includes(industry.id)
-                  ? "bg-blue-500 text-white"
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-50 text-gray-700"
               }`}
               onClick={() => handleSelect(industry.id)}
@@ -61,7 +61,7 @@ const IndustrySelection = () => {
           ))}
         </div>
         <button
-          className="mt-6 flex text-center items-center justify-center w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
+          className="mt-6 flex text-center items-center justify-center w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
           onClick={() =>
             setLoading(true)
           }

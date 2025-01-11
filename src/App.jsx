@@ -24,6 +24,7 @@ import Connect from "./pages/connect/Connect";
 import AddProject from "./pages/add_project/AddProject";
 import CalendarPage from "./pages/calendar/CalendarPage";
 import ActionItems from "./pages/action_items/ActionItems";
+import TeamMembers from "./pages/team_members/TeamMembers";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -35,17 +36,6 @@ function App() {
         !darkMode ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
-      {pathname != "/login" &&
-      "/signup" &&
-      pathname != "/" &&
-      pathname != "/role-selection" &&
-      pathname != "/industry-selection" &&
-      pathname != "/forgot-password" ? (
-        <div className="nav">
-          <Navigation />
-          <MobileNav />
-        </div>
-      ) : null}
 
       <div className="max-sm:my-10 max-sm:p-0 w-full h-screen">
         <Routes>
@@ -58,8 +48,18 @@ function App() {
           <Route path="/verify-otp" element={<Auth />} />
           <Route element={<BaseLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/project/:projectId/action-items/" element={<ActionItems />} />
-            <Route path="/project/:projectId/calendar/" element={<CalendarPage />} />
+            <Route
+              path="/project/:projectId/action-items/"
+              element={<ActionItems />}
+            />
+            <Route
+              path="/project/:projectId/team-members/"
+              element={<TeamMembers />}
+            />
+            <Route
+              path="/project/:projectId/calendar/"
+              element={<CalendarPage />}
+            />
             <Route path="/projects" element={<Projects />} />
             <Route path="/mnjusers" element={<ManageUsers />} />
             <Route path="/profile" element={<Profile />} />

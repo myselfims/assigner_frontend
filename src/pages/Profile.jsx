@@ -128,7 +128,7 @@ const Profile = () => {
 
           <div className="flex justify-between">
             <label>Role Type</label>
-            <h1 className="w-24 bg-blue-500 rounded text-center text-white font-bold">
+            <h1 className="w-24 bg-blue-600 rounded text-center text-white font-bold">
               {user?.role || "N/A"}
             </h1>
           </div>
@@ -146,7 +146,7 @@ const Profile = () => {
             <button
               disabled={updateBtn}
               onClick={handleUpdate}
-              className="w-full bg-blue-500 text-white text-center font-bold p-2 rounded"
+              className="w-full bg-blue-600 text-white text-center font-bold p-2 rounded"
             >
               Update
             </button>

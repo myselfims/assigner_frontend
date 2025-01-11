@@ -14,7 +14,7 @@ const ChatBody = () => {
       {/* Chat Messages */}
       <div className="flex-grow p-4 overflow-y-auto bg-gray-50">
         <div className="flex items-start mb-4">
-          <div className="p-2 bg-blue-500 text-white rounded-md">Hello, how are you?</div>
+          <div className="p-2 bg-blue-600 text-white rounded-md">Hello, how are you?</div>
         </div>
         <div className="flex items-end justify-end mb-4">
           <div className="p-2 bg-gray-200 rounded-md">I'm good, thank you!</div>
@@ -35,7 +35,7 @@ const ChatBody = () => {
         />
         <button
           onClick={handleSendMessage}
-          className="p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+          className="p-2 text-white bg-blue-600 rounded-md hover:bg-blue-600"
         >
           <FiSend size={20} />
         </button>

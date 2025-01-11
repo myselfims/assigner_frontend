@@ -6,7 +6,7 @@ import { setCurrentPage } from "../store/features/appGlobalSlice";
 import { useDispatch } from "react-redux";
 import { fetchData } from "../api";
 import { setUsers } from "../store/features/usersSlice";
-import { setTasks } from "../store/features/tasksSlice";
+import { setTasks } from "../store/features/actionItemsSlice";
 import { setUser } from "../store/features/userDetailsSlice";
 
 const Dashboard = () => {

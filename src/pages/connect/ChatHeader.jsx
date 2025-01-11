@@ -6,7 +6,7 @@ const ChatHeader = ({ selectedUser }) => {
 
   // Function to generate a random color for the placeholder
   const getRandomColor = () => {
-    const colors = ["bg-red-500", "bg-blue-500", "bg-green-500", "bg-yellow-500", "bg-purple-500"];
+    const colors = ["bg-red-500", "bg-blue-600", "bg-green-500", "bg-yellow-500", "bg-purple-500"];
     return colors[Math.floor(Math.random() * colors.length)];
   };
 

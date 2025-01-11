@@ -38,7 +38,7 @@ const TopNav = () => {
   return (
     <>
       {pathname == "/" ? null : (
-        <div className="head z-30 select-none justify-between w-full my-3 flex relative">
+        <div className="head z-40 select-none justify-between w-full my-3 flex relative">
           <h1 className="font-bold text-2xl">{current}</h1>
           <div className="flex items-center">
             <div className=" hidden items-center border-2 px-4 rounded-full">

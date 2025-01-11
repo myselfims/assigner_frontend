@@ -11,39 +11,33 @@ const Dropdown = ({
   showCount = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [dropdownWidth, setDropdownWidth] = useState("auto");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const dropdownRef = useRef();
-  console.log(label)
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleOptionClick = (value) => {
     if (allowMultiple) {
       setSelectedOptions((prev) =>
-        prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+        prev.includes(value)
+          ? prev.filter((item) => item !== value)
+          : [...prev, value]
       );
     } else {
       setSelectedOptions([value]);
       setIsOpen(false); // Close the dropdown after single selection
     }
   };
-
   useEffect(() => {
-    if (selectedOptions.length > 0) { // Ensure there are selected options before calling onSelect
+    if (hasMounted.current) {
+      // Ensure there are selected options and it's not the first render
       onSelect(selectedOptions);
-      console.log("Options selected:", selectedOptions);
+    } else {
+      hasMounted.current = true; // Set to true after first render
     }
-  }, [selectedOptions, onSelect]);
+  }, [selectedOptions]);
 
-  useEffect(() => {
-    if (dropdownRef.current) {
-      const widths = Array.from(dropdownRef.current.children).map(
-        (child) => child.offsetWidth
-      );
-      const maxWidth = Math.max(...widths);
-      setDropdownWidth(`${maxWidth}px`);
-    }
-  }, [options]);
+  // Declare a ref to track the initial mount
+  const hasMounted = useRef(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -60,10 +54,10 @@ const Dropdown = ({
   }, []);
 
   return (
-    <div className={`relative inline-block ${className}`} ref={dropdownRef}>
+    <div className={`relative inline-block`} ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className={`flex items-center text-nowrap space-x-1 px-4 py-2 border border-gray-300 rounded-md text-sm hover:shadow-md ${
+        className={`flex items-center text-nowrap space-x-1 py-2 px-4 ${className} border border-gray-300 rounded-md text-sm hover:shadow-md ${
           selectedOptions.length > 0 ? selectedColor : ""
         }`}
       >
@@ -77,13 +71,10 @@ const Dropdown = ({
       </button>
 
       {isOpen && (
-        <div
-          style={{ width: dropdownWidth }}
-          className="absolute bg-white shadow-md rounded-md mt-2 z-10"
-        >
-          {options.map((option) => (
+        <div className="absolute bg-white shadow-md rounded-md mt-2 z-10">
+          {options?.map((option, index) => (
             <div
-              key={option.value}
+              key={index}
               className="flex items-center px-4 py-2 text-sm hover:bg-gray-100"
             >
               {allowMultiple && (
@@ -95,7 +86,9 @@ const Dropdown = ({
                 />
               )}
               <button
-                onClick={() => !allowMultiple && handleOptionClick(option.value)}
+                onClick={() =>
+                  !allowMultiple && handleOptionClick(option.value)
+                }
                 className="w-full text-nowrap text-left"
               >
                 {option.label}

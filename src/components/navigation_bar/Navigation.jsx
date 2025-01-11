@@ -47,7 +47,7 @@ const Navigation = () => {
       <div
         className={`text-white overflow-hidden max-sm:w-screen max-sm:h-screen flex flex-col transition-all justify-between ${
           close ? "w-0 p-0" : "w-[300px] p-[50px] "
-        }  h-screen  bg-[#4285F4]`}
+        }  h-screen  bg-[#4285F4] bg-blue-600`}
       >
         <div className="">
           <h1 className="text-4xl font-bold">EasyAssigns</h1>

@@ -12,7 +12,7 @@ import {
 } from "../../api";
 import { motion } from "motion/react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTask, setTasks } from "../../store/features/tasksSlice";
+import { removeTask, setTasks } from "../../store/features/actionItemsSlice";
 import ConfirmModal from "../../components/ConfirmModal";
 import Comments from "../../components/Comments";
 import { setComments, setModal } from "../../store/features/taskDetailsSlice";
@@ -73,7 +73,7 @@ const Modal = () => {
       animate={{ opacity: 100 }}
       transition={{ duration: 0.5 }}
       key={task.id}
-      className="w-screen z-30 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
+      className="w-screen z-40 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
     >
       <div className="main max-sm:my-8 max-sm:w-screen w-[544px] bg-[rgb(255,255,255)] rounded-lg ">
         <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">

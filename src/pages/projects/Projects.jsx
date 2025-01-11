@@ -9,6 +9,7 @@ import { fetchData } from "../../api";
 import debounce from "lodash/debounce";
 import AgileProjectCardSkeleton from "./AgileProjectCardSkeleton";
 import Dropdown from "../../components/Dropdown";
+import Button from "../../components/Button";
 
 const Projects = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Projects = () => {
           setLoading(false);
           setProjects(res || []);
           setFilteredProjects(res || []);
-        }, 1000);
+        }, 500);
       })
       .catch((error) => {
         console.log(error);
@@ -92,12 +93,9 @@ const Projects = () => {
             />
           </div>
         </div>
-        <Link
-          to={"/add-project"}
-          className="px-2 h-full py-1 font-bold bg-[#4285F4] text-white rounded hover:opacity-70"
-        >
-          Add Project
-        </Link>
+        <Button to="/add-project" className="">
+        Add Project
+      </Button>
       </div>
       <div className="w-full grid grid-cols-3 gap-4">
         {loading

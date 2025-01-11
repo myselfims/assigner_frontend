@@ -26,7 +26,7 @@ const handleError = (error) => {
     dispatch(setAlert({alert:true, message: "Our servers are temporarily down. Please try again later.", type: "danger" }));
   }
   console.error("Error:", error.message);
-  return null;
+  throw error;
 };
 
 export const fetchData = async (endpoint, params = {}) => {

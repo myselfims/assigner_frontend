@@ -24,7 +24,7 @@ const ViewUser = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <button className="bg-blue-500 text-white rounded-lg p-2 flex items-center justify-center">
+          <button className="bg-blue-600 text-white rounded-lg p-2 flex items-center justify-center">
             {" "}
             <LuMessagesSquare className="w-[18px] h-[18px] mr-1" /> Connect
           </button>

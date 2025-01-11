@@ -30,7 +30,7 @@ const TopNav = () => {
           />
           <BsSearch className="w-[12px] h-[12px] " />
         </div>
-        <Link to={'/share-knowledge'} className="bg-blue-500 text-white p-2 rounded-md">Share Knowledge</Link>
+        <Link to={'/share-knowledge'} className="bg-blue-600 text-white p-2 rounded-md">Share Knowledge</Link>
         <div className="flex items-center">
           <BiBell className="mr-[27px] ml-[46px] w-[18px] cursor-pointer h-[20px]" />
           <div

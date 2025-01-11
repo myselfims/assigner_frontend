@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { fetchData } from "../api";
+import React, { useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Loader from "./Loader";
+import { fetchData } from "../api";
 
-const UserSearchBox = ({ onSelect }) => {
+const UserSearchBox = ({ onSelect, allowMultiple = false }) => {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -15,14 +14,13 @@ const UserSearchBox = ({ onSelect }) => {
     setQuery(event.target.value);
 
     if (event.target.value.length > 2) {
-      // Start fetching after 2 characters
+
       try {
         setLoading(true);
         const response = await fetchData("/users/", {
           query: event.target.value,
         });
         setLoading(false);
-        console.log(response);
         setUsers(response);
       } catch (error) {
         setLoading(false);
@@ -35,62 +33,85 @@ const UserSearchBox = ({ onSelect }) => {
 
   // Handle user selection
   const handleSelectUser = (user) => {
-    let newList = [...selectedUsers, user]
+    let newList = allowMultiple
+      ? [...selectedUsers, user]
+      : [user]; // Allow only one user if `allowMultiple` is false
+
     setSelectedUsers(newList);
-    setQuery(""); // Show the selected user's name in the input field
-    setUsers([]); // Clear suggestions
-    onSelect(newList); // Pass selected user back to parent component
+    setQuery("");
+    setUsers([]);
+    onSelect(newList);
+
+    // If single user selection is allowed, hide the input field
+    if (!allowMultiple) setQuery("");
   };
 
   const removeUser = (id) => {
-    let removedList = selectedUsers?.filter((u) => u.id !== id);
+    let removedList = selectedUsers.filter((u) => u.id !== id);
     setSelectedUsers(removedList);
-    onSelect(removedList)
+    onSelect(removedList);
   };
 
   return (
-    <div className="flex border p-2 rounded items-center relative select-none flex-wrap">
+    <div className="relative flex border p-2 rounded items-center flex-wrap bg-white shadow-sm w-52">
       {selectedUsers.map((user) => (
-        <p className="text-sm mr-1 text-nowrap flex-nowrap bg-gray-200 px-2 rounded-sm flex items-center">
+        <p
+          key={user.id}
+          className="text-sm mr-1 text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center"
+        >
           {user?.name}{" "}
-          <IoCloseCircleOutline
-            onClick={() => removeUser(user.id)}
-            className="inline ml-1 cursor-pointer w-4 h-4"
-          />{" "}
+          {allowMultiple && (
+            <IoCloseCircleOutline
+              onClick={() => removeUser(user.id)}
+              className="inline ml-1 cursor-pointer w-4 h-4 text-blue-700 hover:text-blue-500"
+            />
+          )}
         </p>
       ))}
 
-      <input
-        type="text"
-        value={query}
-        onChange={handleInputChange}
-        placeholder="Search for a user..."
-        className="outline-none"
-      />
+      {(allowMultiple || selectedUsers.length === 0) && (
+        <input
+          type="text"
+          value={query}
+          onChange={handleInputChange}
+          placeholder="Search for a user..."
+          className="outline-none flex-grow bg-transparent text-sm px-2"
+        />
+      )}
+
       {users.length > 0 && (
-        <div className="suggestions left-0 absolute top-11 bg-gray-200 w-full border-1 border-black">
-          {loading && (
-            <div className="flex justify-center text-sm items-center mt-2">
+        <div className="absolute left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-full z-10">
+          {loading ? (
+            <div className="flex justify-center text-sm items-center py-2">
               <Loader />
               <p className="ml-2">Fetching...</p>
             </div>
+          ) : (
+            users
+              .filter(
+                (user) =>
+                  !selectedUsers.some(
+                    (selectedUser) => selectedUser.id === user.id
+                  )
+              )
+              .map((user) => (
+                <div
+                  key={user.id}
+                  onClick={() => handleSelectUser(user)}
+                  className="flex items-center justify-between px-4 py-2 hover:bg-blue-50 cursor-pointer"
+                >
+                  <div>
+                    <p className="text-sm font-semibold text-gray-700">
+                      {user?.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{user?.role}</p>
+                  </div>
+                  <span className="text-sm text-blue-500 font-medium">
+                    Select
+                  </span>
+                </div>
+              ))
           )}
-          {users
-            .filter(
-              (user) =>
-                !selectedUsers.some(
-                  (selectedUser) => selectedUser.id === user.id
-                )
-            )
-            .map((user) => (
-              <div
-                key={user.id}
-                onClick={() => handleSelectUser(user)}
-                className="suggestion-item"
-              >
-                {user.name}
-              </div>
-            ))}
         </div>
       )}
     </div>

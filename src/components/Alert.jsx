@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TiTickOutline } from 'react-icons/ti';
 import { AiOutlineWarning } from 'react-icons/ai';
 import { MdOutlineDangerous } from 'react-icons/md';
@@ -10,12 +10,16 @@ const Alert = () => {
   const dispatch = useDispatch();
   const { alert } = useSelector((state) => state.globalState);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      dispatch(setAlert({ alert: false, type: '', message: '' }));
-    }, 3000);
+  const timeoutRef = useRef(null);
 
-    return () => clearTimeout(timer); // Clear timeout if the component unmounts
+  useEffect(() => {
+    if (alert.alert) {
+      timeoutRef.current = setTimeout(() => {
+        dispatch(setAlert({ alert: false, type: '', message: '' }));
+      }, 3000);
+    }
+
+    return () => clearTimeout(timeoutRef.current); // Clear timeout if the component unmounts or the alert changes
   }, [alert, dispatch]);
 
   const alertTypes = {
@@ -46,7 +50,7 @@ const Alert = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.5 }}
-      className={`fixed bottom-4 right-4 flex items-center p-4 rounded-lg shadow-lg 
+      className={`fixed bottom-4 right-4 z-40 flex items-center p-4 rounded-lg shadow-lg 
         ${alertTypes[alert.type]?.color} ${alertTypes[alert.type]?.borderColor} border-2`}
     >
       <div className="flex items-center justify-center bg-white text-black rounded-full p-2 mr-3">
@@ -57,4 +61,4 @@ const Alert = () => {
   );
 };
 
-export default Alert;
+export default React.memo(Alert);

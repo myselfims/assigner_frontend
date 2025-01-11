@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import Modal from "./TaskDetailsModal";
 import AddTaskModal from "./AddTaskModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setTasks } from "../../store/features/tasksSlice";
+import { setLoading, setTasks } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
 import { AnimatePresence } from "motion/react";
 import TaskCard from "./TaskCard";
@@ -19,7 +19,7 @@ import AddSprintModal from "./AddSprintModal";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
-  const { tasks } = useSelector((state) => state.tasks);
+  const { tasks } = useSelector((state) => state.actionItems);
   const detailsModal = useSelector((state) => state.taskDetails.modal);
   const [addtask, setAddTask] = useState(false);
   const { auth_info } = useSelector((state) => state.globalState);
@@ -57,7 +57,6 @@ const ActionItems = ({ setCurrent }) => {
     setLoading(true);
     fetchData(`/sprints/project/${projectId}/`)
       .then((res) => {
-        console.log(res);
         setSprints(res);
         setTimeout(() => {
           setLoading(false);
@@ -72,7 +71,7 @@ const ActionItems = ({ setCurrent }) => {
 
   return (
     <div className="w-full">
-      <div className="head max-sm:flex-col sticky top-0 flex justify-between items-center w-full">
+      <div className="head max-sm:flex-col z-40 sticky top-0 flex justify-between items-center w-full">
         <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
           {auth_info?.user?.isAdmin ? (
             <button
@@ -98,12 +97,11 @@ const ActionItems = ({ setCurrent }) => {
             .fill()
             .map((_, index) => <SprintTableSkeleton key={index} />)
         : sprints?.map((sprint, index) => (
-          <SprintTable sprint={sprint} handleModal={handleModal} setAddTask={setAddTask} setCurrentSprint={setCurrentSprint}/>
+          <SprintTable key={sprint.id} sprint={sprint} handleModal={handleModal} setAddTask={setAddTask} setCurrentSprint={setCurrentSprint}/>
           ))}
 
       <AnimatePresence>
         {detailsModal && <Modal />}
-        {addtask && <AddTaskModal setModal={setAddTask} sprint={currentSprint}/>}
         {addSprintModal && <AddSprintModal setModal={setAddSprintModal} />}
       </AnimatePresence>
     </div>

@@ -23,7 +23,7 @@ const ProjectCard = ({ project }) => {
         </div>
         <div className="w-full bg-gray-200 h-2 rounded-full mt-1">
           <div
-            className="h-2 rounded-full bg-blue-500"
+            className="h-2 rounded-full bg-blue-600"
             style={{ width: `${progress}%` }}
           ></div>
         </div>

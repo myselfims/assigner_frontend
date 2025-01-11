@@ -27,3 +27,15 @@
   -ms-overflow-style: none; /* Hides scrollbar for IE/Edge */
   scrollbar-width: none; /* Hides scrollbar for Firefox */
 }
+
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 0.6s linear;
+}

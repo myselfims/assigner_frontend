@@ -47,8 +47,8 @@ const UserRow = ({user}) => {
       </td>
       <td className="border-2">
         <div className="flex justify-between p-2 text-black">
-          <button onClick={()=>handleBtns(true)} className={`p-1 border-2 ${isAdmin?'bg-blue-500 text-white':null} rounded px-3`}>True</button>
-          <button onClick={()=>handleBtns(false)} className={`p-1 border-2 ${!isAdmin?'bg-blue-500 text-white':null} rounded px-3`}>False</button>
+          <button onClick={()=>handleBtns(true)} className={`p-1 border-2 ${isAdmin?'bg-blue-600 text-white':null} rounded px-3`}>True</button>
+          <button onClick={()=>handleBtns(false)} className={`p-1 border-2 ${!isAdmin?'bg-blue-600 text-white':null} rounded px-3`}>False</button>
         </div>
       </td>
       {confModal ? (

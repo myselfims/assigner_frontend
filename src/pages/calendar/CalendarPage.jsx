@@ -37,7 +37,7 @@ const CalendarPage = () => {
     <div className="calendar-page container mx-auto p-4">
       <div className="flex items-center justify-between mb-6">
         <button
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
           onClick={handlePreviousMonth}
         >
           <FaArrowLeft />
@@ -46,7 +46,7 @@ const CalendarPage = () => {
           {formatMonthYear(currentDate)}
         </h1>
         <button
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
           onClick={handleNextMonth}
         >
           <FaArrowRight />

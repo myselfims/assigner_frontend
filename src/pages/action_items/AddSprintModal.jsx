@@ -118,9 +118,9 @@ const AddSprintModal = ({ setModal }) => {
                       touched={touched.startDate}
                       type="date"
                     />
-                    <label className="text-red-500 my-1" htmlFor="">
+                    {/* <label className="text-red-500 my-1" htmlFor="">
                       {errors?.startDate}
-                    </label>
+                    </label> */}
                   </div>
                   <div className="flex flex-col">
                     <label htmlFor="">End Date</label>
@@ -134,9 +134,10 @@ const AddSprintModal = ({ setModal }) => {
                       touched={touched.endDate}
                       type="date"
                     />
-                    <label className="text-red-500 my-1" htmlFor="">
+                    {}
+                    {/* <label className="text-red-500 my-1" htmlFor="">
                       {errors?.endDate}
-                    </label>
+                    </label> */}
                   </div>
                 </div>
                 <div className="flex">

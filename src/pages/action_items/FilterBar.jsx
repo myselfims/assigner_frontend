@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiSearch, FiFilter, FiUser } from "react-icons/fi";
 import {
   AiOutlineSortAscending,
@@ -7,11 +7,11 @@ import {
 import { BsCalendar, BsChevronDown } from "react-icons/bs";
 import { getAuthInfo } from "../../api";
 import Dropdown from "../../components/Dropdown";
-import {useDispatch} from 'react-redux'
-import { setSelectedStatusOptions } from "../../store/features/tasksSlice";
+import {useDispatch, useSelector} from 'react-redux'
+import { setSearchQuery, setSelectedStatusOptions } from "../../store/features/actionItemsSlice";
+import Button from "../../components/Button";
 
 const FilterBar = ({
-  search,
   handleDateFilter,
   handleSort,
   handleAssignFilter,
@@ -19,13 +19,19 @@ const FilterBar = ({
   setAddTask,
 }) => {
   const dispatch = useDispatch()
+  const {searchQuery} = useSelector(state => state.actionItems) 
 
   const handleFilterByStatus = (selectedOptions) => {
     dispatch(setSelectedStatusOptions(selectedOptions))
   }
 
+  const handleSearch = (e)=>{
+    let query = e.target.value;
+    dispatch(setSearchQuery(query))
+  }
+
   return (
-    <div className="flex w-full flex-wrap items-center justify-between bg-white p-4 shadow-md rounded-md">
+    <div className="flex z-30 w-full flex-wrap items-center justify-between bg-white p-4 shadow-md rounded-md">
       {/* Left Section: Task Count */}
       <div className="flex items-center space-x-4">
         <h1 className="flex items-center">
@@ -68,8 +74,9 @@ const FilterBar = ({
           <FiSearch className="text-gray-500" />
           <input
             type="text"
-            placeholder="Search stories..."
-            onChange={search}
+            placeholder="Search items..."
+            onChange={handleSearch}
+            value={searchQuery}
             className="bg-transparent outline-none text-sm flex-grow"
           />
         </div>
@@ -98,12 +105,7 @@ const FilterBar = ({
 
       <div className="mx-2">
         {getAuthInfo()?.isAdmin && (
-          <button
-            onClick={() => setAddTask(true)}
-            className="px-2 h-full py-1 font-semibold bg-[#4285F4] text-white rounded hover:opacity-70"
-          >
-            Start Sprint
-          </button>
+          <Button className={'py-1'} onClick={() => setAddTask(true)} > Start Sprint</Button>
         )}
       </div>
     </div>
