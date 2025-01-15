@@ -52,10 +52,15 @@ const SignupLogin = () => {
           setError(null);
           setLoading(false);
           console.log(res);
-          if (res.data.isVerified) {
-            dispatch(setAuthInfo(res.data));
-            localStorage.setItem("auth_info", JSON.stringify(res.data));
-            navigate("/dashboard");
+          let user = res.user;
+          if (user.isVerified) {
+            dispatch(setAuthInfo(res));
+            localStorage.setItem("auth_info", JSON.stringify(res));
+            if (user.accountTypeId){
+              navigate("/dashboard");
+            } else {
+              navigate('/role-selection')
+            }
           } else {
             // setVerify(true);
             localStorage.setItem('userEmail', data.email)
@@ -66,7 +71,7 @@ const SignupLogin = () => {
         .catch((er) => {
           setLoading(false);
           console.log(er);
-          setError(er.response.data);
+          setError(String(ner.response.data));
         });
     },
   });
@@ -156,7 +161,7 @@ const SignupLogin = () => {
               className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
             >
               {pathname == "/login" ? "Sign In" : "Sign Up "}
-              {loading ? <Loader /> : null}
+              {loading ? <Loader className={'ml-2'} /> : null}
             </button>
           </div>
         </form>

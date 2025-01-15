@@ -23,7 +23,11 @@ const OtpVerifier = ({ email }) => {
     postData(`/otp/verify/${otp}`, { email : localStorage.getItem('userEmail') })
       .then((res) => {
         dispatch(setAlert({ alert: true, type: 'success', message: 'OTP Verified!' }));
-        navigate('/dashboard');
+        if (res.accountTypeId){
+          navigate("/dashboard");
+        } else {
+          navigate('/role-selection')
+        }
       })
       .catch((er) => {
         console.log(er)

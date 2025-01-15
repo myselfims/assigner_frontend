@@ -73,14 +73,14 @@ const ActionItems = ({ setCurrent }) => {
     <div className="w-full">
       <div className="head max-sm:flex-col z-40 sticky top-0 flex justify-between items-center w-full">
         <div className="flex max-sm:w-full items-center justify-between max-sm:mb-3">
-          {auth_info?.user?.isAdmin ? (
+         
             <button
               onClick={() => setAddSprintModal(true)}
               className="p-2 max-sm:flex hidden right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
             >
               Start Sprint
             </button>
-          ) : null}
+
         </div>
         <FilterBar tasks={tasks} setAddTask={setAddSprintModal} />
       </div>

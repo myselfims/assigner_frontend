@@ -86,12 +86,14 @@ const Dropdown = ({
                 />
               )}
               <button
+                disabled={label===option?.label}
                 onClick={() =>
-                  !allowMultiple && handleOptionClick(option.value)
+                  !allowMultiple && handleOptionClick(option?.value)
                 }
-                className="w-full text-nowrap text-left"
+                className={`w-full text-nowrap text-left font-semibold ${label===option?.label && 'text-blue-600 opacity-80'}`}
               >
-                {option.label}
+                {option?.label}
+                <p className="text-xs font-normal text-black">{option?.description}</p>
               </button>
             </div>
           ))}

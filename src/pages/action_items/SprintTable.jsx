@@ -96,7 +96,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
   return (
     <div className="flex flex-col my-6 px-4 bg-slate-200 rounded-lg border border-gray-300">
       <div className="w-full h-full py-3 font-semibold flex justify-between items-center relative">
-        <div className="flex flex-col items-center w-full mx-auto text-center">
+        <div className="flex flex-col w-full mx-auto text-start">
           <h1 className="font-semibold">{sprint?.title}</h1>
           <p className="text-sm text-slate-700">{sprint?.description}</p>
         </div>
@@ -155,7 +155,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
         </table>
 
         {items?.length === 0 && !loading ? (
-          <div className="flex my-10 flex-col w-full items-center justify-center bg-white">
+          <div className="flex py-4 flex-col w-full items-center justify-center bg-white">
             <h1 className="text-2xl font-bold">No records found!</h1>
           </div>
         ) : null}

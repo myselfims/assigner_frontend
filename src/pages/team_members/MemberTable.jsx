@@ -1,11 +1,29 @@
-import { AiOutlineMail } from "react-icons/ai";
-import { FaTrashAlt } from "react-icons/fa"; // Trash icon for Remove User action
-import Dropdown from "../../components/Dropdown";
-import { LuMessagesSquare } from "react-icons/lu";
+
+import { useEffect, useState } from "react";
+import { fetchData } from "../../api";
+import MemberRow from "./MemberRow";
 
 const MemberTable = ({ filteredMembers }) => {
+  const [roles, setRoles] = useState([])
+
+  useEffect(()=>{
+    const fetchRoles = async ()=>{
+      const roles = await fetchData('/global/roles')
+     
+      const transformedRoles = roles.map(role => ({
+        label: role.name,  // Rename `name` to `label`
+        value: role.id,    // Rename `id` to `value`
+        description : role?.description
+      }));
+      console.log(transformedRoles)
+
+      setRoles(transformedRoles)
+    }
+    fetchRoles();
+  },[])
+
   return (
-    <div className="overflow-x-auto">
+    <div className="">
       <table className="min-w-full bg-white shadow-md rounded-lg">
         <thead>
           <tr className="bg-gray-100">
@@ -18,54 +36,7 @@ const MemberTable = ({ filteredMembers }) => {
         </thead>
         <tbody>
           {filteredMembers?.map((member) => (
-            <tr key={member.id} className="border-b">
-              <td className="px-4 py-2">
-                <img
-                  src={member.avatar}
-                  alt={member.name}
-                  className="w-12 h-12 rounded-full"
-                />
-              </td>
-              <td className="px-4 py-2">
-                <div className="flex flex-col">
-                  <h1>{member.name}</h1>
-                  <p className="text-sm text-gray-500">Frontend Developer</p>
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="text-blue-600 text-sm hover:underline"
-                  >
-                    <AiOutlineMail className="inline-block mr-1" />
-                    {member.email}
-                  </a>
-                </div>
-              </td>
-              <td className="px-4 py-2">
-                <div className="">
-                  <Dropdown
-                    allowMultiple={false}
-                    showCount={false}
-                    label={"Admin"}
-                  />
-                </div>
-              </td>
-              <td className="px-4 py-2">{member.assignedTasksCount}</td>
-              <td className="px-4 py-2">
-                <div className="flex ">
-                  <button className="bg-blue-600 text-white rounded-lg p-2 flex items-center justify-center mr-2">
-                    {" "}
-                    <LuMessagesSquare className="w-[18px] h-[18px] mr-1" />{" "}
-                    Connect
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800 flex items-center"
-                    onClick={() => handleRemoveUser(member.id)}
-                  >
-                    <FaTrashAlt className="mr-2" />
-                    Remove
-                  </button>
-                </div>
-              </td>
-            </tr>
+            <MemberRow key={member?.id} member={member} roles={roles}/>
           ))}
         </tbody>
       </table>

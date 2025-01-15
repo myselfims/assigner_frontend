@@ -4,6 +4,7 @@ import Calendar from "./Calendar";
 import ViewDayDetailsModal from "./ViewDayDetailsModal";
 import { FaArrowRight } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
+import Tooltip from '../../components/Tooltip'
 
 const CalendarPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -36,21 +37,27 @@ const CalendarPage = () => {
   return (
     <div className="calendar-page container mx-auto p-4">
       <div className="flex items-center justify-between mb-6">
-        <button
-          className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
-          onClick={handlePreviousMonth}
-        >
-          <FaArrowLeft />
-        </button>
+        <Tooltip content={'previous'} position={'bottom'}>
+          <button
+            className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
+            onClick={handlePreviousMonth}
+          >
+            <FaArrowLeft />
+          </button>
+
+        </Tooltip>
         <h1 className="text-2xl font-bold">
           {formatMonthYear(currentDate)}
         </h1>
-        <button
-          className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
-          onClick={handleNextMonth}
-        >
-          <FaArrowRight />
-        </button>
+        <Tooltip content="next" position="bottom">
+          <button
+            className="p-2 bg-blue-600 text-white rounded hover:bg-blue-600"
+            onClick={handleNextMonth}
+          >
+            <FaArrowRight />
+          </button>
+
+        </Tooltip>
       </div>
       <Calendar date={currentDate} toggleModal={toggleModal} />
       {showModal && (

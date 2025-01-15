@@ -53,6 +53,10 @@ function App() {
               element={<ActionItems />}
             />
             <Route
+              path="/project/:projectId/board/"
+              element={<ActionItems />}
+            />
+            <Route
               path="/project/:projectId/team-members/"
               element={<TeamMembers />}
             />

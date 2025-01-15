@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Button = ({ to, onClick, type = "filled", className = "", children }) => {
+const Button = ({ to, onClick, type = "filled", className = "", btnType='button', children }) => {
   const baseClasses =
     "relative inline-flex text-nowrap items-center justify-center hover:opacity-80 font-semibold rounded-md transition px-4 py-2";
 
@@ -20,7 +20,7 @@ const Button = ({ to, onClick, type = "filled", className = "", children }) => {
       {children}
     </Link>
   ) : (
-    <button className={mergedClasses} onClick={onClick}>
+    <button type={btnType} className={mergedClasses} onClick={onClick}>
       {children}
     </button>
   );

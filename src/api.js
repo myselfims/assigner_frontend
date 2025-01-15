@@ -52,12 +52,12 @@ export const fetchData = async (endpoint, params = {}) => {
 
 export const postData = async (endpoint, data) => {
   try {
-    const request = await axios.post(url + endpoint, data, {
+    const response = await axios.post(url + endpoint, data, {
       headers: {
         Authorization: getAuthInfo().token,
       },
     });
-    return request;
+    return response.data;
   } catch (error) {
     return handleError(error);
   }

@@ -8,6 +8,7 @@ import { IoIosCalendar } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
+import { PiKanbanDuotone } from "react-icons/pi";
 
 const ProjectNavBar = () => {
   const { projectId } = useParams();
@@ -48,7 +49,7 @@ const ProjectNavBar = () => {
           to={"/projects/overview"}
           className={`flex ${
             isActive("/projects/overview") ? "font-bold border rounded-xl" : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <AiOutlineDashboard className="w-[20px] h-[20px] mr-[15px]" />
           Overview
@@ -60,10 +61,22 @@ const ProjectNavBar = () => {
             isActive(`/project/${projectId}/action-items`)
               ? "font-bold border rounded-xl"
               : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <FaTasks className="w-[20px] h-[20px] mr-[15px]" />
           Action Items
+        </Link>
+        <Link
+          onClick={() => dispatch(setSidebar(false))}
+          to={`/project/${projectId}/board`}
+          className={`flex ${
+            isActive(`/project/${projectId}/board`)
+              ? "font-bold border rounded-xl"
+              : ""
+          } p-2 items-center `}
+        >
+          <PiKanbanDuotone className="w-[20px] h-[20px] mr-[15px]" />
+          Board
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
@@ -72,7 +85,7 @@ const ProjectNavBar = () => {
             isActive(`/project/${projectId}/team-members`)
               ? "font-bold border rounded-xl"
               : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <FaUsersCog className="w-[20px] h-[20px] mr-[15px]" />
           Team Members
@@ -82,7 +95,7 @@ const ProjectNavBar = () => {
           to={"/projects/chat"}
           className={`flex ${
             isActive("/projects/chat") ? "font-bold border rounded-xl" : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <LuMessageSquare className="w-[20px] h-[20px] mr-[15px]" />
           Chat Group
@@ -94,7 +107,7 @@ const ProjectNavBar = () => {
             isActive(`/project/${projectId}/calendar`)
               ? "font-bold border rounded-xl"
               : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <IoIosCalendar className="w-[20px] h-[20px] mr-[15px]" />
           Calendar
@@ -104,7 +117,7 @@ const ProjectNavBar = () => {
           to={"/projects/settings"}
           className={`flex ${
             isActive("/projects/settings") ? "font-bold border rounded-xl" : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <LuSettings className="w-[20px] h-[20px] mr-[15px]" />
           Settings
@@ -114,7 +127,7 @@ const ProjectNavBar = () => {
           to={"/projects/reports"}
           className={`flex ${
             isActive("/projects/reports") ? "font-bold border rounded-xl" : ""
-          } p-2 items-center transition-all`}
+          } p-2 items-center `}
         >
           <LuClipboard className="w-[20px] h-[20px] mr-[15px]" />
           Reports

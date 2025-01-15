@@ -35,7 +35,7 @@ const GenericNavBar = () => {
           to={"/dashboard"}
           className={`flex ${
             currentPage == "Dashboard" ? "font-bold border rounded-xl" : null
-          } p-2 items-center transition-all`}
+          } p-2 items-center`}
         >
           <AiOutlineDashboard className="w-[18px] h-[18px] mr-[20px]" />
           Dashboard
@@ -45,7 +45,7 @@ const GenericNavBar = () => {
           to={"/projects"}
           className={`flex ${
             currentPage == "Projects" ? "font-bold border rounded-xl" : null
-          } p-2 items-center transition-all`}
+          } p-2 items-center`}
         >
           <FaTasks className="w-[18px] h-[18px] mr-[20px]" />
           Projects
@@ -58,7 +58,7 @@ const GenericNavBar = () => {
               currentPage == "Manage Users"
                 ? "font-bold border rounded-xl"
                 : null
-            } p-2 items-center transition-all`}
+            } p-2 items-center`}
           >
             <FaUserGear className="w-[18px] h-[18px] mr-[20px]" />
             Manage Users
@@ -69,7 +69,7 @@ const GenericNavBar = () => {
           to={"/connect"}
           className={`flex ${
             currentPage == "Connect" ? "font-bold border rounded-xl" : null
-          } p-2 items-center transition-all`}
+          } p-2 items-center`}
         >
           <LuMessageSquare className="w-[18px] h-[18px] mr-[20px]" />
           Connect
@@ -79,7 +79,7 @@ const GenericNavBar = () => {
           to={"/settings"}
           className={`flex ${
             currentPage == "Settings" ? "font-bold border rounded-xl" : null
-          } p-2 items-center transition-all`}
+          } p-2 items-center`}
         >
           <LuSettings className="w-[18px] h-[18px] mr-[20px]" />
           Settings

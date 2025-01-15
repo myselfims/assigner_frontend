@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { MdLogout } from "react-icons/md";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import NotificationsDropdown from "./NotificationsDropdown";
+import Tooltip from "../Tooltip";
 
 const TopNav = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const TopNav = () => {
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [notiDropdown, setNotiDropdown] = useState(false);
-  const dropdownRef = useRef()
+  const dropdownRef = useRef();
 
   const logout = () => {
     localStorage.removeItem("auth_info");
@@ -32,8 +33,6 @@ const TopNav = () => {
     };
   }, []);
 
-  
-
   const current = useSelector((state) => state.globalState.currentPage);
   return (
     <>
@@ -51,13 +50,20 @@ const TopNav = () => {
             </div>
             <div className="flex items-center">
               <div className="relative mr-8">
-                <div className="relative w-[30px] h-[30px]">
-                  <BiBell onClick={()=>setNotiDropdown(!notiDropdown)} className={`mr-[27px] w-full h-full p-1 rounded-full ${notiDropdown? 'bg-slate-200': null}  cursor-pointer ` }/>
-                  <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
-
-                </div>
-                  {notiDropdown &&
-                <NotificationsDropdown setNotiDropdown={setNotiDropdown}/>}
+                <Tooltip content="notifications" position="bottom">
+                  <div className="relative w-[30px] h-[30px]">
+                    <BiBell
+                      onClick={() => setNotiDropdown(!notiDropdown)}
+                      className={`mr-[27px] w-full h-full p-1 rounded-full ${
+                        notiDropdown ? "bg-slate-200" : null
+                      }  cursor-pointer `}
+                    />
+                    <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
+                  </div>
+                </Tooltip>
+                {notiDropdown && (
+                  <NotificationsDropdown setNotiDropdown={setNotiDropdown} />
+                )}
               </div>
 
               <div
@@ -73,22 +79,30 @@ const TopNav = () => {
               </div>
 
               {isOpen && (
-                <div ref={dropdownRef} className="absolute top-8 right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
-                <ul className="py-1 text-gray-700 w-full">
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer w-full flex items-center">
-                    <Link to={'/profile'} className="w-full h-full block text-left">
-                      Profile
-                    </Link>
-                  </li>
-                  <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Upgrade
-                  </li>
-                  <li onClick={logout} className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Logout
-                  </li>
-                </ul>
-              </div>
-              
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-8 right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
+                >
+                  <ul className="py-1 text-gray-700 w-full">
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer w-full flex items-center">
+                      <Link
+                        to={"/profile"}
+                        className="w-full h-full block text-left"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Upgrade
+                    </li>
+                    <li
+                      onClick={logout}
+                      className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>
               )}
             </div>
           </div>

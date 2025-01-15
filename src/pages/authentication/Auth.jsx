@@ -27,9 +27,6 @@ const Auth = ({page}) => {
   const {pathname} = useLocation()
   const navigate = useNavigate()
  
-  useEffect(() => {
-    getAuthInfo().token ? navigate("/dashboard") : null;
-  }, [page]);
 
   const pages = {
     '/login' : <SignupLogin />,

@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUser, FaUsers, FaBuilding } from "react-icons/fa"; // React icons for roles
-import { postData } from "../../api"; // Assuming you have a postData function for API calls
+import * as Icons from "react-icons/fa"; // React icons for roles
+import { fetchData, postData, updateData } from "../../api"; // Assuming you have a postData function for API calls
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
 
 const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const [loading, setLoading] = useState(false);
+  const [types, setTypes] = useState([])
   const navigate = useNavigate();
 
   const roles = [
@@ -15,41 +17,57 @@ const RoleSelection = () => {
     { id: "organization", label: "Organization", icon: <FaBuilding /> },
   ];
 
-  const handleRoleSelect = async (role) => {
-    setSelectedRole(role);
+  const getIcon = (iconName) => {
+    const IconComponent = Icons[iconName];
+    return IconComponent ? <IconComponent /> : null;
+  };
+
+  const handleRoleSelect = async (typeId) => {
+    setSelectedRole(typeId);
     setLoading(true);
-    setTimeout(() => {
-        setLoading(false)
-        navigate('/industry-selection')
-    }, 3000);
+    updateData('/users/self', {accountTypeId : typeId}).then((res)=>{
+      setLoading(false)
+      console.log(res)
+      navigate('/industry-selection')
+    }).catch((error)=>{
+      console.log(error)
+      setLoading(false)
+    })
     // try {
-    //   await postData("/api/role-selection", { role }); // Replace with your actual API endpoint
-    // //   alert(`Role ${role} selected successfully!`);
+    //   await postData("/api/type-selection", { type }); // Replace with your actual API endpoint
+    // //   alert(`Role ${type} selected successfully!`);
     // } catch (error) {
-    //   console.error("Error selecting role:", error);
-    // //   alert("Failed to select role. Please try again.");
+    //   console.error("Error selecting type:", error);
+    // //   alert("Failed to select type. Please try again.");
     // } finally {
     //   setLoading(false);
     // }
   };
 
+  useEffect(()=>{
+    fetchData('/global/account-types').then((res)=>{
+      console.log(res)
+      setTypes(res)
+    })
+  },[])
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full">
       <h1 className="text-4xl font-bold mb-6">Select Your Role</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {roles.map((role) => (
+        {types.map((type) => (
           <button
-            key={role.id}
+            key={type.id}
             className={`flex flex-col items-center justify-center w-48 h-48 p-4 border-2 rounded-lg text-lg font-semibold cursor-pointer transition-all duration-300 ${
-              selectedRole === role.id
+              selectedRole === type.id
                 ? "bg-blue-100 border-blue-500"
                 : "bg-white border-gray-300 hover:bg-gray-100"
             }`}
-            onClick={() => handleRoleSelect(role.id)}
+            onClick={() => handleRoleSelect(type.id)}
             disabled={loading}
           >
-            <div className="text-4xl mb-3">{role.icon}</div>
-            {role.label}
+            <div className="text-4xl mb-3">{getIcon(type.icon)}</div>
+            {type.type}
           </button>
         ))}
       </div>

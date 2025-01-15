@@ -104,9 +104,9 @@ const FilterBar = ({
       />
 
       <div className="mx-2">
-        {getAuthInfo()?.isAdmin && (
+ 
           <Button className={'py-1'} onClick={() => setAddTask(true)} > Start Sprint</Button>
-        )}
+
       </div>
     </div>
   );

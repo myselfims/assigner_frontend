@@ -54,7 +54,7 @@ const UserRow = ({user}) => {
       {confModal ? (
         <ConfirmModal
           message={"Are you sure?"}
-          confirm={adminToggle}
+          onSelect={adminToggle}
         />
       ) : null}
     </tr>

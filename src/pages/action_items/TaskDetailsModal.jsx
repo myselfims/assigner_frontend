@@ -235,7 +235,7 @@ const Modal = () => {
       {confModal ? (
         <ConfirmModal
           message={"Do you really want to delete this task?"}
-          confirm={deleteTask}
+          onSelect={deleteTask}
         />
       ) : null}
     </motion.div>

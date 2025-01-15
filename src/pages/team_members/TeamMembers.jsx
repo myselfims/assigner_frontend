@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AiOutlineUserAdd, AiOutlineSearch, AiOutlineMail } from "react-icons/ai";
 import MemberTable from "./MemberTable";
+import AddTeamMemberModal from "./AddTeamMemberModal";
 
 const TeamMembers = ({ projectName = "Project Alpha" }) => {
   const [teamMembers, setTeamMembers] = useState([
@@ -19,7 +20,7 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
       avatar: "https://via.placeholder.com/50",
     },
   ]);
-
+  const [addModal, setAddModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filtered team members
@@ -29,7 +30,7 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
 
   const handleAddMember = () => {
     // Logic to add a member
-    alert("Add member logic here!");
+    setAddModal(true)
   };
 
   return (
@@ -67,6 +68,8 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
       {filteredMembers.length === 0 && (
         <div className="text-gray-500 text-center mt-8">No members found</div>
       )}
+      {addModal &&
+      <AddTeamMemberModal setModal={setAddModal}/>}
     </div>
   );
 };
