@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaLaptopCode,
   FaChalkboardTeacher,
@@ -10,6 +10,8 @@ import { AiFillShop } from "react-icons/ai";
 import { GiCookingPot, GiFactory } from "react-icons/gi";
 import { BsMegaphoneFill } from "react-icons/bs";
 import Loader from "../../components/Loader";
+import * as Icons from "react-icons/fa";
+import { fetchData } from "../../api";
 
 const industries = [
   { id: 1, name: "Software Development", icon: <FaLaptopCode /> },
@@ -24,9 +26,16 @@ const industries = [
   { id: 10, name: "Business & Consulting", icon: <FaBriefcase /> },
 ];
 
+
+  const getIcon = (iconName) => {
+    const IconComponent = Icons[iconName];
+    return IconComponent ? <IconComponent /> : null;
+  };
+
 const IndustrySelection = () => {
   const [selectedIndustries, setSelectedIndustries] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [industries, setIndustries] = useState([])
 
   const handleSelect = (id) => {
     if (selectedIndustries.includes(id)) {
@@ -37,6 +46,18 @@ const IndustrySelection = () => {
       setSelectedIndustries([...selectedIndustries, id]);
     }
   };
+
+  useEffect(()=>{
+    fetchData('/global/industries').then((res)=>{
+      console.log(res)
+      setIndustries(res)
+    })
+  },[])
+
+
+  const handleSave = ()=>{
+
+  }
 
   return (
     <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -55,7 +76,7 @@ const IndustrySelection = () => {
               }`}
               onClick={() => handleSelect(industry.id)}
             >
-              <span className="text-2xl">{industry.icon}</span>
+              <span className="text-2xl">{getIcon(industry.icon)}</span>
               <span className="text-sm font-medium">{industry.name}</span>
             </div>
           ))}
@@ -66,8 +87,8 @@ const IndustrySelection = () => {
             setLoading(true)
           }
         >
-          {loading && <Loader className={"mr-2"} />}
-          Submit
+          Save
+          {loading && <Loader className={"ml-2"} />}
         </button>
       </div>
     </div>

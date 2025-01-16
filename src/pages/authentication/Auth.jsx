@@ -21,6 +21,7 @@ import SignupLogin from "./SignupLogin";
 import ForgotPassword from "./ForgotPassword";
 import RoleSelection from "./RoleSelection";
 import IndustrySelection from "./IndustrySelection";
+import OrganizationForm from "./OrganizationForm";
 
 const Auth = ({page}) => {
 
@@ -34,7 +35,8 @@ const Auth = ({page}) => {
     '/verify-otp' : <OtpVerifier email={'imrans@64-squares.com'} />,
     '/forgot-password' : <ForgotPassword />,
     '/role-selection' : <RoleSelection />,
-    '/industry-selection' : <IndustrySelection />
+    '/industry-selection' : <IndustrySelection />,
+    '/organization-form' : <OrganizationForm />,
   }
 
   return (

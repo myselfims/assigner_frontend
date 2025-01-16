@@ -11,11 +11,6 @@ const RoleSelection = () => {
   const [types, setTypes] = useState([])
   const navigate = useNavigate();
 
-  const roles = [
-    { id: "individual", label: "Individual", icon: <FaUser /> },
-    { id: "team", label: "Team", icon: <FaUsers /> },
-    { id: "organization", label: "Organization", icon: <FaBuilding /> },
-  ];
 
   const getIcon = (iconName) => {
     const IconComponent = Icons[iconName];

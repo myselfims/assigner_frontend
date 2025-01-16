@@ -71,7 +71,7 @@ const SignupLogin = () => {
         .catch((er) => {
           setLoading(false);
           console.log(er);
-          setError(String(ner.response.data));
+          setError(String(er.response.data));
         });
     },
   });

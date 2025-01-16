@@ -45,6 +45,7 @@ function App() {
           <Route path="/forgot-password" element={<Auth />} />
           <Route path="/role-selection" element={<Auth />} />
           <Route path="/industry-selection" element={<Auth />} />
+          <Route path="/organization-form" element={<Auth />} />
           <Route path="/verify-otp" element={<Auth />} />
           <Route element={<BaseLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
