@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import Modal from "./TaskDetailsModal";
 import AddTaskModal from "./AddTaskModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setTasks } from "../../store/features/actionItemsSlice";
+import { setLoading, setStatuses, setTasks } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
 import { AnimatePresence } from "motion/react";
 import TaskCard from "./TaskCard";
@@ -16,18 +16,22 @@ import ItemCard from "./ItemCard";
 import SprintTable from "./SprintTable";
 import SprintTableSkeleton from "./skeletons/SprintTableSkeleton";
 import AddSprintModal from "./AddSprintModal";
+import StatusModal from "./StatusModal";
+import {
+  AiOutlineSortAscending,
+  AiOutlineSortDescending,
+} from "react-icons/ai";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
   const { tasks } = useSelector((state) => state.actionItems);
   const detailsModal = useSelector((state) => state.taskDetails.modal);
-  const [addtask, setAddTask] = useState(false);
-  const { auth_info } = useSelector((state) => state.globalState);
   const { projectId } = useParams();
   const [loading, setLoading] = useState(false);
   const [currentSprint, setCurrentSprint] = useState(null)
   const [addSprintModal, setAddSprintModal] = useState(false)
   const [sprints, setSprints] = useState([])
+  const [customStatusModal, setCustomStatusModal] = useState(false)
 
   const handleModal = (task) => {
     setModal(true);
@@ -55,19 +59,30 @@ const ActionItems = ({ setCurrent }) => {
     console.log(getAuthInfo());
     dispatch(setCurrentPage("Action Items"));
     setLoading(true);
-    fetchData(`/sprints/project/${projectId}/`)
-      .then((res) => {
-        setSprints(res);
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-      })
-      .catch((err) => {
+  
+    const fetchProjectData = async () => { // Renamed to avoid conflict
+      try {
+        let sprints = await fetchData(`/sprints/project/${projectId}/`);
+        let statuses = await fetchData(`/projects/statuses/${projectId}`);
+        const formattedStatuses = statuses.map(status => ({
+          label: status.name,               // Assuming `name` contains the display name
+          // icon: AiOutlineSortAscending,    // Set the icon for all
+          value: status.slug || status.id, // Use `slug` or `id` as value
+        }));
+        console.log(statuses);
+        setSprints(sprints);
+        dispatch(setStatuses(formattedStatuses))
+        setLoading(false)
+      } catch (err) {
         console.log(err);
         dispatch(setAlert({ alert: true, message: err.error, type: "danger" }));
         dispatch(setTasks([]));
-      });
-  }, []);
+      }
+    };
+  
+    fetchProjectData();
+  }, [dispatch, projectId]);
+  
 
   return (
     <div className="w-full">
@@ -82,7 +97,7 @@ const ActionItems = ({ setCurrent }) => {
             </button>
 
         </div>
-        <FilterBar tasks={tasks} setAddTask={setAddSprintModal} />
+        <FilterBar tasks={tasks} setAddTask={setAddSprintModal} setCustomStatusModal={setCustomStatusModal} />
       </div>
 
       {loading && (
@@ -97,12 +112,13 @@ const ActionItems = ({ setCurrent }) => {
             .fill()
             .map((_, index) => <SprintTableSkeleton key={index} />)
         : sprints?.map((sprint, index) => (
-          <SprintTable key={sprint.id} sprint={sprint} handleModal={handleModal} setAddTask={setAddTask} setCurrentSprint={setCurrentSprint}/>
+          <SprintTable key={sprint.id} sprint={sprint} handleModal={handleModal} setCurrentSprint={setCurrentSprint}/>
           ))}
 
       <AnimatePresence>
         {detailsModal && <Modal />}
         {addSprintModal && <AddSprintModal setModal={setAddSprintModal} />}
+        {customStatusModal && <StatusModal closeModal={()=>setCustomStatusModal(false)}/>}
       </AnimatePresence>
     </div>
   );

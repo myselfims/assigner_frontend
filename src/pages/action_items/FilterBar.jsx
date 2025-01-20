@@ -13,13 +13,12 @@ import Button from "../../components/Button";
 
 const FilterBar = ({
   handleDateFilter,
-  handleSort,
-  handleAssignFilter,
+  setCustomStatusModal,
   tasks,
   setAddTask,
 }) => {
   const dispatch = useDispatch()
-  const {searchQuery} = useSelector(state => state.actionItems) 
+  const {searchQuery, statuses} = useSelector(state => state.actionItems) 
 
   const handleFilterByStatus = (selectedOptions) => {
     dispatch(setSelectedStatusOptions(selectedOptions))
@@ -95,12 +94,11 @@ const FilterBar = ({
       <Dropdown
         label={"Status"}
         allowMultiple={true}
-        options={[
-          { label: "In Progress", icon: AiOutlineSortAscending, value : "in progress" },
-          { label: "To Do", icon: AiOutlineSortAscending, value : "to-do" }
-        
-        ]}
+        options={statuses}
         onSelect={handleFilterByStatus}
+        children={
+          <button onClick={()=>setCustomStatusModal(true)} className="text-center px-4 py-1 text-blue-500 w-full hover:bg-slate-100">Custom</button>
+        }
       />
 
       <div className="mx-2">

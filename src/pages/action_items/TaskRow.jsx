@@ -8,6 +8,7 @@ import { updateData } from "../../api";
 
 const TaskRow = ({ task }) => {
   const { users } = useSelector((state) => state.users);
+  const {statuses} = useSelector(state=>state.actionItems)
   const user = useMemo(
     () => users?.filter((item) => item.id == task?.assignedById)[0],
     [users, task?.assignedById]
@@ -46,11 +47,7 @@ const TaskRow = ({ task }) => {
           label={item?.status}
           selectedColor={"bg-white"}
           showCount={false}
-          options={[
-            { label: "In Progress", value: "in progress" },
-            { label: "To Do", value: "to-do" },
-            { label: "To Do", value: "to-do" },
-          ]}
+          options={statuses}
           onSelect={updateStatus}
           className={'py-[5px]'}
         />

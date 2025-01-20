@@ -9,6 +9,7 @@ const Dropdown = ({
   selectedColor = "bg-blue-200",
   className,
   showCount = true,
+  children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -97,6 +98,10 @@ const Dropdown = ({
               </button>
             </div>
           ))}
+
+          <div className="">
+            {children}
+          </div>
         </div>
       )}
     </div>

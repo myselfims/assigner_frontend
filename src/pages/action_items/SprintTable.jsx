@@ -15,7 +15,7 @@ import AddTaskModal from "./AddTaskModal";
 
 const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
   const dispatch = useDispatch();
-  const { selectedStatusOptions, searchQuery } = useSelector(
+  const { selectedStatusOptions, searchQuery, statuses } = useSelector(
     (state) => state.actionItems
   );
   const { projectId } = useParams();
@@ -163,7 +163,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
         {/* For Mobile */}
         <div className="max-sm:flex flex-col hidden">
           {items?.map((task) => {
-            return <TaskCard key={task.id} task={task} />;
+            return <TaskCard key={task?.id} task={task} />;
           })}
         </div>
       </motion.div>

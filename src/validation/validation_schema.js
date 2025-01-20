@@ -14,7 +14,7 @@ export const signupSchema = Yup.object({
 export const TaskSchema = Yup.object({
     title : Yup.string().min(10).required(),
     description : Yup.string().optional(),
-    deadline : Yup.date().required(),
+    deadline : Yup.date().optional(),
     assignedToId : Yup.number().required()
   })
 

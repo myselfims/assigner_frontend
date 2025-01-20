@@ -60,12 +60,12 @@ const UserSearchBox = ({ onSelect, allowMultiple = false }) => {
           className="text-sm mr-1 text-nowrap bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center"
         >
           {user?.name}{" "}
-          {allowMultiple && (
+          
             <IoCloseCircleOutline
               onClick={() => removeUser(user.id)}
-              className="inline ml-1 cursor-pointer w-4 h-4 text-blue-700 hover:text-blue-500"
+              className="inline ml-1 cursor-pointer w-4 h-4 text-red-700 hover:text-blue-500"
             />
-          )}
+            
         </p>
       ))}
 

@@ -64,10 +64,16 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
   }, []);
 
   const handleUserSelect = (user) => {
-    console.log(users);
-    let id = user.id;
+    console.log("user", user);
+    let id = user[0].id;
     setFieldValue("assignedToId", id);
+    console.log("ass called", id)
   };
+
+
+console.log(errors)
+console.log(values)
+
 
   return (
     <AnimatePresence>
