@@ -3,24 +3,8 @@ import { useEffect, useState } from "react";
 import { fetchData } from "../../api";
 import MemberRow from "./MemberRow";
 
-const MemberTable = ({ filteredMembers }) => {
-  const [roles, setRoles] = useState([])
+const MemberTable = ({roles, filteredMembers }) => {
 
-  useEffect(()=>{
-    const fetchRoles = async ()=>{
-      const roles = await fetchData('/global/roles')
-     
-      const transformedRoles = roles.map(role => ({
-        label: role.name,  // Rename `name` to `label`
-        value: role.id,    // Rename `id` to `value`
-        description : role?.description
-      }));
-      console.log(transformedRoles)
-
-      setRoles(transformedRoles)
-    }
-    fetchRoles();
-  },[])
 
   return (
     <div className="">

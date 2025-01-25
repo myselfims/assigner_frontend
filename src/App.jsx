@@ -25,6 +25,7 @@ import AddProject from "./pages/add_project/AddProject";
 import CalendarPage from "./pages/calendar/CalendarPage";
 import ActionItems from "./pages/action_items/ActionItems";
 import TeamMembers from "./pages/team_members/TeamMembers";
+import Board from "./pages/board/Board";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -55,7 +56,7 @@ function App() {
             />
             <Route
               path="/project/:projectId/board/"
-              element={<ActionItems />}
+              element={<Board />}
             />
             <Route
               path="/project/:projectId/team-members/"

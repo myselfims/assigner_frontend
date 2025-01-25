@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { BsChevronDown } from "react-icons/bs";
 
 const Dropdown = ({
-  label,
+  name,
   options,
   onSelect,
   allowMultiple = false,
@@ -62,7 +62,7 @@ const Dropdown = ({
           selectedOptions.length > 0 ? selectedColor : ""
         }`}
       >
-        <span>{label}</span>
+        <span>{name}</span>
         {showCount && (
           <span className="border-blue-400 border w-4 h-4 text-xs flex items-center justify-center rounded-full p-1">
             {selectedOptions?.length}
@@ -87,13 +87,13 @@ const Dropdown = ({
                 />
               )}
               <button
-                disabled={label===option?.label}
+                disabled={name===option?.name}
                 onClick={() =>
                   !allowMultiple && handleOptionClick(option?.value)
                 }
-                className={`w-full text-nowrap text-left font-semibold ${label===option?.label && 'text-blue-600 opacity-80'}`}
+                className={`w-full text-nowrap text-left font-semibold ${name===option?.name && 'text-blue-600 opacity-80'}`}
               >
-                {option?.label}
+                {option?.name}
                 <p className="text-xs font-normal text-black">{option?.description}</p>
               </button>
             </div>

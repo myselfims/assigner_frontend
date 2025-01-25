@@ -5,11 +5,14 @@ import Dropdown from "../../components/Dropdown";
 import { LuMessagesSquare } from "react-icons/lu";
 import ConfirmModal from "../../components/ConfirmModal";
 import Tooltip from "../../components/Tooltip";
+import { updateData } from "../../api";
+import { useParams } from "react-router-dom";
 
-const MemberRow = ({ member, roles, onUpdateRole }) => {
+const MemberRow = ({ member, roles }) => {
   const [selectedRole, setSelectedRole] = useState(member.role);
   const [pendingRole, setPendingRole] = useState(null); // To store the role selected before confirmation
   const [confirmModal, setConfirmModal] = useState(false);
+  const {projectId} = useParams()
 
   // Handle dropdown selection
   const handleRoleUpdate = (value) => {
@@ -27,6 +30,18 @@ const MemberRow = ({ member, roles, onUpdateRole }) => {
     }
     setPendingRole(null); // Clear pending role
   };
+
+  const onUpdateRole = ()=>{
+    console.log(pendingRole)
+    try{
+      updateData(`/projects/team/${projectId}/${member?.id}`, {roleId : pendingRole.value}).then((res)=>{
+        console.log(res)
+      })
+
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   return (
     <tr key={member?.id} className="border-b">
@@ -55,7 +70,7 @@ const MemberRow = ({ member, roles, onUpdateRole }) => {
             <Dropdown
               allowMultiple={false}
               showCount={false}
-              label={selectedRole}
+              name={member?.role? member?.role : 'Not set'}
               options={roles}
               onSelect={handleRoleUpdate}
             />

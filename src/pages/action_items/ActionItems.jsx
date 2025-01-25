@@ -6,21 +6,15 @@ import Loader from "../../components/Loader";
 import Modal from "./TaskDetailsModal";
 import AddTaskModal from "./AddTaskModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setStatuses, setTasks } from "../../store/features/actionItemsSlice";
+import {  setStatuses, setTasks } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
 import { AnimatePresence } from "motion/react";
-import TaskCard from "./TaskCard";
 import { Link, useParams } from "react-router-dom";
 import FilterBar from "./FilterBar";
-import ItemCard from "./ItemCard";
 import SprintTable from "./SprintTable";
 import SprintTableSkeleton from "./skeletons/SprintTableSkeleton";
 import AddSprintModal from "./AddSprintModal";
 import StatusModal from "./StatusModal";
-import {
-  AiOutlineSortAscending,
-  AiOutlineSortDescending,
-} from "react-icons/ai";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
@@ -65,9 +59,10 @@ const ActionItems = ({ setCurrent }) => {
         let sprints = await fetchData(`/sprints/project/${projectId}/`);
         let statuses = await fetchData(`/projects/statuses/${projectId}`);
         const formattedStatuses = statuses.map(status => ({
-          label: status.name,               // Assuming `name` contains the display name
+          name : status.name,               // Assuming `name` contains the display name
           // icon: AiOutlineSortAscending,    // Set the icon for all
           value: status.slug || status.id, // Use `slug` or `id` as value
+          id : status.id
         }));
         console.log(statuses);
         setSprints(sprints);

@@ -3,80 +3,93 @@ import axios from "axios";
 import ModalBase from "../../components/ModalBase";
 import { useDispatch, useSelector } from "react-redux";
 import { setStatuses } from "../../store/features/actionItemsSlice";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import StatusCard from "./StatusCard";
+import { postData } from "../../api";
+import { useParams } from "react-router-dom";
 
-const StatusModal = ({ projectId, closeModal, onSave }) => {
-  const {statuses} = useSelector(state => state.actionItems) 
+const StatusModal = ({ closeModal, onSave }) => {
+  const { statuses } = useSelector((state) => state.actionItems);
+  const [localStatuses, setLocalStatuses] = useState(statuses);
   const [newStatus, setNewStatus] = useState("");
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    // Fetch existing statuses
-    // axios.get(`/api/projects/${projectId}/statuses`).then((res) => {
-    //   setStatuses(res.data.statuses);
-    // });
-    console.log(statuses)
-  }, [projectId]);
+  const dispatch = useDispatch();
+  const {projectId} = useParams();
 
   const handleAddStatus = () => {
     if (newStatus.trim()) {
-      dispatch(setStatuses([...statuses, { name: newStatus, isDefault: false }]));
+      setLocalStatuses([
+        ...localStatuses,
+        { id: null, name: newStatus, isDefault: false },
+      ]);
       setNewStatus("");
+    
     }
   };
 
+
+
   const handleSave = () => {
-    axios
-      .post("/api/projects/manage-statuses", { projectId, statuses })
+    console.log(localStatuses)
+    postData(`/projects/statuses/${projectId}/`, { statuses: localStatuses })
       .then(() => {
-        onSave();
-      });
+        dispatch(setStatuses(localStatuses)); // Update Redux store
+        closeModal(); // Close modal
+      })
+      .catch((err) => console.error(err));
   };
+
+  const handleUpdateStatus = (index, updatedStatus) => {
+    const updated = [...localStatuses];
+    updated[index] = updatedStatus;
+    setLocalStatuses(updated);
+  };
+
+  const handleDeleteStatus = (index) => {
+    setLocalStatuses(localStatuses.filter((_, i) => i !== index));
+  };
+
 
   return (
     <ModalBase>
       <div className="modal-content p-4">
         <h3 className="font-semibold mb-8">Manage Project Statuses</h3>
         <ul>
-          {statuses.map((status, index) => (
-            <li className="flex justify-between py-1" key={index}>
-              <input
-                type="text"
-                value={status.label}
-                onChange={(e) => {
-                  const updated = [...statuses];
-                  updated[index].name = e.target.value;
-                  setStatuses(updated);
-                }}
-              />
-              {!status.isDefault && (
-                <div className="flex">
-                  <FaEdit className="w-6 h-6 mr-4 cursor-pointer hover:text-blue-500"/>
-                <MdDelete className="w-6 h-6 cursor-pointer hover:text-red-500" onClick={() => {
-                  setStatuses(statuses.filter((_, i) => i !== index));
-                }} />
-                </div>
-              )}
-            </li>
+          {localStatuses.map((status, index) => (
+            <StatusCard
+              key={index}
+              status={status}
+              index={index}
+              onUpdate={handleUpdateStatus}
+              onDelete={handleDeleteStatus}
+            />
           ))}
         </ul>
-        <div>
+        <div className="mt-4">
           <input
             type="text"
             placeholder="New Status"
             value={newStatus}
             onChange={(e) => setNewStatus(e.target.value)}
+            className="border px-2 py-1 rounded"
           />
-          <button onClick={handleAddStatus}>Add</button>
+          <button
+            onClick={handleAddStatus}
+            className="ml-2 px-4 py-1 bg-blue-500 rounded-lg font-semibold text-white"
+          >
+            Add
+          </button>
         </div>
         <div className="mt-8">
-          <button className="px-4 py-1 bg-blue-500 rounded-lg font-semibold text-white" onClick={handleSave}>Save</button>
-          <button className="px-4 py-1" onClick={closeModal}>Close</button>
-
+          <button
+            className="px-4 py-1 bg-blue-500 rounded-lg font-semibold text-white"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+          <button className="px-4 py-1" onClick={closeModal}>
+            Close
+          </button>
         </div>
       </div>
-
     </ModalBase>
   );
 };

@@ -1,37 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineUserAdd, AiOutlineSearch, AiOutlineMail } from "react-icons/ai";
 import MemberTable from "./MemberTable";
 import AddTeamMemberModal from "./AddTeamMemberModal";
+import { useParams } from "react-router-dom";
+import { fetchData } from "../../api";
 
 const TeamMembers = ({ projectName = "Project Alpha" }) => {
-  const [teamMembers, setTeamMembers] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      role: "Frontend Developer",
-      email: "john.doe@example.com",
-      avatar: "https://via.placeholder.com/50",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      role: "Backend Developer",
-      email: "jane.smith@example.com",
-      avatar: "https://via.placeholder.com/50",
-    },
-  ]);
+  const {projectId} = useParams()
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [filteredMembers, setFilteredMember] = useState([]);
   const [addModal, setAddModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
+  const [roles, setRoles] = useState([])
 
   // Filtered team members
-  const filteredMembers = teamMembers.filter((member) =>
-    member.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleAddMember = () => {
     // Logic to add a member
     setAddModal(true)
   };
+
+  useEffect(()=>{
+    fetchData(`/projects/team/${projectId}`).then((res)=>{
+      console.log(res)
+      setTeamMembers(res)
+      setFilteredMember(res)
+    })
+    const fetchRoles = async ()=>{
+      const roles = await fetchData('/global/roles')
+      const transformedRoles = roles.map(role => ({
+        name : role.name,  // Rename `name` to `label`
+        value: role.id,    // Rename `id` to `value`
+        description : role?.description
+      }));
+      console.log(transformedRoles)
+
+      setRoles(transformedRoles)
+    }
+    fetchRoles();
+  },[])
 
   return (
     <div className="p-6">
@@ -62,14 +69,14 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
         </button>
       </div>
 
-      <MemberTable filteredMembers={filteredMembers}/>
+      <MemberTable roles={roles} filteredMembers={filteredMembers}/>
 
       {/* No results */}
       {filteredMembers.length === 0 && (
         <div className="text-gray-500 text-center mt-8">No members found</div>
       )}
       {addModal &&
-      <AddTeamMemberModal setModal={setAddModal}/>}
+      <AddTeamMemberModal roles={roles} setModal={setAddModal}/>}
     </div>
   );
 };

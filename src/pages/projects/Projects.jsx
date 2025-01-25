@@ -81,13 +81,13 @@ const Projects = () => {
           <SearchBar handler={handler} />
           <div>
             <Dropdown
-              label={'Filter by Priority'}
+              name={'Filter by Priority'}
               onSelect={(e) => sortByPriority(e)}
               allowMultiple={true}
               options={[
-                { label: "Low", value: "low" },
-                { label: "Medium", value: "medium" },
-                { label: "High", value: "high" },
+                { name: "Low", value: "low" },
+                { name: "Medium", value: "medium" },
+                { name: "High", value: "high" },
               ]}
               className={'mx-4'}
             />
