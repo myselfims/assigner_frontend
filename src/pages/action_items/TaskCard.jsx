@@ -18,7 +18,7 @@ const TaskCard = ({task}) => {
         <p className="mx-2 text-slate-600">{user?.name}</p>
       </div>
       <div className="flex my-2 justify-between">
-        <p>{new Date(task.deadline).toDateString()}</p>
+        <p>{new Date(task?.deadline).toDateString()}</p>
         <p className="text-center border rounded-full p-1">{task?.status}</p>
       </div>
     </div>

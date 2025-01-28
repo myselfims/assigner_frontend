@@ -33,21 +33,6 @@ const ActionItems = ({ setCurrent }) => {
     setActiveTask(task);
   };
 
-  const search = (query) => {
-    fetchData(`/tasks/${projectId}`).then((res) => {
-      let searched = res.data.filter((item) => {
-        return (
-          String(item.title).toLowerCase().includes(query.toLowerCase()) ||
-          String(item.description)
-            .toLowerCase()
-            .includes(query.toLowerCase()) ||
-          String(item.assignedById).toLowerCase().includes(query.toLowerCase())
-        );
-      });
-      console.log(searched);
-      dispatch(setTasks(searched));
-    });
-  };
 
   useEffect(() => {
     console.log(getAuthInfo());

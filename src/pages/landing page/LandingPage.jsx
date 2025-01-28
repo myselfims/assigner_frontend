@@ -6,6 +6,7 @@ import taskSvg from "../../assets/task_management.svg";
 import collabSvg from "../../assets/team_collabration.svg";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
+import Footer from '../../components/Footer'
 
 const LandingPage = () => {
   const points = [
@@ -108,9 +109,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="footer w-screen bg-slate-800">
-        <h1>Hello</h1>
-      </div>
+     <Footer />
     </div>
   );
 };

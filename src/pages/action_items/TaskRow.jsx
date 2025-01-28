@@ -18,7 +18,10 @@ const TaskRow = ({ task }) => {
   const dispatch = useDispatch();
 
   const updateStatus = (status) => {
-    status = status[0];
+    console.log(status, statuses)
+    status = statuses?.filter((s)=>s.value==status)[0].name
+    console.log(status)
+    
     updateData(`/tasks/${task.id}/`, { status }).then((res) => {
       dispatch(
         setAlert({
@@ -44,7 +47,7 @@ const TaskRow = ({ task }) => {
       </td>
       <td className="">
         <Dropdown
-          label={item?.status}
+          name={item?.status}
           selectedColor={"bg-white"}
           showCount={false}
           options={statuses}
@@ -55,7 +58,7 @@ const TaskRow = ({ task }) => {
       <td className="">
         <div className="flex items-center">
           <img src={user?.avatar} className="w-6 h-6 rounded-full" alt="" />
-          <p className="text-center mx-1">{task?.createdBy}</p>
+          <p className="text-center mx-1">{task?.assignedBy?.name}</p>
         </div>
       </td>
     </tr>

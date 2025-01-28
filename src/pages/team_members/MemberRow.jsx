@@ -7,6 +7,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import Tooltip from "../../components/Tooltip";
 import { updateData } from "../../api";
 import { useParams } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
 
 const MemberRow = ({ member, roles }) => {
   const [selectedRole, setSelectedRole] = useState(member.role);
@@ -46,11 +47,14 @@ const MemberRow = ({ member, roles }) => {
   return (
     <tr key={member?.id} className="border-b">
       <td className="px-4 py-2">
+        {member?.avatar?
         <img
           src={member?.avatar}
           alt={member?.name}
           className="w-12 h-12 rounded-full"
         />
+        :
+        <FaUserCircle className="w-10 h-10 text-gray-500"/> }
       </td>
       <td className="px-4 py-2">
         <div className="flex flex-col">

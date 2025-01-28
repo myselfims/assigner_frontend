@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import Dropdown from "../../components/Dropdown";
 
-const AddTeamMemberModal = ({ setModal, roles }) => {
+const AddTeamMemberModal = ({ setModal }) => {
   const {projectId } = useParams()
   const dispatch = useDispatch()
   const { values, errors, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
@@ -18,7 +18,6 @@ const AddTeamMemberModal = ({ setModal, roles }) => {
       name: "",
       email: "",
       designation: "",
-      roleId : ""
     },
     onSubmit: (data) => {
       console.log(data);
@@ -26,6 +25,7 @@ const AddTeamMemberModal = ({ setModal, roles }) => {
       postData('/users/add-member/', data).then((res)=>{
         console.log(res)
         setModal(false)
+        resetForm()
         dispatch(setAlert({ alert: true, message: "User successfully added!", type: "success" }));
       }).catch((error)=>{
         dispatch(setAlert({ alert: true, message: error.response.data, type: "danger" }));
@@ -33,7 +33,14 @@ const AddTeamMemberModal = ({ setModal, roles }) => {
     },
   });
 
-  console.log(errors)
+  const handleAddAnother = async () => {
+    try {
+      await handleSubmit(); // Ensure handleSubmit is awaited
+    } catch (error) {
+      console.error("Error adding another team member:", error);
+    }
+  };
+  
 
   return (
     <ModalBase>
@@ -52,14 +59,6 @@ const AddTeamMemberModal = ({ setModal, roles }) => {
             <InputBox value={values.name} name={'name'} handler={{handleChange, handleBlur}} label={"Name"} placeholder={"John Deo"} />
             <InputBox value={values.email} name={'email'} handler={{handleChange, handleBlur}} label={"Email"} placeholder={"example@xyz.com"} />
             <div className="flex justify-between items-end">
-            <Dropdown
-              allowMultiple={false}
-              showCount={false}
-              name={"Select permission"}
-              options={roles}
-              // onSelect={handleRoleUpdate}
-              className={'ml-4'}
-            />
           </div>
             <InputBox value={values.designation} name={'designation'} handler={{handleChange, handleBlur}}
               label={"Designation or Title"}
@@ -68,7 +67,7 @@ const AddTeamMemberModal = ({ setModal, roles }) => {
             />
             <div className="flex justify-between mt-6">
               <Button btnType="submit" className="mr-2 w-full">Save</Button>
-              <button className="ml-2 w-full hover:bg-slate-100 rounded-lg">Save and add another</button>
+              <button onClick={handleAddAnother} className="ml-2 w-full hover:bg-slate-100 rounded-lg">Save and add another</button>
             </div>
           </form>
         </div>

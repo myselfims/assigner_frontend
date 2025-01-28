@@ -16,7 +16,6 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
   // Filtered team members
 
   const handleAddMember = () => {
-    // Logic to add a member
     setAddModal(true)
   };
 
@@ -26,19 +25,28 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
       setTeamMembers(res)
       setFilteredMember(res)
     })
-    const fetchRoles = async ()=>{
-      const roles = await fetchData('/global/roles')
-      const transformedRoles = roles.map(role => ({
-        name : role.name,  // Rename `name` to `label`
-        value: role.id,    // Rename `id` to `value`
-        description : role?.description
-      }));
-      console.log(transformedRoles)
-
-      setRoles(transformedRoles)
-    }
-    fetchRoles();
   },[])
+
+
+  
+    useEffect(() => {
+      console.log("Search Query:", searchQuery);
+  
+      // Filter items based on multiple criteria
+      const filtered = teamMembers?.filter((item) => {
+        // Convert search query to lowercase for case-insensitive search
+        const query = searchQuery.toLowerCase();
+  
+        // Check if any property matches the search query
+        return (
+          item.id.toString().includes(query) || // Search by ID
+          item.name.toLowerCase().includes(query) || // Search by name
+          item.email?.toString().includes(query)
+        );
+      });
+      setFilteredMember(filtered);
+    }, [searchQuery]);
+
 
   return (
     <div className="p-6">
