@@ -92,7 +92,8 @@ const FilterBar = ({
       </div>
 
       <Dropdown
-        name={"Status"}
+        name
+        ={"Status"}
         allowMultiple={true}
         options={statuses}
         onSelect={handleFilterByStatus}

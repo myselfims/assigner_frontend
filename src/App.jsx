@@ -26,6 +26,7 @@ import CalendarPage from "./pages/calendar/CalendarPage";
 import ActionItems from "./pages/action_items/ActionItems";
 import TeamMembers from "./pages/team_members/TeamMembers";
 import Board from "./pages/board/Board";
+import GroupChat from "./pages/group_chat/GroupChat";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -65,6 +66,10 @@ function App() {
             <Route
               path="/project/:projectId/calendar/"
               element={<CalendarPage />}
+            />
+            <Route
+              path="/project/:projectId/group-chat/"
+              element={<GroupChat />}
             />
             <Route path="/projects" element={<Projects />} />
             <Route path="/mnjusers" element={<ManageUsers />} />

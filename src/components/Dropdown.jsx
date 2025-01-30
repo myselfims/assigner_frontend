@@ -29,6 +29,7 @@ const Dropdown = ({
     }
   };
   useEffect(() => {
+    console.log(name)
     if (hasMounted.current) {
       // Ensure there are selected options and it's not the first render
       onSelect(selectedOptions);

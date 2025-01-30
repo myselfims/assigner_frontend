@@ -6,7 +6,7 @@ import { AiOutlineSortAscending } from "react-icons/ai";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import { updateData } from "../../api";
 
-const TaskRow = ({ task }) => {
+const TaskRow = ({ task, updateItem }) => {
   const { users } = useSelector((state) => state.users);
   const {statuses} = useSelector(state=>state.actionItems)
   const user = useMemo(
@@ -18,11 +18,11 @@ const TaskRow = ({ task }) => {
   const dispatch = useDispatch();
 
   const updateStatus = (status) => {
-    console.log(status, statuses)
-    status = statuses?.filter((s)=>s.value==status)[0].name
-    console.log(status)
+    console.log(status[0])
+    status = status[0]
     
     updateData(`/tasks/${task.id}/`, { status }).then((res) => {
+      updateItem(task?.id, {status})
       dispatch(
         setAlert({
           alert: true,
@@ -40,14 +40,14 @@ const TaskRow = ({ task }) => {
         <h1>{item?.id}</h1>
       </td>
       <td onClick={() => dispatch(setActiveTask(item))} className="">
-        <h1 className="font-semibold">{item?.title}</h1>
+        <h1 className="font-">{item?.title}</h1>
       </td>
-      <td className="">
+      <td className="text-gray-500">
         <p>{new Date(item?.deadline).toDateString()}</p>
       </td>
       <td className="">
         <Dropdown
-          name={item?.status}
+          name={statuses?.find((s) => s.id == item?.status)?.name}
           selectedColor={"bg-white"}
           showCount={false}
           options={statuses}

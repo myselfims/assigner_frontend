@@ -30,7 +30,6 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
     values,
     errors,
     touched,
-    resetForm,
     handleChange,
     handleBlur,
     handleSubmit,
@@ -47,7 +46,8 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
         .then((res) => {
           setLoading(false);
           setModal(false);
-          addTask(res.data);
+          console.log(res)
+          addTask(res);
         })
         .catch((error) => {
           setLoading(false);
@@ -89,7 +89,7 @@ console.log(values)
           animate={{ scale: 1 }}
           transition={{ duration: 0.2 }}
           exit={{ scale: 0 }}
-          className="main overflow-y-scroll scrollbar-none max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg "
+          className="main overflow-y- scrollbar-none max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg "
         >
           <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
             <h1 className="text-[20px]">

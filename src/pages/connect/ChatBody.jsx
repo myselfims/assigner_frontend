@@ -10,7 +10,7 @@ const ChatBody = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col flex-grow h-full">
       {/* Chat Messages */}
       <div className="flex-grow p-4 overflow-y-auto bg-gray-50">
         <div className="flex items-start mb-4">

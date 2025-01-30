@@ -6,13 +6,13 @@ import MobileNav from "../components/MobileNav";
 
 const BaseLayout = () => {
   return (
-    <div className="w-full h-full flex">
+    <div className="w-full flex">
       <div className="nav">
         <Navigation />
         <MobileNav />
       </div>
 
-      <div className="w-full p-4 overflow-y-scroll">
+      <div className="w-full p-4 overflow-y-hidden">
         <TopNav />
         {/* Animate the page transitions */}
         <AnimatePresence mode="wait">
@@ -24,6 +24,7 @@ const BaseLayout = () => {
           // animate={{ x: 0, opacity: 1 }} // Animate to original position and full opacity
           // // exit={{ x: -800, opacity: 0 }} // Exit to the left with fade-out
           // transition={{ duration: 0.5 }} // Transition duration
+          className="h-[86.5vh] overflow-y-scroll"
           >
             <Outlet />
           </motion.div>

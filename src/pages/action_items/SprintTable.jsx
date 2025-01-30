@@ -25,14 +25,25 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
   const [isOpen, setIsOpen] = useState(true); // State to control collapse/expand
   const [addtask, setAddTask] = useState(false);
 
+  const updateItem = (id, updatedData) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => (item.id === id ? { ...item, ...updatedData } : item))
+    );
+  
+    setFilteredItems((prevFilteredItems) =>
+      prevFilteredItems.map((item) => (item.id === id ? { ...item, ...updatedData } : item))
+    );
+  };
+  
+
   useEffect(() => {
     console.log("selectedStatusOptions", selectedStatusOptions);
-
+    console.log(items)
     // Filter items based on selectedStatusOptions
     let filtered = items?.filter(
       (item) =>
         selectedStatusOptions.length === 0 ||
-        selectedStatusOptions.includes(item.status.toLowerCase())
+        selectedStatusOptions.includes(parseInt(item.status))
     );
 
     // Perform any state updates or operations with the filtered items
@@ -148,7 +159,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
           <tbody className="bg-white">
             {filteredItems?.map((item) => {
               return (
-                <TaskRow handleModal={handleModal} key={item.id} task={item} />
+                <TaskRow updateItem={updateItem} handleModal={handleModal} key={item.id} task={item} />
               );
             })}
           </tbody>
@@ -162,7 +173,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
 
         {/* For Mobile */}
         <div className="max-sm:flex flex-col hidden">
-          {items?.map((task) => {
+          {filteredItems?.map((task) => {
             return <TaskCard key={task?.id} task={task} />;
           })}
         </div>

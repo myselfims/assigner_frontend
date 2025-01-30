@@ -92,7 +92,7 @@ const ProjectNavBar = () => {
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
-          to={"/projects/chat"}
+          to={`/project/${projectId}/group-chat`}
           className={`flex ${
             isActive("/projects/chat") ? "font-bold border rounded-xl" : ""
           } p-2 items-center `}

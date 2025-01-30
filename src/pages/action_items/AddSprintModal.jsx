@@ -18,7 +18,7 @@ const initialValues = {
   endDate: "",
 };
 
-const AddSprintModal = ({ setModal }) => {
+const AddSprintModal = ({ setModal, addSprint }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { projectId } = useParams();
@@ -36,13 +36,12 @@ const AddSprintModal = ({ setModal }) => {
     onSubmit: (data) => {
       setLoading(true);
       data["projectId"] = projectId;
-
       postData(`/sprints/`, data)
         .then((res) => {
           setLoading(false);
           setModal(false);
           // You can dispatch actions to update your state here, if needed
-          // dispatch(addSprint(res.data)); 
+          addSprint(res); 
         })
         .catch((error) => {
             console.log(error)
