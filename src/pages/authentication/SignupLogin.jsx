@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import { loginSchema, signupSchema } from "../../validation/validation_schema";
 import { postData } from "../../api";
-import { setAuthInfo } from "../../store/features/appGlobalSlice";
+import { setAuthInfo, setUser } from "../../store/features/appGlobalSlice";
 
 const SignupLogin = () => {
   const navigate = useNavigate();
@@ -53,6 +53,8 @@ const SignupLogin = () => {
           setLoading(false);
           console.log(res);
           let user = res.user;
+          localStorage.setItem('user', JSON.stringify(user));
+          dispatch(setUser(user))
           if (user.isVerified) {
             dispatch(setAuthInfo(res));
             localStorage.setItem("auth_info", JSON.stringify(res));

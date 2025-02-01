@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiMoreVertical, FiVideo, FiPhone } from "react-icons/fi";
 
-const ChatHeader = ({ selectedUser }) => {
+const ChatHeader = ({ selectedUser, headline }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Function to generate a random color for the placeholder
@@ -28,7 +28,7 @@ const ChatHeader = ({ selectedUser }) => {
         </div>
 
         {/* User Name */}
-        <h2 className="ml-3 text-lg font-medium text-gray-800">{selectedUser?.name}</h2>
+        <h2 className="ml-3 text-lg font-medium text-gray-800">{headline}</h2>
       </div>
 
       {/* Right Icons */}
