@@ -9,8 +9,6 @@ const TypingIndicator = ({ typingUsers }) => {
     return `${typingUsers.slice(0, 2).join(", ")} and others are typing...`;
   };
 
-  console.log(typingUsers)
-
   return (
     <div className="absolute bottom-20 left-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-pulse">
       {getTypingText()}

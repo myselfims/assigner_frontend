@@ -13,3 +13,22 @@ export const formatDate = (dateString)=>{
         return dateString
     }
 }
+
+export function formatChatTimestamp(isoString) {
+    const date = new Date(isoString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) {
+        return "Just now";
+    } else if (diffInSeconds < 3600) {
+        return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    } else if (diffInSeconds < 86400) {
+        return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    } else if (diffInSeconds < 172800) {
+        return "Yesterday";
+    } else {
+        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+}
+
