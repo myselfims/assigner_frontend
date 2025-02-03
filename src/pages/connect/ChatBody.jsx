@@ -98,7 +98,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
   return (
     <div className="flex flex-col flex-grow h-full">
       <div
-        className="flex-grow p-4 overflow-y-auto bg-gray-50 relative"
+        className="flex-grow p-4 overflow-y-auto bg-gray-50 dark:bg-transparent relative"
         ref={chatContainerRef}
         onScroll={handleScroll}
       >
@@ -125,7 +125,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
         )}
       </div>
 
-      <div className="flex relative items-center p-4 bg-gray-100 border-t">
+      <div className="flex relative items-center p-4 dark:bg-gray-900 bg-gray-100 border-t">
         <TypingIndicator typingUsers={typingUsers} />
         <button className="p-2 text-gray-500 hover:text-blue-500">
           <FiPlus size={20} />

@@ -12,7 +12,7 @@ const UsersList = ({ users, setSelectedUser }) => {
       {users.map((user) => (
         <div
           key={user.id}
-          className="flex items-center p-4 cursor-pointer hover:bg-gray-100 border-b"
+          className="flex items-center p-4  cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100 border-b"
           onClick={() => setSelectedUser(user)}
         >
           {/* Profile Picture or Placeholder */}
@@ -31,7 +31,7 @@ const UsersList = ({ users, setSelectedUser }) => {
 
           {/* User Details */}
           <div className="ml-4">
-            <h2 className="text-lg font-medium text-gray-800">{user.name}</h2>
+            <h2 className="text-lg font-medium text-gray-800 dark:text-white">{user.name}</h2>
             <p className="text-sm text-gray-500 truncate">{user.recentMessage || "No recent messages"}</p>
           </div>
         </div>

@@ -35,11 +35,11 @@ function App() {
   return (
     <div
       className={`flex max-sm:p-[10px] w-screen ${
-        !darkMode ? "bg-black text-white" : "bg-white text-black"
-      }`}
+        darkMode ? "dark" : ""
+      } dark:bg-gray-900`}
     >
 
-      <div className="max-sm:my-10 max-sm:p-0 w-full h-screen">
+      <div className="max-sm:my-10 dark:bg-gray-800 dark:text-white max-sm:p-0 w-full h-screen">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Auth page="login" />} />

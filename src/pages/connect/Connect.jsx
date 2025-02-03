@@ -20,15 +20,15 @@ const Connect = () => {
   },[])
 
   return (
-    <div className="flex bg-gray-100 h-[90%]">
+    <div className="flex bg-gray-100 dark:bg-transparent h-[90%]">
       {/* Users List Section */}
-      <div className="w-1/3 border-r border-gray-300 bg-white">
-        <div className="p-4 border-b bg-gray-50">
+      <div className="w-1/3 border-r border-gray-300 dark:">
+        <div className="p-4 border-b bg-gray-50 dark:bg-gray-900">
           <div className="relative">
             <input
               type="text"
               placeholder="Search..."
-              className="w-full p-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-2 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-slate-900 dark:text-white"
             />
             <FiSearch className="absolute top-3 left-3 text-gray-400" />
           </div>

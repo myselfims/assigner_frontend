@@ -11,7 +11,7 @@ const ChatHeader = ({ selectedUser, headline }) => {
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+    <div className="flex items-center justify-between px-4 py-3 border-b dark:bg-gray-900 dark:text-white bg-gray-50">
       {/* Profile Picture or Placeholder */}
       <div className="flex items-center">
         <div
@@ -33,11 +33,11 @@ const ChatHeader = ({ selectedUser, headline }) => {
 
       {/* Right Icons */}
       <div className="flex items-center gap-4">
-        <FiVideo className="text-gray-600 cursor-pointer hover:text-gray-800" size={20} />
-        <FiPhone className="text-gray-600 cursor-pointer hover:text-gray-800" size={20} />
+        <FiVideo className="text-gray-600 dark:text-gray-100 cursor-pointer hover:text-gray-800" size={20} />
+        <FiPhone className="text-gray-600 dark:text-gray-100 cursor-pointer hover:text-gray-800" size={20} />
         <div className="relative">
           <FiMoreVertical
-            className="text-gray-600 cursor-pointer hover:text-gray-800"
+            className="text-gray-600 dark:text-gray-100 cursor-pointer hover:text-gray-800"
             size={20}
             onClick={() => setIsDropdownOpen((prev) => !prev)} // Toggle dropdown
           />
