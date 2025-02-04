@@ -12,33 +12,46 @@ import { formatDate } from "../../globalFunctions";
 import { FaPlusCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { motion } from "framer-motion"; // Import framer-motion
 import AddTaskModal from "./AddTaskModal";
+import { setTasks, updateTask } from "../../store/features/actionItemsSlice";
 
-const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
-  const dispatch = useDispatch();
-  const { selectedStatusOptions, searchQuery, statuses } = useSelector(
+const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
+  const { selectedStatusOptions, searchQuery, tasks } = useSelector(
     (state) => state.actionItems
   );
-  const { projectId } = useParams();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(localTasks);
   const [loading, setLoading] = useState(false);
   const [filteredItems, setFilteredItems] = useState(items);
   const [isOpen, setIsOpen] = useState(true); // State to control collapse/expand
   const [addtask, setAddTask] = useState(false);
+  const dispatch = useDispatch()
 
   const updateItem = (id, updatedData) => {
-    setItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, ...updatedData } : item))
-    );
+    // Find the tasks associated with the sprintId
+    const updatedTasks = { ...tasks };
+    const sprintId = sprint?.id
+    console.log(id, sprintId)
+    if (updatedTasks[sprintId]) {
+      updatedTasks[sprintId] = updatedTasks[sprintId].map((task) =>
+        task.id === id ? { ...task, ...updatedData } : task
+      );
+    }
+  
+    dispatch(setTasks(updatedTasks));
   
     setFilteredItems((prevFilteredItems) =>
-      prevFilteredItems.map((item) => (item.id === id ? { ...item, ...updatedData } : item))
+      prevFilteredItems.map((item) =>
+        item.id === id ? { ...item, ...updatedData } : item
+      )
     );
   };
   
+  useEffect(()=>{
+    console.log(tasks)
+  },[tasks])
+  
+  
 
   useEffect(() => {
-    console.log("selectedStatusOptions", selectedStatusOptions);
-    console.log(items)
     // Filter items based on selectedStatusOptions
     let filtered = items?.filter(
       (item) =>
@@ -51,7 +64,6 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
   }, [selectedStatusOptions, items]); // Add `items` as a dependency if it can change
 
   useEffect(() => {
-    console.log("Search Query:", searchQuery);
 
     // Filter items based on multiple criteria
     const filtered = items?.filter((item) => {
@@ -70,26 +82,6 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint }) => {
 
     setFilteredItems(filtered);
   }, [searchQuery, items]);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchData(`/sprints/${sprint?.id}/tasks/`)
-      .then((res) => {
-        console.log(res);
-        setTimeout(() => {
-          setLoading(false);
-          
-          setItems(res);
-        }, 2000);
-      })
-      .catch((error) => {
-        console.log(error);
-        const { message } = error.response.data;
-        // dispatch(setAlert({ alert: true, message: message, type: "danger" }));
-        setLoading(false);
-        setItems([]);
-      });
-  }, []);
 
   const handleAddItem = () => {
     setCurrentSprint(sprint);

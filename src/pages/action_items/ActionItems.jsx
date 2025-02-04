@@ -6,7 +6,7 @@ import Loader from "../../components/Loader";
 import Modal from "./TaskDetailsModal";
 import AddTaskModal from "./AddTaskModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setStatuses, setTasks } from "../../store/features/actionItemsSlice";
+import { setSprints, setStatuses, setTasks } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
 import { AnimatePresence } from "motion/react";
 import { Link, useParams } from "react-router-dom";
@@ -18,13 +18,12 @@ import StatusModal from "./StatusModal";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
-  const { tasks } = useSelector((state) => state.actionItems);
+  const { tasks, sprints } = useSelector((state) => state.actionItems);
   const detailsModal = useSelector((state) => state.taskDetails.modal);
   const { projectId } = useParams();
   const [loading, setLoading] = useState(false);
   const [currentSprint, setCurrentSprint] = useState(null);
   const [addSprintModal, setAddSprintModal] = useState(false);
-  const [sprints, setSprints] = useState([]);
   const [customStatusModal, setCustomStatusModal] = useState(false);
 
   const handleModal = (task) => {
@@ -33,35 +32,92 @@ const ActionItems = ({ setCurrent }) => {
     setActiveTask(task);
   };
 
-  useEffect(() => {
-    console.log(getAuthInfo());
-    dispatch(setCurrentPage("Action Items"));
-    setLoading(true);
+  // useEffect(() => {
+  //   console.log(getAuthInfo());
+  //   dispatch(setCurrentPage("Action Items"));
+  //   setLoading(true);
 
+  //   const fetchProjectData = async () => {
+  //     // Renamed to avoid conflict
+  //     try {
+  //       let sprints = await fetchData(`/sprints/project/${projectId}/`);
+  //       let statuses = await fetchData(`/projects/statuses/${projectId}`);
+  //       const formattedStatuses = statuses.map((status) => ({
+  //         name: status.name, // Assuming `name` contains the display name
+  //         // icon: AiOutlineSortAscending,    // Set the icon for all
+  //         value: status.slug || status.id, // Use `slug` or `id` as value
+  //         id: status.id,
+  //       }));
+  //       console.log(statuses);
+  //       setSprints(sprints);
+  //       dispatch(setStatuses(formattedStatuses));
+  //       setLoading(false);
+  //     } catch (err) {
+  //       console.log(err);
+  //       dispatch(setAlert({ alert: true, message: err.error, type: "danger" }));
+  //       dispatch(setTasks([]));
+  //     }
+  //   };
+
+  //   fetchProjectData();
+  // }, [dispatch, projectId]);
+
+
+  useEffect(() => {
+    dispatch(setCurrentPage("Action Items"));
     const fetchProjectData = async () => {
-      // Renamed to avoid conflict
       try {
+        setLoading(true);
+        // Fetch sprints and statuses
         let sprints = await fetchData(`/sprints/project/${projectId}/`);
         let statuses = await fetchData(`/projects/statuses/${projectId}`);
+  
+        // Format statuses (unchanged)
         const formattedStatuses = statuses.map((status) => ({
-          name: status.name, // Assuming `name` contains the display name
-          // icon: AiOutlineSortAscending,    // Set the icon for all
-          value: status.slug || status.id, // Use `slug` or `id` as value
+          name: status.name,
+          value: status.slug || status.id,
           id: status.id,
         }));
-        console.log(statuses);
-        setSprints(sprints);
+  
+        dispatch(setSprints(sprints));
         dispatch(setStatuses(formattedStatuses));
+  
+        const tasksResponses = await Promise.all(
+          sprints.map(async (sprint) => {
+            try {
+              return await fetchData(`/sprints/${sprint.id}/tasks/`);
+            } catch (error) {
+              if (error.response?.status === 404) {
+                return []; // Return an empty array if no tasks found
+              }
+              throw error; // Throw error for other issues (500, 403, etc.)
+            }
+          })
+        );
+  
+        // Map tasks to sprint IDs
+        const tasksData = sprints.reduce((acc, sprint, index) => {
+          acc[sprint.id] = tasksResponses[index];
+          return acc;
+        }, {});
+        console.log(tasksData)
+  
+        dispatch(setTasks(tasksData)); // Store all tasks in Redux or state
         setLoading(false);
       } catch (err) {
         console.log(err);
         dispatch(setAlert({ alert: true, message: err.error, type: "danger" }));
-        dispatch(setTasks([]));
+        dispatch(setTasks({})); // Reset tasks on error
+        setLoading(false);
       }
     };
-
-    fetchProjectData();
+    if (sprints?.lenght==0){
+      fetchProjectData();
+    }
   }, [dispatch, projectId]);
+  
+
+
 
   return (
     <div className="w-full">
@@ -99,6 +155,7 @@ const ActionItems = ({ setCurrent }) => {
                 sprint={sprint}
                 handleModal={handleModal}
                 setCurrentSprint={setCurrentSprint}
+                localTasks={tasks[sprint.id] || []}
               />
             ))}
 
@@ -109,7 +166,7 @@ const ActionItems = ({ setCurrent }) => {
         {detailsModal && <Modal />}
         {addSprintModal && (
           <AddSprintModal
-            addSprint={(sprint) => setSprints([...sprints, sprint])}
+            addSprint={(sprint) => dispatch(setSprints([...sprints, sprint]))}
             setModal={setAddSprintModal}
           />
         )}

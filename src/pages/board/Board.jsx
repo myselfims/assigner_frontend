@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTasksAPI, updateTaskStatusAPI } from "./dummyAPIs"; // Dummy API functions
+import { fetchTasksAPI, updateTaskStatusAPI } from "./dummyAPIs";
 import TaskCard from "./TaskCard";
+import { formatDate } from "../../globalFunctions";
+import { updateData } from "../../api";
 
 const Board = () => {
-  const { statuses } = useSelector((state) => state.actionItems); // Fetch statuses from Redux store
+  const { statuses, sprints, tasks } = useSelector(
+    (state) => state.actionItems
+  ); // Fetch statuses and sprints from Redux store
   const dispatch = useDispatch();
 
-  const [tasks, setTasks] = useState([]);
+  const [localTasks, setLocalTasks] = useState([]);
+  const [currentSprintIndex, setCurrentSprintIndex] = useState(0);
 
   useEffect(() => {
-    // Fetch tasks when the component mounts
-    const fetchTasks = async () => {
-      const fetchedTasks = await fetchTasksAPI();
-      setTasks(fetchedTasks);
-    };
-
-    fetchTasks();
-
-    console.log("board page")
-  }, []);
+    if (sprints.length > 0) {
+      setLocalTasks(tasks[sprints[currentSprintIndex].id]);
+      console.log('called...')
+      console.log(tasks[sprints[currentSprintIndex].id])
+    }
+  }, [currentSprintIndex, sprints, tasks]);
 
   const handleDragStart = (e, taskId) => {
     e.dataTransfer.setData("taskId", taskId);
@@ -27,43 +28,110 @@ const Board = () => {
 
   const handleDrop = async (e, statusValue) => {
     const taskId = e.dataTransfer.getData("taskId");
-    const updatedTasks = tasks.map((task) =>
+    const updatedTasks = localTasks.map((task) =>
       task.id === parseInt(taskId) ? { ...task, status: statusValue } : task
     );
-    setTasks(updatedTasks);
-
-    // Dummy API call to update task status
-    await updateTaskStatusAPI(taskId, statusValue);
+    setLocalTasks(updatedTasks);
+    await updateData(`/tasks/${taskId}/`, { status: statusValue }).then(
+      (res) => {
+        dispatch(
+          setAlert({
+            alert: true,
+            type: "success",
+            message: "Successfully updated!",
+          })
+        );
+      }
+    );
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
+  const goToPreviousSprint = () => {
+    if (currentSprintIndex > 0) {
+      setCurrentSprintIndex((prev) => prev - 1);
+    }
+  };
+
+  const goToNextSprint = () => {
+    if (currentSprintIndex < sprints.length - 1) {
+      setCurrentSprintIndex((prev) => prev + 1);
+    }
+  };
+
   return (
-    <div className="p-6 flex gap-6 overflow-x-auto h-screen">
-      {statuses.map((status) => (
-        <div
-          key={status.value}
-          className="bg-gray-100 rounded-lg p-4 min-w-[300px] flex-1 shadow-md"
-          onDrop={(e) => handleDrop(e, status.value)}
-          onDragOver={handleDragOver}
-        >
-          <h3 className="text-lg font-semibold mb-4">{status.name}</h3>
-          <div className="flex flex-col gap-3">
-            <h1>Hello</h1>
-            {tasks
-              .filter((task) => task.status === status.value)
-              .map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onDragStart={(e) => handleDragStart(e, task.id)}
-                />
-              ))}
+    <div className="p-6 flex flex-col h-screen">
+      {/* Sprint Navigation */}
+      {sprints.length > 0 && (
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={goToPreviousSprint}
+            disabled={currentSprintIndex === 0}
+            className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <div className="text-center">
+            <h2 className="text-xl font-bold text-black">
+              {sprints[currentSprintIndex].name}
+            </h2>
+            <p className="text-gray-600">
+              {sprints[currentSprintIndex].description}
+            </p>
+            <p className="text-sm text-gray-500">
+              {formatDate(sprints[currentSprintIndex].startDate)} -{" "}
+              {formatDate(sprints[currentSprintIndex].endDate)}
+            </p>
           </div>
+
+          <button
+            onClick={goToNextSprint}
+            disabled={currentSprintIndex === sprints.length - 1}
+            className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
-      ))}
+      )}
+
+      {/* Kanban Board */}
+      <div className="flex gap-6 overflow-x-auto flex-1">
+        {statuses.map((status) => (
+          <div
+            key={status.value}
+            className="bg-gray-100 rounded-lg p-4 min-w-[300px] flex-1 shadow-md"
+            onDrop={(e) => handleDrop(e, status.value)}
+            onDragOver={handleDragOver}
+          >
+            <div className="flex justify-between">
+              <h3 className="text-lg font-semibold mb-4">{status.name}</h3>
+              <span className="font-semibold mb-4 border-2 rounded-full w-5 h-5 flex justify-center items-center text-sm text-gray-700">
+                {
+                  localTasks?.filter(
+                    (task) => parseInt(task.status) === parseInt(status.value)
+                  ).length
+                }
+              </span>
+            </div>
+            <div className="flex flex-col gap-3">
+              {localTasks
+                ?.filter(
+                  (task) => parseInt(task.status) === parseInt(status.value)
+                )
+                ?.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onDragStart={(e) => handleDragStart(e, task.id)}
+                  />
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

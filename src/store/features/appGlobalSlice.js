@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     currentPage : 'dashboard',
     alert : {alert:false,type:'',message:''},
-    darkMode : true,
+    darkMode : false,
     sidebar : false,
     auth_info : {token:null},
     user : JSON.parse(localStorage.getItem("user")) || null, 

@@ -49,7 +49,7 @@ const Settings = () => {
         </div>
         <div className="flex justify-between my-2">
           <p>Show Animations</p>
-          <ToggleBtn value={false} handler={() => {}} />
+          <ToggleBtn value={false} handler={() => {}} /> 
         </div>
       </div>
 
