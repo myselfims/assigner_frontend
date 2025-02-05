@@ -5,6 +5,7 @@ import Dropdown from "../../components/Dropdown";
 import { AiOutlineSortAscending } from "react-icons/ai";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import { updateData } from "../../api";
+import { GoGrabber } from "react-icons/go";
 
 const TaskRow = ({ task, updateItem }) => {
   const { users } = useSelector((state) => state.users);
@@ -35,17 +36,20 @@ const TaskRow = ({ task, updateItem }) => {
   };
 
   return (
-    <tr key={item.id} className="hover:bg-slate-100 cursor-pointer relative">
+    <tr key={item.id} className="hover:bg-slate-100 text-sm  cursor-pointer relative">
+      <td>
+      <GoGrabber className="text-xl cursor-grabbing"/>
+      </td>
       <td className="text-center py-2">
         <h1>{item?.id}</h1>
       </td>
       <td onClick={() => dispatch(setActiveTask(item))} className="">
         <h1 className="font-">{item?.title}</h1>
       </td>
-      <td className="text-gray-500">
+      <td className="text-gray-500 text-sm">
         <p>{new Date(item?.deadline).toDateString()}</p>
       </td>
-      <td className="">
+      <td className="py-2">
         <Dropdown
           name={statuses?.find((s) => s.id == item?.status)?.name}
           selectedColor={"bg-white"}
@@ -55,10 +59,16 @@ const TaskRow = ({ task, updateItem }) => {
           className={'py-[5px]'}
         />
       </td>
+      {/* <td className="">
+        <div className="flex items-center">
+          <img src={user?.avatar} className="w-6 h-6 rounded-full" alt="" />
+          <p className="text-center mx-1 text-sm">{task?.assignedBy?.name}</p>
+        </div>
+      </td> */}
       <td className="">
         <div className="flex items-center">
           <img src={user?.avatar} className="w-6 h-6 rounded-full" alt="" />
-          <p className="text-center mx-1">{task?.assignedBy?.name}</p>
+          <p className="text-center mx-1 text-sm">{task?.assignedTo?.name}</p>
         </div>
       </td>
     </tr>

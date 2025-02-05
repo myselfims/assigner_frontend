@@ -133,6 +133,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
         <table className="table-auto max-sm:hidden max-sm:text-xs w-full text-start border border-gray-300">
           <thead className="static rounded-md">
             <tr className="bg-blue-100 border border-b border-gray-300">
+              <th className="border-slate-400 w-[0px] text-start"></th>
               <th className="border-slate-400 p-2 w-[20px] text-start">ID</th>
               <th className="border-slate-400 p-2 w-[600px] text-start">
                 Title
@@ -143,8 +144,11 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
               <th className="border-slate-400 p-2 w-[150px] text-start">
                 Status
               </th>
-              <th className="border-slate-400 p-2 w-[150px] text-start">
+              {/* <th className="border-slate-400 p-2 w-[150px] text-start">
                 Created By
+              </th> */}
+              <th className="border-slate-400 p-2 w-[150px] text-start">
+                Assigned To
               </th>
             </tr>
           </thead>

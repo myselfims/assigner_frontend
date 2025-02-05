@@ -7,6 +7,8 @@ const initialState = {
     selectedStatusOptions : [],
     statuses : [],
     searchQuery : '',
+    project : null,
+    members : [],
 }
 
 export const actionItemsSlice = createSlice({
@@ -15,6 +17,12 @@ export const actionItemsSlice = createSlice({
     reducers : {
         setTasks : (state, action)=>{
             state.tasks = action.payload
+        },
+        setMembers : (state, action)=>{
+            state.members = action.payload
+        },
+        setProject : (state, action)=>{
+            state.project = action.payload
         },
         setSprints : (state, action)=>{
             state.sprints = action.payload
@@ -47,5 +55,5 @@ export const actionItemsSlice = createSlice({
 })
 
 
-export const {setTasks,setSprints, setSearchQuery, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions, setStatuses} = actionItemsSlice.actions
+export const {setTasks, setMembers,setProject ,setSprints, setSearchQuery, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions, setStatuses} = actionItemsSlice.actions
 export default actionItemsSlice.reducer

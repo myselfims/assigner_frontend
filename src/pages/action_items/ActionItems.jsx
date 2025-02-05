@@ -111,7 +111,8 @@ const ActionItems = ({ setCurrent }) => {
         setLoading(false);
       }
     };
-    if (sprints?.lenght==0){
+    console.log(sprints.lenght)
+    if (sprints?.lenght==0 || sprints){
       fetchProjectData();
     }
   }, [dispatch, projectId]);

@@ -3,9 +3,9 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import Loader from "./Loader";
 import { fetchData } from "../api";
 
-const UserSearchBox = ({ onSelect, allowMultiple = false }) => {
+const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) => {
   const [query, setQuery] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(passedUsers?passedUsers : []);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 

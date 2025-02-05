@@ -19,11 +19,12 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const [showNewMessageButton, setShowNewMessageButton] = useState(false);
+  const [inputRows, setInputRows] = useState(1)
 
-  const removeMessage = (id)=>{
-    setMessagesList(messages?.filter((m)=>m.id!==id))
-    setMessages(messages?.filter((m)=>m.id!==id))
-  }
+  const removeMessage = (id) => {
+    setMessagesList(messages?.filter((m) => m.id !== id));
+    setMessages(messages?.filter((m) => m.id !== id));
+  };
 
   useEffect(() => {
     if (!projectId) return;
@@ -69,7 +70,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
   };
 
   const handleSendMessage = async () => {
-    if (!message) return;
+    if (!message.trim()) return;
 
     try {
       const data = {
@@ -88,6 +89,34 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
       console.log(error);
     }
   };
+
+
+const handleKeyDown = (e) => {
+  if (e.key === "Enter") {
+    if (e.shiftKey) {
+      // Shift + Enter → Move to a new line
+      setInputRows((prev) => prev + 1);
+    } else {
+      // Enter (without Shift) → Send message
+      e.preventDefault();
+      handleSendMessage();
+    }
+  } else if (e.key === "Backspace") {
+    const { selectionStart, selectionEnd, value } = e.target;
+
+    // If entire text is selected (Ctrl+A) and Backspace is pressed, reset to 1 row
+    if (selectionStart === 0 && selectionEnd === value.length) {
+      setInputRows(1);
+    } 
+    // Reduce rows when deleting a newline at the end
+    else if (value.endsWith("\n")) {
+      setInputRows((prev) => (prev > 1 ? prev - 1 : 1)); // Prevent going below 1
+    }
+  }
+};
+
+  
+  
 
   const sendTypingStatus = debounce(() => {
     if (message?.length > 0) {
@@ -130,15 +159,16 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
         <button className="p-2 text-gray-500 hover:text-blue-500">
           <FiPlus size={20} />
         </button>
-        <input
-          type="text"
+        <textarea
           placeholder="Type your message..."
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
             sendTypingStatus();
           }}
-          className="flex-grow p-2 mx-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onKeyDown={handleKeyDown}
+          className="flex-grow p-2 mx-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+          rows={inputRows}
         />
         <button
           onClick={handleSendMessage}

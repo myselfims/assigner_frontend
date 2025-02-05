@@ -10,14 +10,16 @@ import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 
 const MemberRow = ({ member, roles }) => {
-  const [selectedRole, setSelectedRole] = useState(member.role);
+  const [selectedRole, setSelectedRole] = useState(member['role.name']);
   const [pendingRole, setPendingRole] = useState(null); // To store the role selected before confirmation
   const [confirmModal, setConfirmModal] = useState(false);
   const {projectId} = useParams()
 
   // Handle dropdown selection
   const handleRoleUpdate = (value) => {
+    console.log(value)
     const role = roles?.find((r) => r?.value === value[0]);
+    console.log(role, roles)
     setPendingRole(role); // Save the pending role
     setConfirmModal(true); // Show confirmation modal
   };
@@ -26,7 +28,7 @@ const MemberRow = ({ member, roles }) => {
   const handleConfirm = (isConfirmed) => {
     setConfirmModal(false);
     if (isConfirmed && pendingRole) {
-      setSelectedRole(pendingRole.label); // Update the role in UI
+      setSelectedRole(pendingRole.name); // Update the role in UI
       onUpdateRole(member.id, pendingRole.value); // Callback to update role in parent or backend
     }
     setPendingRole(null); // Clear pending role
@@ -74,7 +76,7 @@ const MemberRow = ({ member, roles }) => {
             <Dropdown
               allowMultiple={false}
               showCount={false}
-              name={member?.role? member?.role : 'Not set'}
+              name={selectedRole? selectedRole : 'Not set'}
               options={roles}
               onSelect={handleRoleUpdate}
             />
@@ -99,7 +101,7 @@ const MemberRow = ({ member, roles }) => {
       {confirmModal && (
         <ConfirmModal
           onSelect={handleConfirm}
-          message={`Are you sure you want to change the role to "${pendingRole?.label}"?`}
+          message={`Are you sure you want to change the role to "${pendingRole?.name}"?`}
         />
       )}
     </tr>

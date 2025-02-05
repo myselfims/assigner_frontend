@@ -58,7 +58,7 @@ const FileGallery = ({ files }) => {
   return (
     <div className="bg-white p-4">
       {/* Search Box */}
-      <div className="relative mb-4">
+      <div className="sticky mb-4 top-1">
         <input
           type="text"
           placeholder="Search files..."
@@ -66,7 +66,7 @@ const FileGallery = ({ files }) => {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full p-3 pl-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-        <FiSearch className="absolute top-3 left-3 text-gray-400" />
+        <FiSearch className="absolute top-4 left-3 text-gray-400" />
       </div>
 
       {/* Files List */}

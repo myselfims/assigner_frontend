@@ -13,7 +13,7 @@ import {
 import UsersList from "../connect/UsersList";
 import ChatHeader from "../connect/ChatHeader";
 import ChatBody from "../connect/ChatBody";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../../store/features/appGlobalSlice";
 import FileGallery from "./files/FileGallery";
 import { fetchData } from "../../api";
@@ -25,16 +25,15 @@ const GroupChat = () => {
   const [activeTab, setActiveTab] = useState("messages");
   const [selectedUser, setSelectedUser] = useState(null);
   const dispatch = useDispatch();
-  const [messages, setMessages] = useState([])
-  const {projectId} = useParams()
+  const [messages, setMessages] = useState([]);
+  const { projectId } = useParams();
+  const { project } = useSelector((state) => state.actionItems);
 
   const users = [
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
     { id: 3, name: "Michael Brown" },
   ];
-
-
 
   const files = [
     {
@@ -121,31 +120,29 @@ const GroupChat = () => {
 
   useEffect(() => {
     dispatch(setCurrentPage("GroupChat"));
-    getMessages()
+    getMessages();
   }, [dispatch]);
 
-  const getMessages = async ()=>{
-    try{
-      let res = await fetchData(`/chat/project/${projectId}`)
-      setMessages(res)
-    } catch(error) {
-      console.log("error", error)
+  const getMessages = async () => {
+    try {
+      let res = await fetchData(`/chat/project/${projectId}`);
+      setMessages(res);
+    } catch (error) {
+      console.log("error", error);
     }
-  }
+  };
 
-
-  const addMessage = (message)=>{
-    setMessages([...messages, message])
-  }
+  const addMessage = (message) => {
+    setMessages([...messages, message]);
+  };
 
   return (
     <div className="flex h-full">
       {/* Left Section: Group Info, Search, and Tabs */}
       <div className="w-1/4 border-r border-gray-300 bg- p-">
-        <div className="group-info mb-4">
-          <h3>Group Name</h3>
+        {/* <div className="group-info mb-4">
           <p>5 Active Members</p>
-        </div>
+        </div> */}
 
         {/* Search Bar */}
         <div className="relative px-2 mt-4">
@@ -175,7 +172,7 @@ const GroupChat = () => {
             }`}
           >
             <FiUsers className="inline-block mr-2 w-6 h-6" />
-         Members
+            Members
           </button>
           <button
             onClick={() => setActiveTab("files")}
@@ -184,7 +181,7 @@ const GroupChat = () => {
             }`}
           >
             <FiFileText className="inline-block mr-2 w-6 h-6" />
-           Files
+            Files
           </button>
           <button
             onClick={() => setActiveTab("files")}
@@ -193,7 +190,7 @@ const GroupChat = () => {
             }`}
           >
             <TiPinOutline className="inline-block mr-2 w-6 h-6" />
-           Pinned Messages
+            Pinned Messages
           </button>
           <button
             onClick={() => setActiveTab("files")}
@@ -202,7 +199,7 @@ const GroupChat = () => {
             }`}
           >
             <FaGripLines className="inline-block mr-2 w-6 h-6" />
-           Statements
+            Statements
           </button>
         </div>
       </div>
@@ -212,16 +209,22 @@ const GroupChat = () => {
         {/* Tab Content */}
         <div className="flex-grow overflow-y-auto ">
           {activeTab === "messages" && (
-           <div className="h-full flex flex-col">
-           {/* Render Chat Header */}
-           <ChatHeader headline={"Project Name"} selectedUser={selectedUser} />
-         
-           {/* Render Chat Body */}
-           <div className="flex-1 overflow-y-auto">
-             <ChatBody setMessages={setMessages} messages={messages} onSend={addMessage}/>
-           </div>
-         </div>
-         
+            <div className="h-full flex flex-col">
+              {/* Render Chat Header */}
+              <ChatHeader
+                headline={`${project?.name} - Chat`}
+                selectedUser={selectedUser}
+              />
+
+              {/* Render Chat Body */}
+              <div className="flex-1 overflow-y-auto">
+                <ChatBody
+                  setMessages={setMessages}
+                  messages={messages}
+                  onSend={addMessage}
+                />
+              </div>
+            </div>
           )}
           {activeTab === "members" && (
             <div>

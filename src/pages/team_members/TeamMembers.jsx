@@ -4,10 +4,12 @@ import MemberTable from "./MemberTable";
 import AddTeamMemberModal from "./AddTeamMemberModal";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../api";
+import { useSelector } from "react-redux";
 
 const TeamMembers = ({ projectName = "Project Alpha" }) => {
   const {projectId} = useParams()
-  const [teamMembers, setTeamMembers] = useState([]);
+  const {members, project} = useSelector(state=>state.actionItems)
+  const [teamMembers, setTeamMembers] = useState(members);
   const [filteredMembers, setFilteredMember] = useState([]);
   const [addModal, setAddModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,10 +22,16 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
   };
 
   useEffect(()=>{
-    fetchData(`/projects/team/${projectId}`).then((res)=>{
+    fetchData('/global/roles').then((res)=>{
       console.log(res)
-      setTeamMembers(res)
-      setFilteredMember(res)
+      const formattedroles = res.map((role) => ({
+        name: role.name,
+        value: role.slug || role.id,
+        description : role.description,
+        id: role.id,
+      }));
+
+      setRoles(formattedroles)
     })
   },[])
 
@@ -52,8 +60,8 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
     <div className="p-6">
       {/* Project Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">{projectName}</h1>
-        <p className="text-gray-600">A detailed view of your project team.</p>
+        <h1 className="text-3xl font-bold">{project?.name}</h1>
+        <p className="text-gray-600">{project?.description}</p>
       </div>
 
       {/* Search and Actions */}

@@ -1,21 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { setSidebar } from "../../store/features/appGlobalSlice";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { FaTasks, FaUsersCog } from "react-icons/fa";
 import { LuMessageSquare, LuSettings, LuClipboard } from "react-icons/lu";
 import { IoIosCalendar } from "react-icons/io";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
 import { PiKanbanDuotone } from "react-icons/pi";
+import { fetchData } from "../../api";
+import {setMembers, setProject} from "../../store/features/actionItemsSlice"
 
 const ProjectNavBar = () => {
   const { projectId } = useParams();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  const {project} = useSelector(state => state.actionItems)
 
   const isActive = (path) => pathname === path;
+
+  useEffect(()=>{
+    const fetchProject = async ()=>{
+      try{
+        let res = await fetchData(`/projects/${projectId}`)
+        let members = await fetchData(`/projects/team/${projectId}`)
+        dispatch(setMembers(members))
+        console.log(members)
+        dispatch(setProject(res))
+      }catch(error){
+        console.log(error)
+      }
+    }
+    fetchProject()
+  },[projectId])
 
   return (
     <AnimatePresence>
@@ -41,7 +59,7 @@ const ProjectNavBar = () => {
             <IoIosArrowBack />
             Back
           </Link>
-          <h1 className="text-2xl font-semibold">ViziSmart</h1>
+          <h1 className="text-xl font-semibold">{project?.name}</h1>
         </div>
 
         <Link

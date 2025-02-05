@@ -4,7 +4,7 @@ import { FaSave } from "react-icons/fa";
 import { fetchData, postData } from "../../api";
 import { useFormik } from "formik";
 import { TaskSchema } from "../../validation/validation_schema";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../store/features/actionItemsSlice";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import Loader from "../../components/Loader";
@@ -25,6 +25,7 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const { projectId } = useParams();
+  const {members} = useSelector(state=>state.actionItems)
 
   const {
     values,
@@ -152,6 +153,7 @@ console.log(values)
                     <UserSearchBox
                       onSelect={handleUserSelect}
                       allowMultiple={false}
+                      passedUsers={members}
                     />
                     {/* <label className="text-red-500 my-1" htmlFor="">
                       {errors?.assignedToId}
