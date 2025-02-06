@@ -107,7 +107,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
         {/* Button placed after text content */}
         <Button
           onClick={handleAddItem}
-          className="py-0 px-1 hover:bg-blue-100"
+          className="px-1 h-8 hover:bg-blue-100"
           type="outlined"
         >
           <FaPlusCircle className="mr-1" />

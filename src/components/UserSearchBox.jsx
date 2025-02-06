@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import Loader from "./Loader";
 import { fetchData } from "../api";
@@ -8,6 +8,7 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) =>
   const [users, setUsers] = useState(passedUsers?passedUsers : []);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const ref = useRef()
 
   // Handle input change and fetch users
   const handleInputChange = async (event) => {
@@ -31,6 +32,19 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) =>
     }
   };
 
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setUsers([]);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
   // Handle user selection
   const handleSelectUser = (user) => {
     let newList = allowMultiple
@@ -53,7 +67,7 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) =>
   };
 
   return (
-    <div className="relative flex border p-2 rounded items-center flex-wrap bg-white shadow-sm w-52">
+    <div ref={ref} className="relative z-30 flex border p-2 rounded items-center flex-wrap bg-white shadow-sm w-52">
       {selectedUsers.map((user) => (
         <p
           key={user.id}
@@ -80,7 +94,7 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) =>
       )}
 
       {users.length > 0 && (
-        <div className="absolute left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-full z-10">
+        <div className="absolute max-h-40 overflow-y-scroll left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-full z-10">
           {loading ? (
             <div className="flex justify-center text-sm items-center py-2">
               <Loader />

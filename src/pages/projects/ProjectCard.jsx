@@ -1,12 +1,12 @@
 import React from 'react';
 
 const ProjectCard = ({ project }) => {
-  const { name, lead, teamSize, startDate, status, priority, description, progress } = project;
+  const { name, leadUser, teamSize, startDate, status, priority, description, progress } = project;
 
   return (
     <div className="max-w-sm p-4 bg-white rounded-lg shadow-md border border-gray-200">
       <h2 className="text-xl font-bold text-gray-800">{name}</h2>
-      <p className="text-gray-600 text-sm">Lead: {lead}</p>
+      <p className="text-gray-600 text-sm">Lead: {leadUser?.name}</p>
       <p className="text-gray-600 text-sm">Team Size: {teamSize}</p>
       <p className="text-gray-600 text-sm">Started: {startDate}</p>
       <p className={`text-sm font-medium mt-2 ${status === 'Ongoing' ? 'text-blue-500' : status === 'Completed' ? 'text-green-500' : 'text-red-500'}`}>

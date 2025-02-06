@@ -20,6 +20,7 @@ import { fetchData } from "../../api";
 import { useParams } from "react-router-dom";
 import { TiPinOutline } from "react-icons/ti";
 import { FaGripLines } from "react-icons/fa6";
+import PinnedMessages from "./pinned_messages/PinnedMessages";
 
 const GroupChat = () => {
   const [activeTab, setActiveTab] = useState("messages");
@@ -136,6 +137,11 @@ const GroupChat = () => {
     setMessages([...messages, message]);
   };
 
+  const tabs = {
+    "files" : <FileGallery files={files}/>,
+    "pins" : <PinnedMessages />
+  }
+
   return (
     <div className="flex h-full">
       {/* Left Section: Group Info, Search, and Tabs */}
@@ -184,7 +190,7 @@ const GroupChat = () => {
             Files
           </button>
           <button
-            onClick={() => setActiveTab("files")}
+            onClick={() => setActiveTab("pins")}
             className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
               activeTab === "files" ? "border-b-2 border-blue-500" : ""
             }`}
@@ -236,11 +242,7 @@ const GroupChat = () => {
               </ul>
             </div>
           )}
-          {activeTab === "files" && (
-            <div>
-              <FileGallery files={files} />
-            </div>
-          )}
+          {tabs[activeTab]}
         </div>
       </div>
     </div>

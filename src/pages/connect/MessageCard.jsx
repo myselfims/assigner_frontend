@@ -11,7 +11,7 @@ import { useParams } from "react-router-dom";
 const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isPinned, setIsPinned] = useState(message?.isPinned || false); // Track pinned status
+  const [isPinned, setIsPinned] = useState(message?.pinned || false); // Track pinned status
   const {projectId} = useParams()
 
   const deleteMessage = async () => {
@@ -31,7 +31,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
         receiverId: receiverId || null,
       });
       console.log(res);
-      setIsPinned(true); // Update UI on success
+      setIsPinned(!isPinned); // Update UI on success
     } catch (error) {
       console.error("Error pinning message:", error);
     }

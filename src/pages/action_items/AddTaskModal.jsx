@@ -9,7 +9,7 @@ import { addTask } from "../../store/features/actionItemsSlice";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import Loader from "../../components/Loader";
 import InputField from "../../components/InputField";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import UserSearchBox from "../../components/UserSearchBox";
 import { useParams } from "react-router-dom";
 
@@ -22,10 +22,9 @@ const initialValues = {
 
 const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
   const dispatch = useDispatch();
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const { projectId } = useParams();
-  const {members} = useSelector(state=>state.actionItems)
+  const { members } = useSelector((state) => state.actionItems);
 
   const {
     values,
@@ -34,7 +33,6 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
     handleChange,
     handleBlur,
     handleSubmit,
-    setValues,
     setFieldValue,
   } = useFormik({
     initialValues,
@@ -47,7 +45,6 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
         .then((res) => {
           setLoading(false);
           setModal(false);
-          console.log(res)
           addTask(res);
         })
         .catch((error) => {
@@ -58,117 +55,100 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
     },
   });
 
-  useEffect(() => {
-    fetchData("/users").then((res) => {
-      setUsers(res.data);
-    });
-  }, []);
-
   const handleUserSelect = (user) => {
-    console.log("user", user);
-    let id = user[0].id;
-    setFieldValue("assignedToId", id);
-    console.log("ass called", id)
+    setFieldValue("assignedToId", user[0].id);
   };
-
-
 console.log(errors)
-console.log(values)
-
-
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
         exit={{ opacity: 0 }}
-        className="w-screen z-40 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       >
         <motion.div
-          initial={{ scale: 0 }}
+          initial={{ scale: 0.9 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.2 }}
-          exit={{ scale: 0 }}
-          className="main overflow-y- scrollbar-none max-sm:w-screen w-[544px] bg-[#FFFFFF] rounded-lg "
+          exit={{ scale: 0.9 }}
+          className="w-full max-w-lg bg-white rounded-lg shadow-xl overflow-"
         >
-          <div className="head px-[24px] items-center py-[16px] border-b border-slate-200 flex justify-between text-[20px]">
-            <h1 className="text-[20px]">
-              {sprint?.title ? sprint?.title : "Add new task"}
+          {/* Header */}
+          <div className="flex justify-between items-center p-5 bg-gray-100 border-b rounded-l-lg rounded-r-lg">
+            <h1 className="text-lg font-semibold">
+              {sprint?.title || "Add New Task"}
             </h1>
             <button
               onClick={() => setModal(false)}
-              className="text-[#999CA0] hover:opacity-70"
+              className="text-gray-500 hover:text-gray-700"
             >
-              <AiOutlineClose className="w-[24px] h-[24px]" />
+              <AiOutlineClose size={24} />
             </button>
           </div>
 
-          <div className="p-[24px]">
-            <form onSubmit={handleSubmit}>
-              <div className="details">
-                <div className="my- flex flex-col">
-                  <p>Title</p>
+          {/* Form */}
+          <div className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <InputField
+                label="Title"
+                name="title"
+                placeholder="Enter title"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.title}
+                error={errors.title}
+                touched={touched.title}
+                className="w-full"
+              />
+
+              <div>
+                <label className="block text-sm font-medium">
+                  Description (Optional)
+                </label>
+                <textarea
+                  name="description"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.description}
+                  placeholder="Enter task description"
+                  className="mt-1 w-full p-2 border rounded-md focus:ring focus:ring-blue-300"
+                  rows={4}
+                ></textarea>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="">
+                <label className={`block text-sm font-medium ${errors?.deadline && 'text-red-500'}`}>Deadline</label>
                   <InputField
-                    name={"title"}
-                    placeholder={"Enter title"}
+                    name={"deadline"}
+                    placeholder={""}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.title}
-                    error={errors.title}
-                    touched={touched.title}
+                    value={values.deadline}
+                    error={errors.deadline}
+                    touched={touched.deadline}
+                    type="date"
                   />
                 </div>
-                <div className="my-[24px] flex flex-col">
-                  <label htmlFor="">Description (Optional) </label>
-                  <textarea
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.description}
-                    name="description"
-                    placeholder="Description here"
-                    className="border mt-[8px] rounded-md outline-none p-2"
-                    rows={10}
-                  ></textarea>
+
+                <div>
+                  <label className={`block text-sm font-medium ${errors?.assignedToId && 'text-red-500'}`}>Assign to</label>
+                  <UserSearchBox
+                    onSelect={handleUserSelect}
+                    allowMultiple={false}
+                    passedUsers={members}
+                  />
                 </div>
-                <div className="my-[24px] flex justify-between">
-                  <div className="flex flex-col">
-                    <label htmlFor="">Deadline</label>
-                    <InputField
-                      name={"deadline"}
-                      placeholder={""}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.deadline}
-                      error={errors.deadline}
-                      touched={touched.deadline}
-                      type="date"
-                    />
-                    {/* <label className="text-red-500 my-1" htmlFor="">
-                      {errors?.deadline}
-                    </label> */}
-                  </div>
-                  <div className="flex flex-col">
-                    <label htmlFor="">Assign to</label>
-                    <UserSearchBox
-                      onSelect={handleUserSelect}
-                      allowMultiple={false}
-                      passedUsers={members}
-                    />
-                    {/* <label className="text-red-500 my-1" htmlFor="">
-                      {errors?.assignedToId}
-                    </label> */}
-                  </div>
-                </div>
-                <div className="flex ">
-                  <button
-                    disabled={loading}
-                    type="submit"
-                    className="rounded-[8px] w-full flex justify-center items-center font-semibold bg-[#3E84F8] text-white px-[16px] py-[8px]"
-                  >
-                    Save {loading ? <Loader /> : <FaSave className="mx-3" />}
-                  </button>
-                </div>
+              </div>
+
+              <div className="flex justify-start mt-6">
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition"
+                  disabled={loading}
+                >
+                  {loading ? <Loader /> : <FaSave />} Save Task
+                </button>
               </div>
             </form>
           </div>

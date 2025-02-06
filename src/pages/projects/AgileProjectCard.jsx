@@ -1,73 +1,89 @@
 import { formatDate } from "../../globalFunctions";
 import React from "react";
-import { PiUsersThreeDuotone } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import { PiUsersThreeDuotone } from "react-icons/pi";
+import { FaRegCalendarAlt } from "react-icons/fa";
+import { MdAttachMoney } from "react-icons/md";
 
 const AgileProjectCard = ({ project }) => {
-  const {
-    id,
-    name,
-    lead,
-    teamSize,
-    startDate,
-    status,
-    sprintInfo,
-    tasks,
-    priority,
-  } = project;
+  const { id, name, leadUser, teamSize, startDate, status, priority, budget, deadline, description, role } = project;
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  // Status colors
+  const statusColors = {
+    Ongoing: "bg-blue-100 text-blue-600",
+    Completed: "bg-green-100 text-green-600",
+    Pending: "bg-yellow-100 text-yellow-600",
+  };
+
+  // Priority colors
+  const priorityColors = {
+    High: "bg-red-100 text-red-600",
+    Medium: "bg-yellow-100 text-yellow-600",
+    Low: "bg-green-100 text-green-600",
+  };
+
+  // Get initials from leadUser name
+  const getInitials = (name) => name ? name.split(" ").map(n => n[0]).join("").toUpperCase() : "?";
 
   return (
-    <div onClick={()=>navigate(`/project/${id}/action-items`)} className="w-[90%] p-4 my-4 bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer">
-      <h2 className="text-xl font-bold text-gray-800">{name}</h2>
-      <div className="flex my-2 justify-between">
-        <div className="flex ">
-            <div className="w-5 h-5 hover:border-2 border-black bg-red-700 mr-1 p-2 flex justify-center rounded-full items-center text-xs">
-            M
-            </div>
-            <p className="text-sm">Karan Khan</p>
+    <div
+      onClick={() => navigate(`/project/${id}/action-items`)}
+      className="w-[90%] p-5 my-4 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl cursor-pointer transition-all duration-300"
+    >
+      {/* Project Header */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-gray-800 truncate">{name}</h2>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
+          {status}
+        </span>
+      </div>
 
+      {/* Lead User & Role */}
+      <div className="flex items-center mt-2">
+        <div className="w-8 h-8 bg-gray-300 text-white flex items-center justify-center rounded-full text-sm font-semibold mr-2">
+          {getInitials(leadUser?.name)}
         </div>
-
-         </div>
-      <div className="flex justify-between">
-        <p className="text-gray-600 text-sm">Team Size: {teamSize}</p>
+        <div>
+          <p className="text-sm text-gray-700 font-medium">{leadUser?.name}</p>
+          <p className="text-xs text-gray-500">{role}</p>
+        </div>
       </div>
-      <div className="flex justify-between items-center mt-2">
-        <p
-            className={`text-sm font-medium ${
-            status === "Ongoing" ? "text-blue-500" : "text-green-500"
-            }`}
-        >
-            Status: {status}
+
+      {/* Team Size & Priority */}
+      <div className="flex justify-between items-center mt-3">
+        <p className="text-sm text-gray-600 flex items-center">
+          <PiUsersThreeDuotone className="text-gray-500 mr-1" /> Team: {teamSize}
         </p>
-        <p
-            className={`text-sm font-medium ${
-            priority === "High"
-                ? "text-red-500"
-                : priority === "Medium"
-                ? "text-yellow-500"
-                : "text-green-500"
-            }`}
-        >
-            Priority: {priority}
-        </p>
-
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[priority]}`}>
+          Priority: {priority}
+        </span>
       </div>
 
-      <div className="mt-4">
-        <h3 className="font-semibold text-gray-800">Current Sprint Info:</h3>
-        <p className="text-gray-600 text-sm">{sprintInfo}</p>
+      {/* Budget & Deadline (Conditionally Rendered) */}
+      <div className="mt-3 flex justify-between">
+        {role === "Created by You" && (
+          <p className="text-sm text-gray-600 flex items-center">
+            <MdAttachMoney className="text-green-500 mr-1" /> Budget: ${budget}
+          </p>
+        )}
+        {deadline && (
+          <p className="text-sm text-gray-600 flex items-center mt-1">
+            <FaRegCalendarAlt className="text-red-500 mr-1" /> Deadline: {formatDate(deadline)}
+          </p>
+        )}
       </div>
 
-      <div className="mt-4">
-        <h3 className="font-semibold text-gray-800">Tasks:</h3>
-        <p className="text-gray-600 text-sm">
-          {/* {tasks.completed} completed / {tasks.total} total */}
-        </p>
-        <p className="text-gray-600 text-sm text-end">{formatDate(startDate)}</p>
+      {/* Description */}
+      <div className="mt-3">
+        <h3 className="text-sm font-medium text-gray-800">Description:</h3>
+        <p className="text-xs text-gray-600 truncate">{description || "No description provided."}</p>
       </div>
+
+      {/* Start Date */}
+      <p className="text-xs text-gray-500 text-end mt-4">
+        Start Date: {formatDate(startDate)}
+      </p>
     </div>
   );
 };
