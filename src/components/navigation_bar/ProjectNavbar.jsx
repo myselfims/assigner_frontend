@@ -10,7 +10,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { motion, AnimatePresence } from "motion/react";
 import { PiKanbanDuotone } from "react-icons/pi";
 import { fetchData } from "../../api";
-import {setMembers, setProject} from "../../store/features/actionItemsSlice"
+import {setMembers, setProject, setRole} from "../../store/features/actionItemsSlice"
 
 const ProjectNavBar = () => {
   const { projectId } = useParams();
@@ -25,8 +25,10 @@ const ProjectNavBar = () => {
       try{
         let res = await fetchData(`/projects/${projectId}`)
         let members = await fetchData(`/projects/team/${projectId}`)
+        let role = await fetchData(`/projects/${projectId}/member/role/`)
         dispatch(setMembers(members))
-        console.log(members)
+        console.log(role)
+        dispatch(setRole(role))
         dispatch(setProject(res))
       }catch(error){
         console.log(error)

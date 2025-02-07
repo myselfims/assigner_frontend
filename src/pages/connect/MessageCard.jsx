@@ -55,7 +55,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
       <div
         onMouseEnter={() => setShowOptions(true)}
         onMouseLeave={() => setShowOptions(false)}
-        className={`p-3 min-w-28 rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
+        className={`p-3 min-w-28 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
       >
         {message?.content}
 

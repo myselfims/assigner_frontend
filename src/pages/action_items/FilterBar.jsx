@@ -18,7 +18,7 @@ const FilterBar = ({
   setAddTask,
 }) => {
   const dispatch = useDispatch()
-  const {searchQuery, statuses} = useSelector(state => state.actionItems) 
+  const {searchQuery, statuses, role} = useSelector(state => state.actionItems) 
 
   const handleFilterByStatus = (selectedOptions) => {
     dispatch(setSelectedStatusOptions(selectedOptions))
@@ -103,9 +103,9 @@ const FilterBar = ({
       />
 
       <div className="mx-2">
- 
+        {role?.roleId==2 &&
           <Button className={'py-1'} onClick={() => setAddTask(true)} > Start Sprint</Button>
-
+        }
       </div>
     </div>
   );

@@ -12,7 +12,6 @@ const socket = io("http://localhost:3000"); // Replace with your server URL
 
 const ChatBody = ({ onSend, messages, setMessages}) => {
   const [message, setMessage] = useState("");
-  const [messagesList, setMessagesList] = useState(messages || []);
   const { user } = useSelector((state) => state.globalState);
   const { projectId } = useParams();
   const [typingUsers, setTypingUsers] = useState([]);
@@ -22,7 +21,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
   const [inputRows, setInputRows] = useState(1)
 
   const removeMessage = (id) => {
-    setMessagesList(messages?.filter((m) => m.id !== id));
+    setMessages(messages?.filter((m) => m.id !== id));
     setMessages(messages?.filter((m) => m.id !== id));
   };
 
@@ -33,7 +32,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
 
     const handleMessage = (newMessage) => {
       console.log("Received:", newMessage);
-      setMessagesList((prevMessages) => [...prevMessages, newMessage]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
     const handleTyping = (name) => {
@@ -61,7 +60,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messagesList]);
+  }, [messages]);
 
   const handleScroll = () => {
     if (!chatContainerRef.current) return;
@@ -132,7 +131,7 @@ const handleKeyDown = (e) => {
         onScroll={handleScroll}
       >
         <div className="flex items-start mb-4 flex-col">
-          {messagesList?.map((m, i) => (
+          {messages?.map((m, i) => (
             <MessageCard
               key={m?.id}
               self={m?.sender?.id === user?.id}

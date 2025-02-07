@@ -66,6 +66,7 @@ const SignupLogin = () => {
           } else {
             // setVerify(true);
             localStorage.setItem('userEmail', data.email)
+            localStorage.setItem("auth_info", JSON.stringify(res));
             console.log('navigated to otp')
             navigate("/verify-otp");
           }
