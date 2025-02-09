@@ -9,7 +9,7 @@ const ModalBase = ({children}) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       exit={{ opacity: 0 }}
-      className="w-screen z-40 absolute flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
+      className="w-screen z-40 fixed flex justify-center items-center top-0 left-0 h-screen bg-[#00000080]"
     >
       <motion.div
         initial={{ scale: 0 }}

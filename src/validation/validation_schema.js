@@ -9,6 +9,7 @@ export const signupSchema = Yup.object({
     name : Yup.string().min(2).required(),
     email: Yup.string().email().required(),
     password: Yup.string().min(8).required(),
+    termsAndCondition: Yup.boolean().required(),
 });
 
 export const TaskSchema = Yup.object({

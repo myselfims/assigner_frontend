@@ -4,6 +4,11 @@ import InputBox from "../../components/InputBox";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { postData } from "../../api";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -84,7 +89,7 @@ const ForgotPassword = () => {
             <>
               <InputBox
                 name="email"
-                label={'Email'}
+                label={"Email"}
                 value={values.email}
                 handler={{ handleBlur, handleChange }}
                 handleError={{ touched, errors }}
@@ -101,13 +106,20 @@ const ForgotPassword = () => {
 
           {step === 2 && (
             <>
-              <InputBox
-                name="otp"
-                label={'OTP'}
+              <h1>Please enter OTP</h1>
+              <InputOTP
+                maxLength={4}
                 value={values.otp}
-                handler={{ handleBlur, handleChange }}
-                handleError={{ touched, errors }}
-              />
+                className="w-full"
+                onChange={(otp) => setFieldValue("otp", otp)} // Use Formik's setFieldValue or update state
+              >
+                <InputOTPGroup className="w-full flex justify-between my-8">
+                  {[...Array(4)].map((_, index) => (
+                    <InputOTPSlot className="w-full h-12" key={index} index={index} />
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
+
               <button
                 type="submit"
                 className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"

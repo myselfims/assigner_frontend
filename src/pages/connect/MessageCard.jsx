@@ -37,6 +37,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
     }
   };
 
+
   return (
     <div className={`flex items-start mb-4 flex-col relative w-full my-4 ${self && "items-end"}`}>
       {/* Sender Info */}

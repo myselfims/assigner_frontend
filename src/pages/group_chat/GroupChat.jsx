@@ -127,6 +127,7 @@ const GroupChat = () => {
   const getMessages = async () => {
     try {
       let res = await fetchData(`/chat/project/${projectId}`);
+      console.log(res)
       setMessages(res);
     } catch (error) {
       console.log("error", error);
@@ -192,16 +193,16 @@ const GroupChat = () => {
           <button
             onClick={() => setActiveTab("pins")}
             className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
-              activeTab === "files" ? "border-b-2 border-blue-500" : ""
+              activeTab === "pins" ? "border-b-2 border-blue-500" : ""
             }`}
           >
             <TiPinOutline className="inline-block mr-2 w-6 h-6" />
             Pinned Messages
           </button>
           <button
-            onClick={() => setActiveTab("files")}
+            onClick={() => setActiveTab("statements")}
             className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
-              activeTab === "files" ? "border-b-2 border-blue-500" : ""
+              activeTab === "statements" ? "border-b-2 border-blue-500" : ""
             }`}
           >
             <FaGripLines className="inline-block mr-2 w-6 h-6" />
@@ -223,7 +224,7 @@ const GroupChat = () => {
               />
 
               {/* Render Chat Body */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto bg-red-900">
                 <ChatBody
                   setMessages={setMessages}
                   messages={messages}

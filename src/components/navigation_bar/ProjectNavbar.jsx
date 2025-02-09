@@ -12,13 +12,14 @@ import { PiKanbanDuotone } from "react-icons/pi";
 import { fetchData } from "../../api";
 import {setMembers, setProject, setRole} from "../../store/features/actionItemsSlice"
 
+
 const ProjectNavBar = () => {
   const { projectId } = useParams();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const {project} = useSelector(state => state.actionItems)
 
-  const isActive = (path) => pathname === path;
+  const isActive = (path) => pathname.includes(path);
 
   useEffect(()=>{
     const fetchProject = async ()=>{
@@ -114,11 +115,11 @@ const ProjectNavBar = () => {
           onClick={() => dispatch(setSidebar(false))}
           to={`/project/${projectId}/group-chat`}
           className={`flex ${
-            isActive("/projects/chat") ? "font-bold border rounded-xl" : ""
+            isActive("/group-chat") ? "font-bold border rounded-xl" : ""
           } p-2 items-center `}
         >
           <LuMessageSquare className="w-[20px] h-[20px] mr-[15px]" />
-          Chat Group
+          Group Chat
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
@@ -131,6 +132,16 @@ const ProjectNavBar = () => {
         >
           <IoIosCalendar className="w-[20px] h-[20px] mr-[15px]" />
           Calendar
+        </Link>
+        <Link
+          onClick={() => dispatch(setSidebar(false))}
+          to={"/projects/settings"}
+          className={`flex ${
+            isActive("/projects/settings") ? "font-bold border rounded-xl" : ""
+          } p-2 items-center `}
+        >
+          <LuSettings className="w-[20px] h-[20px] mr-[15px]" />
+          Activity Logs
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}

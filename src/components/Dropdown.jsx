@@ -9,7 +9,7 @@ const Dropdown = ({
   selectedColor = "bg-blue-200",
   className,
   showCount = true,
-  children
+  children,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -29,7 +29,6 @@ const Dropdown = ({
     }
   };
   useEffect(() => {
-    console.log(name)
     if (hasMounted.current) {
       // Ensure there are selected options and it's not the first render
       onSelect(selectedOptions);
@@ -73,7 +72,7 @@ const Dropdown = ({
       </button>
 
       {isOpen && (
-        <div className="absolute bg-white shadow-md rounded-md mt-2 z-10">
+        <div className="fixed bg-white shadow-md rounded-md z-50 w-max">
           {options?.map((option, index) => (
             <div
               key={index}
@@ -88,21 +87,23 @@ const Dropdown = ({
                 />
               )}
               <button
-                disabled={name===option?.name}
+                disabled={name === option?.name}
                 onClick={() =>
                   !allowMultiple && handleOptionClick(option?.value)
                 }
-                className={`w-full text-nowrap text-left font-semibold ${name===option?.name && 'text-blue-600 opacity-80'}`}
+                className={`w-full text-nowrap text-left font-semibold ${
+                  name === option?.name && "text-blue-600 opacity-80"
+                }`}
               >
                 {option?.name}
-                <p className="text-xs font-normal text-black">{option?.description}</p>
+                <p className="text-xs font-normal text-black">
+                  {option?.description}
+                </p>
               </button>
             </div>
           ))}
 
-          <div className="">
-            {children}
-          </div>
+          <div className="">{children}</div>
         </div>
       )}
     </div>

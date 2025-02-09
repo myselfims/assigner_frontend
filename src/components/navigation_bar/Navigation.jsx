@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineDashboard } from "react-icons/ai";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { LuSettings } from "react-icons/lu";
-import { FaTasks } from "react-icons/fa";
-import { FaUsersGear } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
-import { Link, useLocation, useMatch, useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import { getAuthInfo } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthInfo, setSidebar } from "../../store/features/appGlobalSlice";
-import { LuMessagesSquare } from "react-icons/lu";
+import { setSidebar } from "../../store/features/appGlobalSlice";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
 import GenericNavBar from "./GenericNavBar";
 import ProjectNavbar from "./ProjectNavbar";
+import logo from '../../assets/logo.png'
+
 
 const Navigation = () => {
   const { currentPage, sidebar, auth_info } = useSelector(
@@ -45,12 +41,15 @@ const Navigation = () => {
       } transition-all relative`}
     >
       <div
-        className={`text-white overflow-hidden max-sm:w-screen max-sm:h-screen flex flex-col transition-all justify-between ${
+        className={`text-white overflow-y-scroll scrollbar-none max-sm:w-screen max-sm:h-screen flex flex-col transition-all justify-between ${
           close ? "w-0 p-0" : "w-[300px] p-[50px] "
-        }  h-screen  bg-[#4285F4] bg-blue-600`}
+        }  h-screen bg-blue-600`}
       >
         <div className="">
-          <h1 className="text-4xl font-bold">EasyAssigns</h1>
+          <div className="fixed top-0 pt-8 bg-blue-600 flex items-center">
+            <img width={50} className="rounded-full mr-2" src={logo}/>
+            <h1 className="text-3xl font-bold ">EasyAssigns</h1>
+          </div>
           <AiOutlineClose
             onClick={() => dispatch(setSidebar(false))}
             className="absolute w-[30px] h-[30px] hidden max-sm:flex right-5 top-5"

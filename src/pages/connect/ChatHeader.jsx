@@ -28,7 +28,7 @@ const ChatHeader = ({ selectedUser, headline }) => {
         </div>
 
         {/* User Name */}
-        <h2 className="ml-3 text-lg font-medium text-gray-800">{headline}</h2>
+        <h2 className="ml-3 text-lg font-medium text-gray-800">{headline? headline : selectedUser?.name}</h2>
       </div>
 
       {/* Right Icons */}

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import TaskRow from "./TaskRow";
 import noDataImage from "../../assets/no data.png";
 import Loader from "../../components/Loader";
-import Button from "../../components/Button";
+import {Button} from '../../components/ui/button'
 import TaskCard from "./TaskCard";
 import { formatDate } from "../../globalFunctions";
 import { FaPlusCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -107,8 +107,8 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
         {/* Button placed after text content */}
         <Button
           onClick={handleAddItem}
-          className="px-1 h-8 hover:bg-blue-100"
-          type="outlined"
+          className="px-1 h-8 bg-white text-black hover:bg-blue-100"
+          type="filled"
         >
           <FaPlusCircle className="mr-1" />
           Add Item

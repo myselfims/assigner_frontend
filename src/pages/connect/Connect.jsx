@@ -5,23 +5,31 @@ import ChatHeader from "./ChatHeader";
 import ChatBody from "./ChatBody";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "../../store/features/appGlobalSlice";
+import { fetchData } from "@/api";
+import { setUser } from "@/store/features/userDetailsSlice";
 
 const Connect = () => {
   const [selectedUser, setSelectedUser] = useState(null);
-  const dispatch = useDispatch()
-  const users = [
+  const [users, setUsers] = useState([
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
-    { id: 3, name: "Michael Brown" },
-  ];
+    { id: 3, name: "Imran Brown" },
+  ])
+  const dispatch = useDispatch()
 
   useEffect(()=>{
      dispatch(setCurrentPage("Connect"));
+    fetchData('/users').then((res)=>{
+      setUsers(res)
+    })
+
+
   },[])
 
   return (
-    <div className="flex bg-gray-100 dark:bg-transparent h-[90%]">
-      {/* Users List Section */}
+    <div className="flex bg-gray-100 dark:bg-transparent h-[100%] overflow-y-hidden">
+      {/* Users List Sect
+      ion */}
       <div className="w-1/3 border-r border-gray-300 dark:">
         <div className="p-4 border-b bg-gray-50 dark:bg-gray-900">
           <div className="relative">

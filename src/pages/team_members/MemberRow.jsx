@@ -1,64 +1,56 @@
 import React, { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
-import { FaTrashAlt } from "react-icons/fa"; // Trash icon for Remove User action
+import { FaTrashAlt } from "react-icons/fa";
 import Dropdown from "../../components/Dropdown";
 import { LuMessagesSquare } from "react-icons/lu";
 import ConfirmModal from "../../components/ConfirmModal";
-import Tooltip from "../../components/Tooltip";
 import { updateData } from "../../api";
 import { useParams } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TableCell, TableRow } from "@/components/ui/table";
 
 const MemberRow = ({ member, roles }) => {
-  const [selectedRole, setSelectedRole] = useState(member['role.name']);
-  const [pendingRole, setPendingRole] = useState(null); // To store the role selected before confirmation
+  const [selectedRole, setSelectedRole] = useState(member["role.name"]);
+  const [pendingRole, setPendingRole] = useState(null);
   const [confirmModal, setConfirmModal] = useState(false);
-  const {projectId} = useParams()
+  const { projectId } = useParams();
 
-  // Handle dropdown selection
   const handleRoleUpdate = (value) => {
-    console.log(value)
     const role = roles?.find((r) => r?.value === value[0]);
-    console.log(role, roles)
-    setPendingRole(role); // Save the pending role
-    setConfirmModal(true); // Show confirmation modal
+    setPendingRole(role);
+    setConfirmModal(true);
   };
 
-  // Handle confirmation
   const handleConfirm = (isConfirmed) => {
     setConfirmModal(false);
     if (isConfirmed && pendingRole) {
-      setSelectedRole(pendingRole.name); // Update the role in UI
-      onUpdateRole(member.id, pendingRole.value); // Callback to update role in parent or backend
+      setSelectedRole(pendingRole.name);
+      onUpdateRole(member.id, pendingRole.value);
     }
-    setPendingRole(null); // Clear pending role
+    setPendingRole(null);
   };
 
-  const onUpdateRole = ()=>{
-    console.log(pendingRole)
-    try{
-      updateData(`/projects/team/${projectId}/${member?.id}`, {roleId : pendingRole.value}).then((res)=>{
-        console.log(res)
-      })
-
-    }catch(err){
-      console.log(err)
+  const onUpdateRole = () => {
+    try {
+      updateData(`/projects/team/${projectId}/${member?.id}`, {
+        roleId: pendingRole.value,
+      }).then((res) => {
+        console.log(res);
+      });
+    } catch (err) {
+      console.log(err);
     }
-  }
+  };
 
   return (
-    <tr key={member?.id} className="border-b">
-      <td className="px-4 py-2">
-        {member?.avatar?
-        <img
-          src={member?.avatar}
-          alt={member?.name}
-          className="w-12 h-12 rounded-full"
-        />
-        :
-        <FaUserCircle className="w-10 h-10 text-gray-500"/> }
-      </td>
-      <td className="px-4 py-2">
+    <TableRow>
+      <TableCell>
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </TableCell>
+      <TableCell>
         <div className="flex flex-col">
           <h1>{member?.name}</h1>
           <p className="text-sm text-gray-500">Frontend Developer</p>
@@ -70,20 +62,18 @@ const MemberRow = ({ member, roles }) => {
             {member?.email}
           </a>
         </div>
-      </td>
-      <td className="px-4 py-2">
-          <div>
-            <Dropdown
-              allowMultiple={false}
-              showCount={false}
-              name={selectedRole? selectedRole : 'Not set'}
-              options={roles}
-              onSelect={handleRoleUpdate}
-            />
-          </div>
-      </td>
-      <td className="px-4 py-2">{member?.assignedTasksCount}</td>
-      <td className="px-4 py-2">
+      </TableCell>
+      <TableCell>
+        <Dropdown
+          allowMultiple={false}
+          showCount={false}
+          name={selectedRole ? selectedRole : "Not set"}
+          options={roles}
+          onSelect={handleRoleUpdate}
+        />
+      </TableCell>
+      <TableCell>{member?.assignedTasksCount}</TableCell>
+      <TableCell>
         <div className="flex">
           <button className="bg-blue-600 text-white rounded-lg p-2 hover:opacity-70 flex items-center justify-center mr-2">
             <LuMessagesSquare className="w-[18px] h-[18px] mr-1" />
@@ -97,14 +87,15 @@ const MemberRow = ({ member, roles }) => {
             Remove
           </button>
         </div>
-      </td>
+      </TableCell>
       {confirmModal && (
         <ConfirmModal
           onSelect={handleConfirm}
+          open={confirmModal}
           message={`Are you sure you want to change the role to "${pendingRole?.name}"?`}
         />
       )}
-    </tr>
+    </TableRow>
   );
 };
 

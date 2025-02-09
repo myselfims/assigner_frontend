@@ -1,5 +1,5 @@
 import Auth from "./pages/authentication/Auth";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard/Dashboard";
 import {
   BrowserRouter as Router,
   Routes,
@@ -27,6 +27,7 @@ import ActionItems from "./pages/action_items/ActionItems";
 import TeamMembers from "./pages/team_members/TeamMembers";
 import Board from "./pages/board/Board";
 import GroupChat from "./pages/group_chat/GroupChat";
+import ActivityLogs from "./pages/activity_logs/ActivityLogs";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -54,6 +55,10 @@ function App() {
             <Route
               path="/project/:projectId/action-items/"
               element={<ActionItems />}
+            />
+            <Route
+              path="/activity-logs/"
+              element={<ActivityLogs />}
             />
             <Route
               path="/project/:projectId/board/"

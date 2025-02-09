@@ -3,11 +3,16 @@ import Loader from "./Loader";
 import { postData } from "../api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setAlert } from '../store/features/appGlobalSlice';
+import { setAlert } from "../store/features/appGlobalSlice";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const OtpVerifier = ({ email }) => {
-  const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(10);
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(30);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [sendingOtp, setSendingOtp] = useState(false);
@@ -15,37 +20,36 @@ const OtpVerifier = ({ email }) => {
   const dispatch = useDispatch();
 
   const verify = () => {
-    if (otp.length !== 4) {
+    if (otp.replace(/\s/g, "").length !== 4) {
       setError("Please enter a 4-digit OTP.");
       return;
     }
     setLoading(true);
-    postData(`/otp/verify/${otp}`, { email : localStorage.getItem('userEmail') })
+    postData(`/otp/verify/${otp}`, { email: localStorage.getItem("userEmail") })
       .then((res) => {
-        dispatch(setAlert({ alert: true, type: 'success', message: 'OTP Verified!' }));
-        if (res.accountTypeId){
+        dispatch(
+          setAlert({ alert: true, type: "success", message: "OTP Verified!" })
+        );
+        if (res.accountTypeId) {
           navigate("/dashboard");
         } else {
-          navigate('/role-selection')
+          navigate("/role-selection");
         }
       })
-      .catch((er) => {
-        console.log(er)
-        setError("Invalid OTP. Please try again.");
-      })
+      .catch(() => setError("Invalid OTP. Please try again."))
       .finally(() => setLoading(false));
   };
 
   const sendOtp = () => {
     setSendingOtp(true);
-    postData('/otp/send/', { email : localStorage.getItem('userEmail') })
-      .then((res) => {
-        dispatch(setAlert({ alert: true, type: 'success', message: 'OTP Sent!' }));
-        setTimer(30); // Example timer reset
+    postData("/otp/send/", { email: localStorage.getItem("userEmail") })
+      .then(() => {
+        dispatch(
+          setAlert({ alert: true, type: "success", message: "OTP Sent!" })
+        );
+        setTimer(30);
       })
-      .catch((er) => {
-        setError("Failed to send OTP. Please try again.");
-      })
+      .catch(() => setError("Failed to send OTP. Please try again."))
       .finally(() => setSendingOtp(false));
   };
 
@@ -60,14 +64,6 @@ const OtpVerifier = ({ email }) => {
     }
   }, [timer]);
 
-  const handleInput = (e) => {
-    const value = e.target.value;
-    if (/^\d{0,4}$/.test(value)) {
-      setOtp(value);
-      setError(null); // Clear error when user modifies OTP input
-    }
-  };
-
   return (
     <div className="rounded border p-4 max-sm:text-xs flex flex-col items-center bg-[#FFFFFF] w-78">
       <div className="head">
@@ -75,13 +71,18 @@ const OtpVerifier = ({ email }) => {
         {error && <p className="text-red-500">{error}</p>}
       </div>
       <div className="input my-5">
-        <input
-          onChange={handleInput}
-          value={otp}
-          className="w-40 h-12 tracking-[1rem] mx-4 text-center text-xl font-semibold border-2 rounded"
-          type="text"
+        <InputOTP
           maxLength={4}
-        />
+          value={otp}
+          className="w-full"
+          onChange={(otp) => setOtp(otp)} // Use Formik's setFieldValue or update state
+        >
+          <InputOTPGroup className="w-full flex justify-between my-8">
+            {[...Array(4)].map((_, index) => (
+              <InputOTPSlot className="w-full h-12" key={index} index={index} />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
       </div>
       <div className="w-full">
         <button

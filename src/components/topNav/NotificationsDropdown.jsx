@@ -1,72 +1,48 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchData } from "../../api";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { BiBell } from "react-icons/bi";
 
-const NotificationsDropdown = ({setNotiDropdown}) => {
-  const dropDownRef = useRef()
-  const text = 'adipisicing elit. Praesentium, impedit? Unde, at! Error, obcaecati necessitatibus! Expedita praesentium aut iste deserunt? Quibusdam deserunt ab omnis quas voluptatem aliquam adipisci officia ducimusadipisicing elit. Praesentium, impedit? Unde, at! Error, obcaecati necessitatibus! Expedita praesentium aut iste deserunt? Quibusdam deserunt ab omnis quas voluptatem aliquam adipisci officia ducimus'
-
-  useEffect(()=>{
-    fetchData('/notifications').then((res)=>(
-      console.log(res)
-    ))
-  },[])
+const NotificationsDropdown = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [notiDropdown, setNotiDropdown] = useState(false);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
-        setNotiDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    fetchData("/notifications").then((res) => setNotifications(res || []));
   }, []);
 
-
-
   return (
-    <>
-      {true && (
-        <div ref={dropDownRef} className="absolute scrollbar-none top-8 right-0 mt-2 w-96 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 h-96 overflow-y-scroll">
-          <ul className="py-1 text-gray-700">
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-            <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer border-b">
-              {String(text)?.length >= 90 ? text.slice(0,90)+'...' : text }
-              <p className="text-xs text-slate-500">2 hours ago</p>
-            </li>
-          </ul>
+    <DropdownMenu open={notiDropdown} onOpenChange={setNotiDropdown}>
+      <DropdownMenuTrigger asChild>
+        <div className="relative w-[30px] h-[30px] cursor-pointer">
+          <BiBell className="w-full h-full p-1 rounded-full hover:bg-slate-200" />
+          {notifications.length > 0 && (
+            <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
+          )}
         </div>
-      )}
-    </>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-96 max-h-96 overflow-y-auto">
+        {notifications.length > 0 ? (
+          notifications.map((notification, index) => (
+            <DropdownMenuItem key={index} className="border-b">
+              <div>
+                {notification.text.length > 90
+                  ? notification.text.slice(0, 90) + "..."
+                  : notification.text}
+                <p className="text-xs text-slate-500">{notification.timeAgo}</p>
+              </div>
+            </DropdownMenuItem>
+          ))
+        ) : (
+          <DropdownMenuItem>No notifications</DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

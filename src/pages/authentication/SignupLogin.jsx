@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import InputBox from "../../components/InputBox";
-import {
-  AiFillApple,
-} from "react-icons/ai";
+import { AiFillApple } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -12,6 +10,7 @@ import { useFormik } from "formik";
 import { loginSchema, signupSchema } from "../../validation/validation_schema";
 import { postData } from "../../api";
 import { setAuthInfo, setUser } from "../../store/features/appGlobalSlice";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const SignupLogin = () => {
   const navigate = useNavigate();
@@ -31,6 +30,7 @@ const SignupLogin = () => {
       name: "",
       email: "",
       password: "",
+      termsAndCondition: false,
     },
   };
 
@@ -39,11 +39,12 @@ const SignupLogin = () => {
     errors,
     touched,
     resetForm,
+    setFieldValue,
     handleChange,
     handleBlur,
     handleSubmit,
   } = useFormik({
-    initialValues: initialValues['/login'],
+    initialValues: initialValues[pathname],
     validationSchema: pathname == "/login" ? loginSchema : signupSchema,
     onSubmit: (data) => {
       setLoading(true);
@@ -53,21 +54,21 @@ const SignupLogin = () => {
           setLoading(false);
           console.log(res);
           let user = res.user;
-          localStorage.setItem('user', JSON.stringify(user));
-          dispatch(setUser(user))
+          localStorage.setItem("user", JSON.stringify(user));
+          dispatch(setUser(user));
           if (user.isVerified) {
             dispatch(setAuthInfo(res));
             localStorage.setItem("auth_info", JSON.stringify(res));
-            if (user.accountTypeId){
+            if (user.accountTypeId) {
               navigate("/dashboard");
             } else {
-              navigate('/role-selection')
+              navigate("/role-selection");
             }
           } else {
             // setVerify(true);
-            localStorage.setItem('userEmail', data.email)
+            localStorage.setItem("userEmail", data.email);
             localStorage.setItem("auth_info", JSON.stringify(res));
-            console.log('navigated to otp')
+            console.log("navigated to otp");
             navigate("/verify-otp");
           }
         })
@@ -78,6 +79,8 @@ const SignupLogin = () => {
         });
     },
   });
+
+  console.log(values);
 
   return (
     <div className="form">
@@ -94,7 +97,7 @@ const SignupLogin = () => {
 
           <button className="mx-2 p-2 rounded-full hover:opacity-80 flex items-center px-3 text-slate-500 bg-[#FFFFFF]">
             <AiFillApple className="mr-[10px] w-[15px] h-[15px]" />
-            Sign in with Google
+            Sign in with Apple
           </button>
         </div>
       </div>
@@ -107,7 +110,7 @@ const SignupLogin = () => {
             <div>
               <InputBox
                 name="name"
-                label={'Name'}
+                label={"Name"}
                 handler={{ handleBlur, handleChange }}
                 handleError={{ touched, errors }}
               />
@@ -116,7 +119,7 @@ const SignupLogin = () => {
           <div>
             <InputBox
               name="email"
-              label={'Email'}
+              label={"Email"}
               handler={{ handleBlur, handleChange }}
               handleError={{ touched, errors }}
             />
@@ -156,20 +159,47 @@ const SignupLogin = () => {
             </p>
           </div>
           <div className="flex w-full flex-col">
-            <Link to={"/forgot-password"} className="text-[#346BD4] mb-[21px]">
-              Forgot password?
-            </Link>
+            {pathname.includes("/login") ? (
+              <Link
+                to={"/forgot-password"}
+                className="text-[#346BD4] mb-[21px]"
+              >
+                Forgot password?
+              </Link>
+            ) : (
+              <div className="flex flex-col">
+                <div className="">
+                  <Checkbox
+                    onCheckedChange={(e) => setFieldValue("termsAndCondition", e)}
+                    onBlur={handleBlur}
+                    name="termsAndCondition"
+                    checked={values.termsAndCondition}
+                    id="terms"
+                  />
+
+                  <label
+                    htmlFor="terms"
+                    className="text-sm ml-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Accept terms and conditions
+                  </label>
+                </div>
+                <p className="text-sm text-muted-foreground ml-6">
+                  You agree to our Terms of Service and Privacy Policy.
+                </p>
+              </div>
+            )}
             <button
               type="submit"
-              className="w-full flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
+              className="w-full mt-7 flex items-center justify-center font-bold rounded-xl bg-[#4285F4] text-white h-[43.91px]"
             >
               {pathname == "/login" ? "Sign In" : "Sign Up "}
-              {loading ? <Loader className={'ml-2'} /> : null}
+              {loading ? <Loader className={"ml-2"} /> : null}
             </button>
           </div>
         </form>
         {pathname == "/login" ? (
-          <p className="mt-[54px] text-base">
+          <p className="mt-[40px] text-base">
             Don't have an account?{" "}
             <Link to={"/signup"} className="text-[#346BD4]" href="">
               {" "}
@@ -177,7 +207,7 @@ const SignupLogin = () => {
             </Link>
           </p>
         ) : (
-          <p className="mt-[54px] text-base">
+          <p className="mt-[40px] text-base">
             Already have an account?{" "}
             <Link to={"/login"} className="text-[#346BD4]" href="">
               {" "}

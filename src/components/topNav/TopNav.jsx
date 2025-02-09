@@ -1,109 +1,63 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { BiBell } from "react-icons/bi";
 import { BsSearch } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import { MdLogout } from "react-icons/md";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import NotificationsDropdown from "./NotificationsDropdown";
 import Tooltip from "../Tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const TopNav = () => {
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.currentUser);
   const { pathname } = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
   const [notiDropdown, setNotiDropdown] = useState(false);
-  const dropdownRef = useRef();
+  const current = useSelector((state) => state.globalState.currentPage);
 
   const logout = () => {
     localStorage.removeItem("auth_info");
     navigate("/login");
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const current = useSelector((state) => state.globalState.currentPage);
   return (
     <>
-      {pathname == "/" ? null : (
-        <div className="head z-40 select-none justify-between w-full my-3 flex relative">
+      {pathname !== "/" && (
+        <div className="head z-40 select-none justify-between items-center my-3 flex relative">
           <h1 className="font-bold text-2xl">{current}</h1>
           <div className="flex items-center">
-            <div className=" hidden items-center border-2 px-4 rounded-full">
+            <div className="hidden items-center border-2 px-4 rounded-full">
               <input
                 placeholder="Search..."
-                className=" p-2 outline-none"
+                className="p-2 outline-none"
                 type="text"
               />
-              <BsSearch className="w-[12px] h-[12px] " />
+              <BsSearch className="w-[12px] h-[12px]" />
             </div>
-            <div className="flex items-center">
-              <div className="relative mr-8">
-                <Tooltip content="notifications" position="bottom">
-                  <div className="relative w-[30px] h-[30px]">
-                    <BiBell
-                      onClick={() => setNotiDropdown(!notiDropdown)}
-                      className={`mr-[27px] w-full h-full p-1 rounded-full ${
-                        notiDropdown ? "bg-slate-200" : null
-                      }  cursor-pointer `}
-                    />
-                    <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
-                  </div>
-                </Tooltip>
-                {notiDropdown && (
-                  <NotificationsDropdown setNotiDropdown={setNotiDropdown} />
-                )}
+            <div className="flex items-center mr-8">
+              <div className="relative mr-8 flex items-center">
+                <NotificationsDropdown setNotiDropdown={setNotiDropdown} />
               </div>
 
-              <div
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-[30px] overflow-hidden group cursor-pointer bg-center bg-no-repeat bg-cover rounded-full h-[30px] flex items-center justify-center bg-gradient-to-t from-blue-500 to-blue-300 text-white font-serif
-              "
-              >
-                {user?.avatar ? (
-                  <img src={user?.avatar} alt="" />
-                ) : (
-                  <h1 className="font-bold text-xl">IM</h1>
-                )}
-              </div>
-
-              {isOpen && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute top-8 right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
-                >
-                  <ul className="py-1 text-gray-700 w-full">
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer w-full flex items-center">
-                      <Link
-                        to={"/profile"}
-                        className="w-full h-full block text-left"
-                      >
-                        Profile
-                      </Link>
-                    </li>
-                    <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Upgrade
-                    </li>
-                    <li
-                      onClick={logout}
-                      className="block px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Logout
-                    </li>
-                  </ul>
-                </div>
-              )}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="cursor-pointer">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Upgrade</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </div>

@@ -83,7 +83,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
       let res = await postData("/chat", data);
       console.log(res);
       setMessage("");
-      onSend(data);
+      onSend(res);
     } catch (error) {
       console.log(error);
     }

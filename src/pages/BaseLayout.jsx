@@ -12,7 +12,7 @@ const BaseLayout = () => {
         <MobileNav />
       </div>
 
-      <div className="w-full p-4 overflow-y-hidden">
+      <div className="w-full overflow-y-hidden">
         <TopNav />
         {/* Animate the page transitions */}
         <AnimatePresence mode="wait">
@@ -24,7 +24,7 @@ const BaseLayout = () => {
           // animate={{ x: 0, opacity: 1 }} // Animate to original position and full opacity
           // // exit={{ x: -800, opacity: 0 }} // Exit to the left with fade-out
           // transition={{ duration: 0.5 }} // Transition duration
-          className="h-[86.5vh] overflow-y-scroll"
+          className="h-[93vh] overflow-y-scroll p-4"
           >
             <Outlet />
           </motion.div>

@@ -7,6 +7,7 @@ import { FaTasks } from "react-icons/fa";
 import { FaUserGear } from "react-icons/fa6";
 import { LuMessageSquare, LuSettings } from "react-icons/lu";
 import { AnimatePresence, motion } from "framer-motion"; // Importing AnimatePresence and motion
+import { RxActivityLog } from "react-icons/rx";
 
 const GenericNavBar = () => {
   const { currentPage, sidebar, auth_info } = useSelector(
@@ -73,6 +74,16 @@ const GenericNavBar = () => {
         >
           <LuMessageSquare className="w-[18px] h-[18px] mr-[20px]" />
           Connect
+        </Link>
+        <Link
+          onClick={() => dispatch(setSidebar(false))}
+          to={"/activity-logs"}
+          className={`flex ${
+            currentPage == "Settings" ? "font-bold border rounded-xl" : null
+          } p-2 items-center`}
+        >
+          <RxActivityLog className="w-[18px] h-[18px] mr-[20px]" />
+          Activity Logs
         </Link>
         <Link
           onClick={() => dispatch(setSidebar(false))}
