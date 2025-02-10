@@ -12,7 +12,7 @@ const BaseLayout = () => {
         <MobileNav />
       </div>
 
-      <div className="w-full overflow-y-hidden">
+      <div className="w-full overflow-hidden">
         <TopNav />
         {/* Animate the page transitions */}
         <AnimatePresence mode="wait">

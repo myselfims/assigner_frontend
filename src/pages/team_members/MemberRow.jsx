@@ -46,7 +46,7 @@ const MemberRow = ({ member, roles }) => {
     <TableRow>
       <TableCell>
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={member?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </TableCell>

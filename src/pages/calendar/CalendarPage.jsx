@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddReminderModal from "./AddReminderModal";
 import Calendar from "./Calendar";
 import ViewDayDetailsModal from "./ViewDayDetailsModal";
 import { FaArrowRight } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
 import Tooltip from '../../components/Tooltip'
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "@/store/features/appGlobalSlice";
 
 const CalendarPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [actionItems, setActionItems] = useState([]);
+  const dispatch = useDispatch()
 
   const toggleModal = (date, items = []) => {
     setSelectedDate(date);
@@ -33,6 +36,10 @@ const CalendarPage = () => {
   const formatMonthYear = (date) => {
     return date.toLocaleString("default", { month: "long", year: "numeric" });
   };
+
+  useEffect(()=>{
+    dispatch(setCurrentPage('Calendar'))
+  },[])
 
   return (
     <div className="calendar-page container mx-auto p-4">

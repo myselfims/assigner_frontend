@@ -19,7 +19,7 @@ const UsersList = ({ users, setSelectedUser }) => {
       {users.map((user) => (
         <div
           key={user.id}
-          className="flex items-center p-4  cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100 border-b"
+          className="flex relative items-center p-4  cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100 border-b"
           onClick={() => setSelectedUser(user)}
         >
           {/* const isOnline = true; // Change this dynamically based on user status */}
@@ -40,6 +40,7 @@ const UsersList = ({ users, setSelectedUser }) => {
               {user.recentMessage || "No recent messages"}
             </p>
           </div>
+          <span className="absolute right-8 text-xs bg-blue-400 p-1 rounded-full font-semibold w-5 h-5 flex items-center justify-center">3</span>
         </div>
       ))}
     </div>

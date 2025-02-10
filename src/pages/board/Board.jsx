@@ -4,6 +4,7 @@ import { fetchTasksAPI, updateTaskStatusAPI } from "./dummyAPIs";
 import TaskCard from "./TaskCard";
 import { formatDate } from "../../globalFunctions";
 import { updateData } from "../../api";
+import { setCurrentPage } from "@/store/features/appGlobalSlice";
 
 const Board = () => {
   const { statuses, sprints, tasks } = useSelector(
@@ -15,9 +16,9 @@ const Board = () => {
   const [currentSprintIndex, setCurrentSprintIndex] = useState(0);
 
   useEffect(() => {
+    dispatch(setCurrentPage('Board'))
     if (sprints.length > 0) {
       setLocalTasks(tasks[sprints[currentSprintIndex].id]);
-      console.log(tasks[sprints[currentSprintIndex].id])
     }
   }, [currentSprintIndex, sprints, tasks]);
 

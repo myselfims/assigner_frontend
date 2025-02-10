@@ -58,7 +58,7 @@ const ChatBody = ({ onSend, messages, setMessages}) => {
 
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      // messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
@@ -124,7 +124,7 @@ const handleKeyDown = (e) => {
   }, 500);
 
   return (
-    <div className="flex flex-col flex-grow h-full">
+    <div className="flex w-full flex-col flex-grow h-full">
       <div
         className="flex-grow p-4 overflow-y-auto bg-gray-50 dark:bg-transparent relative"
         ref={chatContainerRef}

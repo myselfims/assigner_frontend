@@ -49,7 +49,7 @@ const TaskRow = ({ task, updateItem }) => {
       <td className="text-gray-500 text-sm">
         <p>{new Date(item?.deadline).toDateString()}</p>
       </td>
-      <td className="py-2">
+      <td className="py-2 relative">
         <Dropdown
           name={statuses?.find((s) => s.id == item?.status)?.name}
           selectedColor={"bg-white"}

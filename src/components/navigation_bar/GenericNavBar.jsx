@@ -34,7 +34,7 @@ const GenericNavBar = () => {
         <Link
           onClick={() => dispatch(setSidebar(false))}
           to={"/dashboard"}
-          className={`flex ${
+          className={`flex my-2 ${
             currentPage == "Dashboard" ? "font-bold border rounded-xl" : null
           } p-2 items-center`}
         >
@@ -44,7 +44,7 @@ const GenericNavBar = () => {
         <Link
           onClick={() => dispatch(setSidebar(false))}
           to={"/projects"}
-          className={`flex ${
+          className={`flex my-2 ${
             currentPage == "Projects" ? "font-bold border rounded-xl" : null
           } p-2 items-center`}
         >
@@ -55,7 +55,7 @@ const GenericNavBar = () => {
           <Link
             onClick={() => dispatch(setSidebar(false))}
             to={"/mnjusers"}
-            className={`flex ${
+            className={`flex my-2 ${
               currentPage == "Manage Users"
                 ? "font-bold border rounded-xl"
                 : null
@@ -68,7 +68,7 @@ const GenericNavBar = () => {
         <Link
           onClick={() => dispatch(setSidebar(false))}
           to={"/connect"}
-          className={`flex ${
+          className={`flex my-2 ${
             currentPage == "Connect" ? "font-bold border rounded-xl" : null
           } p-2 items-center`}
         >
@@ -78,7 +78,7 @@ const GenericNavBar = () => {
         <Link
           onClick={() => dispatch(setSidebar(false))}
           to={"/activity-logs"}
-          className={`flex ${
+          className={`flex my-2 ${
             currentPage == "Settings" ? "font-bold border rounded-xl" : null
           } p-2 items-center`}
         >
@@ -88,7 +88,7 @@ const GenericNavBar = () => {
         <Link
           onClick={() => dispatch(setSidebar(false))}
           to={"/settings"}
-          className={`flex ${
+          className={`flex my-2 ${
             currentPage == "Settings" ? "font-bold border rounded-xl" : null
           } p-2 items-center`}
         >

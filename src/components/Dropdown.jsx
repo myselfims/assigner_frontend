@@ -72,7 +72,7 @@ const Dropdown = ({
       </button>
 
       {isOpen && (
-        <div className="fixed bg-white shadow-md rounded-md z-50 w-max">
+        <div className="absolute bg-white shadow-md rounded-md z-50 w-max top-full left-0">
           {options?.map((option, index) => (
             <div
               key={index}

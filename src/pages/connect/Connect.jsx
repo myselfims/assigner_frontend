@@ -27,7 +27,7 @@ const Connect = () => {
   },[])
 
   return (
-    <div className="flex bg-gray-100 dark:bg-transparent h-[100%] overflow-y-hidden">
+    <div className="flex  dark:bg-transparent h-[100%] pt-8 overflow-hidden">
       {/* Users List Sect
       ion */}
       <div className="w-1/3 border-r border-gray-300 dark:">
@@ -52,8 +52,9 @@ const Connect = () => {
         )}
 
         {/* Chat Body */}
+         <ChatBody />
         {selectedUser ? (
-          <ChatBody />
+          <></>
         ) : (
           <div className="flex items-center justify-center flex-grow text-gray-400">
             Select a user to start a conversation

@@ -93,7 +93,7 @@ const Projects = () => {
             />
           </div>
         </div>
-        <Button to="/add-project" className="">
+        <Button to="/add-project" className="text-white">
         Add Project
       </Button>
       </div>

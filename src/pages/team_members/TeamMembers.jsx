@@ -4,10 +4,11 @@ import MemberTable from "./MemberTable";
 import AddTeamMemberModal from "./AddTeamMemberModal";
 import { useParams } from "react-router-dom";
 import { fetchData } from "../../api";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentPage } from "@/store/features/appGlobalSlice";
 
 const TeamMembers = ({ projectName = "Project Alpha" }) => {
-  const {projectId} = useParams()
+  const dispatch = useDispatch()
   const {members, project} = useSelector(state=>state.actionItems)
   const [teamMembers, setTeamMembers] = useState(members);
   const [filteredMembers, setFilteredMember] = useState([]);
@@ -22,6 +23,7 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
   };
 
   useEffect(()=>{
+    dispatch(setCurrentPage('Team Members'))
     fetchData('/global/roles').then((res)=>{
       console.log(res)
       const formattedroles = res.map((role) => ({
