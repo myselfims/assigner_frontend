@@ -8,8 +8,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
 import GenericNavBar from "./GenericNavBar";
 import ProjectNavbar from "./ProjectNavbar";
-import logo from '../../assets/logo.png'
-
+import logo from "../../assets/logo.png";
 
 const Navigation = () => {
   const { currentPage, sidebar, auth_info } = useSelector(
@@ -45,18 +44,17 @@ const Navigation = () => {
           close ? "w-0 p-0" : "w-[300px] p-[50px] "
         }  h-screen bg-blue-600`}
       >
+      
         <div className="">
           <div className="fixed top-0 pt-8 bg-blue-600 flex items-center">
-            <img width={50} className="rounded-full mr-2" src={logo}/>
+            <img width={50} className="rounded-full mr-2" src={logo} />
             <h1 className="text-3xl font-bold ">EasyAssigns</h1>
           </div>
           <AiOutlineClose
             onClick={() => dispatch(setSidebar(false))}
             className="absolute w-[30px] h-[30px] hidden max-sm:flex right-5 top-5"
           />
-          {isProjectRoute?
-            <ProjectNavbar /> :
-          <GenericNavBar />}
+          {isProjectRoute ? <ProjectNavbar /> : <GenericNavBar />}
         </div>
         <div className="flex justify-start items-start flex-col">
           <button className="my-[20px]">Help</button>

@@ -4,7 +4,7 @@ import { postData } from "../../api";
 import Loader from "../../components/Loader";
 import UserSearchBox from "../../components/UserSearchBox";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../../store/features/appGlobalSlice";
 
 
@@ -12,6 +12,7 @@ const AddProject = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const {currentWorkspace} = useSelector(state => state.workspaceState)
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -22,6 +23,7 @@ const AddProject = () => {
       budget: "",
       deadline: "",
       description: "",
+      workspaceId: currentWorkspace.id,
     },
     onSubmit: (values) => {
       console.log("New Project Data:", values);

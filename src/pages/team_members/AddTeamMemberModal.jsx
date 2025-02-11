@@ -13,6 +13,7 @@ import Dropdown from "../../components/Dropdown";
 const AddTeamMemberModal = ({ setModal }) => {
   const {projectId } = useParams()
   const dispatch = useDispatch()
+  const {currentWorkspace} = useSelector(state=>state.workspaceState)
   const { values, errors, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
     initialValues: {
       name: "",
@@ -22,6 +23,8 @@ const AddTeamMemberModal = ({ setModal }) => {
     onSubmit: (data) => {
       console.log(data);
       data['projectId'] = projectId;
+      // data['roleId'] = 1;
+      data['workspaceId'] = currentWorkspace.id;
       postData('/users/add-member/', data).then((res)=>{
         console.log(res)
         setModal(false)

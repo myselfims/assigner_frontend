@@ -16,11 +16,12 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const {currentWorkspace} = useSelector(state => state.workspaceState)
 
   useEffect(() => {
     dispatch(setCurrentPage("Projects"));
     setLoading(true);
-    fetchData("/projects")
+    fetchData(`/workspaces/${currentWorkspace.id}/projects`)
       .then((res) => {
         setTimeout(() => {
           setLoading(false);
@@ -32,7 +33,7 @@ const Projects = () => {
         console.log(error);
         setLoading(false);
       });
-  }, [dispatch]);
+  }, [dispatch, currentWorkspace.id]);
 
   const handler = useCallback(
     debounce((query) => {
@@ -75,7 +76,7 @@ const Projects = () => {
   
 
   return (
-    <div>
+    <div key={currentWorkspace?.id}>
       <div className="header w-full flex mb-4 justify-between items-center">
         <div className="flex items-center">
           <SearchBar handler={handler} />

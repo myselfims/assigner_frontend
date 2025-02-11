@@ -28,6 +28,7 @@ import TeamMembers from "./pages/team_members/TeamMembers";
 import Board from "./pages/board/Board";
 import GroupChat from "./pages/group_chat/GroupChat";
 import ActivityLogs from "./pages/activity_logs/ActivityLogs";
+import WorkspaceSelection from "./pages/workspace_selection/WorkspaceSelection";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -52,6 +53,7 @@ function App() {
           <Route path="/verify-otp" element={<Auth />} />
           <Route element={<BaseLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/select-workspace" element={<WorkspaceSelection />} />
             <Route
               path="/project/:projectId/action-items/"
               element={<ActionItems />}

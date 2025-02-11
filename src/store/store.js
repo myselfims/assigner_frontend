@@ -4,6 +4,7 @@ import taskDetailsSlice from './features/taskDetailsSlice'
 import appGlobalSlice from './features/appGlobalSlice'
 import usersSlice from './features/usersSlice'
 import userDetailsSlice from './features/userDetailsSlice'
+import workspaceSlice from './features/workspaceSlice'
 
 export const store = configureStore({
     reducer : {
@@ -12,6 +13,7 @@ export const store = configureStore({
         globalState : appGlobalSlice,
         users : usersSlice,
         currentUser : userDetailsSlice,
+        workspaceState : workspaceSlice,
     },
 })
 
