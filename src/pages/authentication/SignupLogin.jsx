@@ -54,16 +54,18 @@ const SignupLogin = () => {
           setLoading(false);
           console.log(res);
           let user = res.user;
+          delete values.termsAndCondition;
           localStorage.setItem("user", JSON.stringify(user));
           dispatch(setUser(user));
           if (user.isVerified) {
             dispatch(setAuthInfo(res));
             localStorage.setItem("auth_info", JSON.stringify(res));
-            if (user.accountTypeId) {
-              navigate("/dashboard");
-            } else {
-              navigate("/role-selection");
-            }
+            navigate("/dashboard");
+            // if (user.accountTypeId) {
+            //   navigate("/dashboard");
+            // } else {
+            //   navigate("/role-selection");
+            // }
           } else {
             // setVerify(true);
             localStorage.setItem("userEmail", data.email);

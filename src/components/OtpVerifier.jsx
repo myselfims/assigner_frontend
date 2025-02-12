@@ -30,11 +30,12 @@ const OtpVerifier = ({ email }) => {
         dispatch(
           setAlert({ alert: true, type: "success", message: "OTP Verified!" })
         );
-        if (res.accountTypeId) {
-          navigate("/dashboard");
-        } else {
-          navigate("/role-selection");
-        }
+        navigate("/dashboard");
+        // if (res.accountTypeId) {
+        //   navigate("/dashboard");
+        // } else {
+        //   navigate("/role-selection");
+        // }
       })
       .catch(() => setError("Invalid OTP. Please try again."))
       .finally(() => setLoading(false));
@@ -70,7 +71,7 @@ const OtpVerifier = ({ email }) => {
         <h1 className="text-2xl">Enter OTP</h1>
         {error && <p className="text-red-500">{error}</p>}
       </div>
-      <div className="input my-5">
+      <div className="input w-full">
         <InputOTP
           maxLength={4}
           value={otp}

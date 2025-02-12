@@ -1,85 +1,125 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { setSidebar } from "../../store/features/appGlobalSlice";
-import { AiOutlineDashboard } from "react-icons/ai";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FaTasks } from "react-icons/fa";
-import { LuMessageSquare, LuSettings } from "react-icons/lu";
-import { AnimatePresence, motion } from "framer-motion";
-import { RxActivityLog } from "react-icons/rx";
-import { setCurrentWorkspace, setWorkspaces } from "../../store/features/workspaceSlice";
-import { LuUserCog } from "react-icons/lu";
-import WorkspaceSelector from "./WorkspaceSelector";
-import { CiLock } from "react-icons/ci";
+import { setSidebar } from "../../store/features/appGlobalSlice";
+import {
+  setCurrentWorkspace,
+  setWorkspaces,
+} from "../../store/features/workspaceSlice";
 import { fetchData } from "@/api";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { motion } from "framer-motion";
+import { AiOutlineDashboard } from "react-icons/ai";
+import { FaTasks } from "react-icons/fa";
+import { LuMessageSquare, LuSettings, LuUserCog } from "react-icons/lu";
+import { RxActivityLog } from "react-icons/rx";
+import { FaRegCreditCard } from "react-icons/fa6";
+import { CiLock } from "react-icons/ci";
+import WorkspaceSelector from "./WorkspaceSelector";
 
 const GenericNavBar = () => {
-  const { currentPage, auth_info } = useSelector((state) => state.globalState);
-  const { workspaces, currentWorkspace } = useSelector((state) => state.workspaceState);
+  const { currentPage, auth_info, user } = useSelector(
+    (state) => state.globalState
+  );
+  const { workspaces, currentWorkspace } = useSelector(
+    (state) => state.workspaceState
+  );
   const dispatch = useDispatch();
-  
-  useEffect(()=>{
-    fetchData('/workspaces').then((res)=>{
-      console.log(res)
-      dispatch(setWorkspaces(res))
-      dispatch(setCurrentWorkspace(res[0]))
-    })
-  },[])
-  
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchData("/workspaces").then((res) => {
+      if (res.length === 0) {
+        navigate("/select-workspace");
+      } else {
+        dispatch(setWorkspaces(res));
+        dispatch(setCurrentWorkspace(res[0]));
+        navigate("/projects");
+      }
+    });
+  }, []);
+
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ x: -200, opacity: 0 }}
-        animate={{ x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeInOut" } }}
-        exit={{ x: 200, opacity: 0, transition: { duration: 0.3, ease: "easeInOut" } }}
-        className="btns relative my-[60px] flex text-normal justify-between flex-col"
-      >
-        {/* Workspace Selection Dropdown */}
-        <div className="mb-8">
-          <WorkspaceSelector workspaces={workspaces} currentWorkspace={currentWorkspace}/>
+    <motion.div
+      initial={{ x: -200, opacity: 0 }}
+      animate={{
+        x: 0,
+        opacity: 1,
+        transition: { duration: 0.5, ease: "easeInOut" },
+      }}
+      exit={{
+        x: 200,
+        opacity: 0,
+        transition: { duration: 0.3, ease: "easeInOut" },
+      }}
+      className="w-64 mt-8 h-screen p-4 flex flex-col"
+    >
+      {/* Workspace Selection */}
+      <Card className="mb-4 p-3 shadow-md">
+        <WorkspaceSelector
+          workspaces={workspaces}
+          currentWorkspace={currentWorkspace}
+        />
+      </Card>
+
+      {!currentWorkspace && (
+        <div className="flex flex-col items-center justify-center backdrop-blur-md w-full  text-white rounded-lg p-4 text-center">
+          <CiLock className="w-10 h-10" />
+          <h1 className="text-sm mt-2">
+            Create a new workspace to get started.
+          </h1>
         </div>
+      )}
 
-
-        {!currentWorkspace &&
-        <div className="locked flex items-center justify-center absolute top-0 backdrop-blur-md w-full flex-col rounded-lg h-full px-4 text-center">
-          <CiLock  className="w-10 h-10" />
-          <h1>Create a new workspace to get started.</h1>
-        </div>}
-
-        <Link onClick={() => dispatch(setSidebar(false))} to="/dashboard" className={`flex my-2 ${currentPage === "Dashboard" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-          <AiOutlineDashboard className="w-[18px] h-[18px] mr-[20px]" />
-          Dashboard
-        </Link>
-        <Link onClick={() => dispatch(setSidebar(false))} to="/projects" className={`flex my-2 ${currentPage === "Projects" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-          <FaTasks className="w-[18px] h-[18px] mr-[20px]" />
-          Projects
-        </Link>
+      {/* Navigation Links */}
+      <div className="space-y-2">
+        {[
+          { to: "/dashboard", label: "Dashboard", icon: AiOutlineDashboard },
+          { to: "/projects", label: "Projects", icon: FaTasks },
+          { to: "/connect", label: "Connect", icon: LuMessageSquare },
+          { to: "/activity-logs", label: "Activity Logs", icon: RxActivityLog },
+          { to: "/settings", label: "Settings", icon: LuSettings },
+        ].map(({ to, label, icon: Icon }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition  ${
+              currentPage === label ? "bg-blue-100 text-black" : "hover:bg-gray-100 hover:text-slate-700"
+            }`}
+            
+            onClick={() => dispatch(setSidebar(false))}
+          >
+            <Icon className="w-5 h-5" />
+            <span className="font-medium">{label}</span>
+          </Link>
+        ))}
         {auth_info.isAdmin && (
-          <Link onClick={() => dispatch(setSidebar(false))} to="/mnjusers" className={`flex my-2 ${currentPage === "Manage Users" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-            <LuUserCog className="w-[18px] h-[18px] mr-[20px]" />
-            Manage Users
+          <Link
+            to="/mnjusers"
+            className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 text-black"
+            onClick={() => dispatch(setSidebar(false))}
+          >
+            <LuUserCog className="w-5 h-5 text-white" />
+            <span className="text-white font-medium">Manage Users</span>
           </Link>
         )}
-        <Link onClick={() => dispatch(setSidebar(false))} to="/connect" className={`flex my-2 ${currentPage === "Connect" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-          <LuMessageSquare className="w-[18px] h-[18px] mr-[20px]" />
-          Connect
-        </Link>
-        <Link onClick={() => dispatch(setSidebar(false))} to="/activity-logs" className={`flex my-2 ${currentPage === "Activity Logs" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-          <RxActivityLog className="w-[18px] h-[18px] mr-[20px]" />
-          Activity Logs
-        </Link>
-        {auth_info.isAdmin && (
-          <Link onClick={() => dispatch(setSidebar(false))} to="/mnjusers" className={`flex my-2 ${currentPage === "Manage Users" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-            <LuUserCog className="w-[18px] h-[18px] mr-[20px]" />
-            Billing & Subscription
+        {currentWorkspace?.owner?.id === user?.id && (
+          <Link
+            to="/billing"
+            className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 text-black"
+            onClick={() => dispatch(setSidebar(false))}
+          >
+            <FaRegCreditCard className="w-5 h-5 text-white" />
+            <span className="text-white font-medium">
+              Billing & Subscription
+            </span>
           </Link>
         )}
-        <Link onClick={() => dispatch(setSidebar(false))} to="/settings" className={`flex my-2 ${currentPage === "Settings" ? "font-bold border rounded-xl" : ""} p-2 items-center`}>
-          <LuSettings className="w-[18px] h-[18px] mr-[20px]" />
-          Settings
-        </Link>
-      </motion.div>
-    </AnimatePresence>
+      </div>
+
+    </motion.div>
   );
 };
 

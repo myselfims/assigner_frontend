@@ -1,7 +1,8 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { setCurrentWorkspace } from "@/store/features/workspaceSlice";
-import { useEffect } from "react";
+import { FaPlus } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
+import Button from "../Button";
 
 const WorkspaceSelector = ({ workspaces, currentWorkspace }) => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const WorkspaceSelector = ({ workspaces, currentWorkspace }) => {
             {workspace.name}
           </SelectItem>
         ))}
+        <Button className="bg-sky-200 mt-4 text-sm w-full py-[4px] font-light"> <FaPlus className="mr-2" /> New Workspace</Button>
       </SelectContent>
     </Select>
   );

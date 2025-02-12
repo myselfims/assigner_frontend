@@ -10,6 +10,7 @@ import debounce from "lodash/debounce";
 import AgileProjectCardSkeleton from "./AgileProjectCardSkeleton";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
+import NoProjectsCard from "./NoProjectsCard";
 
 const Projects = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Projects = () => {
   useEffect(() => {
     dispatch(setCurrentPage("Projects"));
     setLoading(true);
-    fetchData(`/workspaces/${currentWorkspace.id}/projects`)
+    fetchData(`/workspaces/${currentWorkspace?.id}/projects`)
       .then((res) => {
         setTimeout(() => {
           setLoading(false);
@@ -33,7 +34,7 @@ const Projects = () => {
         console.log(error);
         setLoading(false);
       });
-  }, [dispatch, currentWorkspace.id]);
+  }, [dispatch, currentWorkspace?.id]);
 
   const handler = useCallback(
     debounce((query) => {
@@ -99,6 +100,8 @@ const Projects = () => {
       </Button>
       </div>
       <div className="w-full grid grid-cols-3 gap-4">
+        {!loading && filteredProjects.length==0 &&
+        <NoProjectsCard />}
         {loading
           ? Array(3)
               .fill()

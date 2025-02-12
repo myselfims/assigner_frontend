@@ -61,7 +61,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
         {message?.content}
 
         {/* Timestamp */}
-        <span className="absolute text-nowrap bottom-[-18px] right-1 text-xs text-gray-500">
+        <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500">
           {formatChatTimestamp(message?.createdAt)}
         </span>
 
