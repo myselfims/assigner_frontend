@@ -10,13 +10,22 @@ const Dropdown = ({
   className,
   showCount = true,
   children,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const dropdownRef = useRef();
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const hasMounted = useRef(false);
+
+  const toggleDropdown = () => {
+    if (!disabled) {
+      setIsOpen((prev) => !prev);
+    }
+  };
 
   const handleOptionClick = (value) => {
+    if (disabled) return;
+
     if (allowMultiple) {
       setSelectedOptions((prev) =>
         prev.includes(value)
@@ -25,22 +34,18 @@ const Dropdown = ({
       );
     } else {
       setSelectedOptions([value]);
-      setIsOpen(false); // Close the dropdown after single selection
+      setIsOpen(false);
     }
   };
+
   useEffect(() => {
     if (hasMounted.current) {
-      // Ensure there are selected options and it's not the first render
       onSelect(selectedOptions);
     } else {
-      hasMounted.current = true; // Set to true after first render
+      hasMounted.current = true;
     }
   }, [selectedOptions]);
 
-  // Declare a ref to track the initial mount
-  const hasMounted = useRef(false);
-
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -60,7 +65,8 @@ const Dropdown = ({
         onClick={toggleDropdown}
         className={`flex items-center text-nowrap space-x-1 py-2 px-4 ${className} border border-gray-300 rounded-md text-sm hover:shadow-md ${
           selectedOptions.length > 0 ? selectedColor : ""
-        }`}
+        } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+        disabled={disabled}
       >
         <span>{name}</span>
         {showCount && (
@@ -71,7 +77,7 @@ const Dropdown = ({
         <BsChevronDown />
       </button>
 
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute bg-white shadow-md rounded-md z-50 w-max top-full left-0">
           {options?.map((option, index) => (
             <div
@@ -84,16 +90,15 @@ const Dropdown = ({
                   checked={selectedOptions.includes(option.value)}
                   onChange={() => handleOptionClick(option.value)}
                   className="mr-2"
+                  disabled={disabled}
                 />
               )}
               <button
-                disabled={name === option?.name}
-                onClick={() =>
-                  !allowMultiple && handleOptionClick(option?.value)
-                }
+                disabled={disabled || name === option?.name}
+                onClick={() => !allowMultiple && handleOptionClick(option?.value)}
                 className={`w-full text-nowrap text-left font-semibold ${
                   name === option?.name && "text-blue-600 opacity-80"
-                }`}
+                } ${disabled ? "cursor-not-allowed" : ""}`}
               >
                 {option?.name}
                 <p className="text-xs font-normal text-black">

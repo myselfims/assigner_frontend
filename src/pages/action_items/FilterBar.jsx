@@ -7,10 +7,14 @@ import {
 import { BsCalendar, BsChevronDown } from "react-icons/bs";
 import { getAuthInfo } from "../../api";
 import Dropdown from "../../components/Dropdown";
-import {useDispatch, useSelector} from 'react-redux'
-import { setSearchQuery, setSelectedStatusOptions } from "../../store/features/actionItemsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setSearchQuery,
+  setSelectedStatusOptions,
+} from "../../store/features/actionItemsSlice";
 // import Button from "../../components/Button";
-import {Button} from "../../components/ui/button"
+import { Button } from "../../components/ui/button";
+import { useIsWorkspaceOwner } from "@/customHooks";
 
 const FilterBar = ({
   handleDateFilter,
@@ -18,17 +22,22 @@ const FilterBar = ({
   tasks,
   setAddTask,
 }) => {
-  const dispatch = useDispatch()
-  const {searchQuery, statuses, role} = useSelector(state => state.actionItems) 
+  const dispatch = useDispatch();
+  const { searchQuery, statuses, role, members } = useSelector(
+    (state) => state.actionItems
+  );
+  const { currentWorkspace } = useSelector((state) => state.workspaceState);
+  const { user } = useSelector((state) => state.globalState);
+  const isOwner = useIsWorkspaceOwner();
 
   const handleFilterByStatus = (selectedOptions) => {
-    dispatch(setSelectedStatusOptions(selectedOptions))
-  }
+    dispatch(setSelectedStatusOptions(selectedOptions));
+  };
 
-  const handleSearch = (e)=>{
+  const handleSearch = (e) => {
     let query = e.target.value;
-    dispatch(setSearchQuery(query))
-  }
+    dispatch(setSearchQuery(query));
+  };
 
   return (
     <div className="flex z-30 w-full flex-wrap items-center justify-between bg-white p-4 shadow-md rounded-md">
@@ -44,28 +53,27 @@ const FilterBar = ({
         <div className="flex items-center space-x-4">
           <div className="flex space-x-4">
             {/* Assigned Users */}
-            <div className="group relative cursor-pointer">
-              <div className="w-8 h-8 hover:border-2 border-black bg-purple-700 p-2 flex justify-center rounded-full items-center">
-                R
+            {members?.map((m) => (
+              <div className="group relative cursor-pointer">
+                <div className="w-8 h-8 hover:border-2 border-black text-white bg-purple-700 p-2 flex justify-center rounded-full items-center">
+                  {m?.name?.slice(0, 2)?.toUpperCase()}
+                </div>
+                <div className="absolute text-nowrap hidden group-hover:flex bg-white shadow-lg rounded-md p-2 flex-col">
+                  <h1 className="text-sm">{m?.name}</h1>
+                  {Object.keys(m?.taskCounts).map((key) => (
+                    <>
+                    {key.includes('totalTasks') ?
+                    <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
+                      Total tasks <span>{m?.taskCounts[key]}</span> 
+                    </a>:
+                    <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
+                      {key} <span>{m?.taskCounts[key]}</span> 
+                    </a>}
+                    </>
+                  ))}
+                </div>
               </div>
-              <div className="absolute text-nowrap hidden group-hover:flex bg-white shadow-lg rounded-md p-2 flex-col">
-                <h1 className="text-sm">Imran S</h1>
-                <a className="hover:text-blue-700 text-xs text-slate-700">
-                  3 Items in progress
-                </a>
-              </div>
-            </div>
-            <div className="group relative cursor-pointer">
-              <div className="w-8 h-8 hover:border-2 border-black bg-red-700 p-2 flex justify-center rounded-full items-center">
-                M
-              </div>
-              <div className="absolute text-nowrap hidden group-hover:flex bg-white shadow-lg rounded-md p-2 flex-col">
-                <h1 className="text-sm">Shubham S</h1>
-                <a className="hover:text-blue-700 text-xs text-slate-700">
-                  3 Items in progress
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -93,20 +101,28 @@ const FilterBar = ({
       </div>
 
       <Dropdown
-        name
-        ={"Status"}
+        name={"Status"}
         allowMultiple={true}
         options={statuses}
         onSelect={handleFilterByStatus}
         children={
-          <button onClick={()=>setCustomStatusModal(true)} className="text-center px-4 py-1 text-blue-500 w-full hover:bg-slate-100">Custom</button>
+          <button
+            onClick={() => setCustomStatusModal(true)}
+            className="text-center px-4 py-1 text-blue-500 w-full hover:bg-slate-100"
+          >
+            Custom
+          </button>
         }
       />
 
       <div className="mx-2">
-        {role?.roleId==2 &&
-          <Button className={'py-1'} onClick={() => setAddTask(true)} > Start Sprint</Button>
-        }
+        {role?.roleId == 2 ||
+          (isOwner && (
+            <Button className={"py-1"} onClick={() => setAddTask(true)}>
+              {" "}
+              Start Sprint
+            </Button>
+          ))}
       </div>
     </div>
   );

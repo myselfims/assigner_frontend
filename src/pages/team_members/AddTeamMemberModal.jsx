@@ -9,11 +9,13 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import Dropdown from "../../components/Dropdown";
+import { setMembers } from "@/store/features/actionItemsSlice";
 
 const AddTeamMemberModal = ({ setModal }) => {
   const {projectId } = useParams()
   const dispatch = useDispatch()
   const {currentWorkspace} = useSelector(state=>state.workspaceState)
+  const {members} = useSelector(state=>state.actionItems)
   const { values, errors, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
     initialValues: {
       name: "",
@@ -28,6 +30,7 @@ const AddTeamMemberModal = ({ setModal }) => {
       postData('/users/add-member/', data).then((res)=>{
         console.log(res)
         setModal(false)
+        dispatch(setMembers([...members, res]))
         resetForm()
         dispatch(setAlert({ alert: true, message: "User successfully added!", type: "success" }));
       }).catch((error)=>{

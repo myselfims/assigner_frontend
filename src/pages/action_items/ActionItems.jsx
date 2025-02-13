@@ -146,6 +146,9 @@ const ActionItems = ({ setCurrent }) => {
           </>
         )}
 
+        {!loading && sprints?.length==0 &&
+        <h1 className="text-3xl select-none font-semibold text-center my-8">No records found</h1>}
+
         {loading
           ? Array(3)
               .fill()

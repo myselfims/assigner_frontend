@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { fetchData } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "@/store/features/appGlobalSlice";
+import { useIsWorkspaceOwner } from "@/customHooks";
 
 const TeamMembers = ({ projectName = "Project Alpha" }) => {
   const dispatch = useDispatch()
@@ -15,6 +16,7 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
   const [addModal, setAddModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState("");
   const [roles, setRoles] = useState([])
+  const isOwner = useIsWorkspaceOwner()
 
   // Filtered team members
 
@@ -78,13 +80,14 @@ const TeamMembers = ({ projectName = "Project Alpha" }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        {isOwner &&
         <button
           onClick={handleAddMember}
           className="flex items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           <AiOutlineUserAdd className="mr-2" />
           Add Member
-        </button>
+        </button>}
       </div>
 
       <MemberTable roles={roles} filteredMembers={filteredMembers}/>

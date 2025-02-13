@@ -16,17 +16,35 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers=null }) =>
 
     if (event.target.value.length > 2) {
 
-      try {
-        setLoading(true);
-        const response = await fetchData("/users/", {
-          query: event.target.value,
+      if (passedUsers){
+        const filtered = passedUsers?.filter((item) => {
+          // Convert search query to lowercase for case-insensitive search
+          const query = searchQuery.toLowerCase();
+    
+          // Check if any property matches the search query
+          return (
+            item.name.toString().includes(query) || // Search by ID
+            item.email.toLowerCase().includes(query)
+          );
         });
-        setLoading(false);
-        setUsers(response);
-      } catch (error) {
-        setLoading(false);
-        console.error("Error fetching users:", error);
+        setSelectedUsers(filtered)
       }
+
+      else{
+        try {
+          setLoading(true);
+          const response = await fetchData("/users/", {
+            query: event.target.value,
+          });
+          setLoading(false);
+          setUsers(response);
+        } catch (error) {
+          setLoading(false);
+          console.error("Error fetching users:", error);
+        }
+
+      }
+
     } else {
       setUsers([]);
     }

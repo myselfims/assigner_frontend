@@ -27,7 +27,7 @@ const Connect = () => {
   },[])
 
   return (
-    <div className="flex  dark:bg-transparent h-[100%] pt-8 overflow-hidden">
+    <div className="flex  dark:bg-transparent h-[100%] overflow-hidden">
       {/* Users List Sect
       ion */}
       <div className="w-1/3 border-r border-gray-300 dark:">

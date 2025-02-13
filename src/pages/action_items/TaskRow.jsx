@@ -9,11 +9,12 @@ import { GoGrabber } from "react-icons/go";
 
 const TaskRow = ({ task, updateItem }) => {
   const { users } = useSelector((state) => state.users);
-  const {statuses} = useSelector(state=>state.actionItems)
+  const {statuses, role} = useSelector(state=>state.actionItems)
   const user = useMemo(
     () => users?.filter((item) => item.id == task?.assignedById)[0],
     [users, task?.assignedById]
   );
+  console.log(role)
 
   const [item, setItem] = useState(task);
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ const TaskRow = ({ task, updateItem }) => {
           options={statuses}
           onSelect={updateStatus}
           className={'py-[5px]'}
+          disabled={role?.roleId === 4}
         />
       </td>
       {/* <td className="">

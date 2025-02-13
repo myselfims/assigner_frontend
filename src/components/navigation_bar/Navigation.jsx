@@ -46,14 +46,17 @@ const Navigation = () => {
       >
       
         <div className="">
+          {!close &&
           <div className="fixed top-0 pt-8 bg-blue-600 flex items-center">
             <img width={50} className="rounded-full mr-2" src={logo} />
             <h1 className="text-3xl font-bold ">EasyAssigns</h1>
-          </div>
+          </div>}
+
           <AiOutlineClose
             onClick={() => dispatch(setSidebar(false))}
             className="absolute w-[30px] h-[30px] hidden max-sm:flex right-5 top-5"
           />
+          
           {isProjectRoute ? <ProjectNavbar /> : <GenericNavBar />}
         </div>
         <div className="flex justify-start items-start flex-col">
