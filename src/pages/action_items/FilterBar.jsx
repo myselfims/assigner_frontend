@@ -51,7 +51,7 @@ const FilterBar = ({
 
       <div className="flex flex-grow items-center justify-center space-x-4">
         <div className="flex items-center space-x-4">
-          <div className="flex space-x-4">
+          <div className="flex space-x-1">
             {/* Assigned Users */}
             {members?.map((m) => (
               <div className="group relative cursor-pointer">
@@ -60,6 +60,8 @@ const FilterBar = ({
                 </div>
                 <div className="absolute text-nowrap hidden group-hover:flex bg-white shadow-lg rounded-md p-2 flex-col">
                   <h1 className="text-sm">{m?.name}</h1>
+                  {m?.taskCounts &&
+                  <>
                   {Object.keys(m?.taskCounts).map((key) => (
                     <>
                     {key.includes('totalTasks') ?
@@ -71,6 +73,8 @@ const FilterBar = ({
                     </a>}
                     </>
                   ))}
+                  </>
+                  }
                 </div>
               </div>
             ))}

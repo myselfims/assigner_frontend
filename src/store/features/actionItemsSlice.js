@@ -10,6 +10,9 @@ const initialState = {
     project : null,
     members : [],
     role : null,
+    selectedSprint : null,
+    addSprintModal : false,
+    editSprintModal : false,
 }
 
 export const actionItemsSlice = createSlice({
@@ -18,6 +21,15 @@ export const actionItemsSlice = createSlice({
     reducers : {
         setRole : (state, action)=>{
             state.role = action.payload
+        },
+        setAddSprintModal : (state, action)=>{
+            state.addSprintModal = action.payload
+        },
+        setEditSprintModal : (state, action)=>{
+            state.editSprintModal = action.payload
+        },
+        setSelectedSprint : (state, action)=>{
+            state.selectedSprint = action.payload
         },
         setTasks : (state, action)=>{
             state.tasks = action.payload
@@ -59,5 +71,5 @@ export const actionItemsSlice = createSlice({
 })
 
 
-export const {setTasks, setRole, setMembers,setProject ,setSprints, setSearchQuery, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions, setStatuses} = actionItemsSlice.actions
+export const {setTasks, setRole,setEditSprintModal, setSelectedSprint,setAddSprintModal, setMembers,setProject ,setSprints, setSearchQuery, addTask,removeTask,updateTask, setLoading, setSelectedStatusOptions, setStatuses} = actionItemsSlice.actions
 export default actionItemsSlice.reducer

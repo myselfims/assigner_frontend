@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FiMoreVertical, FiVideo, FiPhone } from "react-icons/fi";
+import TypingIndicator from "./TypingIndicator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const ChatHeader = ({ selectedUser, headline }) => {
+const ChatHeader = ({ selectedUser, headline, typingUsers }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Function to generate a random color for the placeholder
@@ -14,21 +16,18 @@ const ChatHeader = ({ selectedUser, headline }) => {
     <div className="flex items-center justify-between px-4 py-3 border-b dark:bg-gray-900 dark:text-white bg-gray-50">
       {/* Profile Picture or Placeholder */}
       <div className="flex items-center">
-        <div
-          className={`w-10 h-10 flex items-center justify-center rounded-full text-white font-bold ${
-            selectedUser?.profilePic ? "" : getRandomColor()
-          }`}
-          style={{
-            backgroundImage: selectedUser?.profilePic ? `url(${selectedUser.profilePic})` : "none",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          {!selectedUser?.profilePic && selectedUser?.name[0].toUpperCase()}
-        </div>
+         <Avatar>
+                  <AvatarImage src={''} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
 
         {/* User Name */}
-        <h2 className="ml-3 text-lg font-medium text-gray-800">{headline? headline : selectedUser?.name}</h2>
+        <div className="ml-3 justify-between">
+          <h2 className="font-medium text-lg text-gray-800">{headline? headline : selectedUser?.name}</h2>
+          {typingUsers?.length>0 &&
+          <TypingIndicator typingUsers={typingUsers} />}
+
+        </div>
       </div>
 
       {/* Right Icons */}
@@ -50,6 +49,7 @@ const ChatHeader = ({ selectedUser, headline }) => {
           )}
         </div>
       </div>
+      
     </div>
   );
 };

@@ -70,7 +70,7 @@ export const updateData = async (endpoint, data) => {
         Authorization: getAuthInfo().token,
       },
     });
-    return request;
+    return request.data;
   } catch (error) {
     return handleError(error);
   }

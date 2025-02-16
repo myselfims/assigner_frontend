@@ -10,11 +10,10 @@ import { debounce } from "lodash";
 
 const socket = io("http://localhost:3000"); // Replace with your server URL
 
-const ChatBody = ({ onSend, messages, setMessages}) => {
+const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
   const [message, setMessage] = useState("");
   const { user } = useSelector((state) => state.globalState);
   const { projectId } = useParams();
-  const [typingUsers, setTypingUsers] = useState([]);
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const [showNewMessageButton, setShowNewMessageButton] = useState(false);
@@ -154,7 +153,7 @@ const handleKeyDown = (e) => {
       </div>
 
       <div className="flex relative items-center p-4 dark:bg-gray-900 bg-gray-100 border-t">
-        <TypingIndicator typingUsers={typingUsers} />
+       
         <button className="p-2 text-gray-500 hover:text-blue-500">
           <FiPlus size={20} />
         </button>

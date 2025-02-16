@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData, getAuthInfo } from "../../api";
-import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
-import { useParams } from "react-router-dom";
+import { MdEdit } from "react-icons/md";
 import TaskRow from "./TaskRow";
-import noDataImage from "../../assets/no data.png";
 import Loader from "../../components/Loader";
-import {Button} from '../../components/ui/button'
+import { Button } from "../../components/ui/button";
 import TaskCard from "./TaskCard";
 import { formatDate } from "../../globalFunctions";
 import { FaPlusCircle, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { motion } from "framer-motion"; // Import framer-motion
 import AddTaskModal from "./AddTaskModal";
-import { setTasks, updateTask } from "../../store/features/actionItemsSlice";
+import {
+  setEditSprintModal,
+  setSelectedSprint,
+  setTasks,
+  updateTask,
+} from "../../store/features/actionItemsSlice";
 
-const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
+const SprintTable = ({ sprint, handleModal, localTasks }) => {
   const { selectedStatusOptions, searchQuery, tasks } = useSelector(
     (state) => state.actionItems
   );
@@ -23,33 +25,31 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
   const [filteredItems, setFilteredItems] = useState(items);
   const [isOpen, setIsOpen] = useState(true); // State to control collapse/expand
   const [addtask, setAddTask] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const updateItem = (id, updatedData) => {
     // Find the tasks associated with the sprintId
     const updatedTasks = { ...tasks };
-    const sprintId = sprint?.id
-    console.log(id, sprintId)
+    const sprintId = sprint?.id;
+    console.log(id, sprintId);
     if (updatedTasks[sprintId]) {
       updatedTasks[sprintId] = updatedTasks[sprintId].map((task) =>
         task.id === id ? { ...task, ...updatedData } : task
       );
     }
-  
+
     dispatch(setTasks(updatedTasks));
-  
+
     setFilteredItems((prevFilteredItems) =>
       prevFilteredItems.map((item) =>
         item.id === id ? { ...item, ...updatedData } : item
       )
     );
   };
-  
-  useEffect(()=>{
-    console.log(tasks)
-  },[tasks])
-  
-  
+
+  useEffect(() => {
+    console.log(tasks);
+  }, [tasks]);
 
   useEffect(() => {
     // Filter items based on selectedStatusOptions
@@ -64,7 +64,6 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
   }, [selectedStatusOptions, items]); // Add `items` as a dependency if it can change
 
   useEffect(() => {
-
     // Filter items based on multiple criteria
     const filtered = items?.filter((item) => {
       // Convert search query to lowercase for case-insensitive search
@@ -84,7 +83,7 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
   }, [searchQuery, items]);
 
   const handleAddItem = () => {
-    setCurrentSprint(sprint);
+    dispatch(setSelectedSprint(sprint));
     setAddTask(true);
   };
 
@@ -112,6 +111,14 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
         >
           <FaPlusCircle className="mr-1" />
           Add Item
+        </Button>
+        <Button
+          onClick={() => {dispatch(setSelectedSprint(sprint)); dispatch(setEditSprintModal(true))}}
+          className="px-1 h-8 ml-2 bg-white text-black hover:bg-blue-100"
+          type="filled"
+        >
+          <MdEdit className="" />
+          Edit
         </Button>
 
         {/* Collapsible Icon */}
@@ -153,11 +160,16 @@ const SprintTable = ({ sprint, handleModal, setCurrentSprint, localTasks }) => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {filteredItems?.map((item) => {
-              return (
-                <TaskRow updateItem={updateItem} handleModal={handleModal} key={item.id} task={item} />
-              );
-            })}
+            {[...filteredItems]
+              ?.sort((a, b) => a.rank - b.rank) // Sort tasks by rank (ascending order)
+              .map((item) => (
+                <TaskRow
+                  updateItem={updateItem}
+                  handleModal={handleModal}
+                  key={item.id}
+                  task={item}
+                />
+              ))}
           </tbody>
         </table>
 

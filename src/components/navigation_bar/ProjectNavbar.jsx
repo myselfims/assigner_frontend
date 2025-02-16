@@ -45,9 +45,9 @@ const ProjectNavBar = () => {
     { to: `/project/${projectId}/team-members`, icon: <FaUsersCog />, label: "Team Members" },
     { to: `/project/${projectId}/group-chat`, icon: <LuMessageSquare />, label: "Group Chat" },
     { to: `/project/${projectId}/calendar`, icon: <IoIosCalendar />, label: "Calendar" },
-    { to: "/projects/settings", icon: <LuSettings />, label: "Settings" },
     { to: "/projects/reports", icon: <LuClipboard />, label: "Reports" },
     { to: "/projects/activity-logs", icon: <RxActivityLog />, label: "Activity Logs" },
+    { to: "/projects/settings", icon: <LuSettings />, label: "Settings" },
   ];
 
   return (

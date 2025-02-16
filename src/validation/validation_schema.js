@@ -24,9 +24,7 @@ export const TaskSchema = Yup.object({
   export const SprintSchema = yup.object({
     title: yup.string().required("Title is required"),
     description: yup.string(),
-    startDate: yup.date().required("Start date is required"),
-    endDate: yup.date()
-      .min(yup.ref('startDate'), "End date cannot be before start date")
-      .required("End date is required"),
+    startDate: yup.date(),
+    endDate: yup.date(),
   });
   

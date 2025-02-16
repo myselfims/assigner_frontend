@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
-import { getAuthInfo } from "../../api";
+import { fetchData, getAuthInfo } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { setSidebar } from "../../store/features/appGlobalSlice";
 import { FaAngleLeft } from "react-icons/fa6";
@@ -9,6 +9,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import GenericNavBar from "./GenericNavBar";
 import ProjectNavbar from "./ProjectNavbar";
 import logo from "../../assets/logo.png";
+import { setCurrentWorkspace, setWorkspaces } from "@/store/features/workspaceSlice";
 
 const Navigation = () => {
   const { currentPage, sidebar, auth_info } = useSelector(
@@ -32,6 +33,18 @@ const Navigation = () => {
       getAuthInfo().token ? null : navigate("/login");
     }
   }, []);
+
+  useEffect(() => {
+    fetchData("/workspaces").then((res) => {
+      if (res.length === 0) {
+        navigate("/select-workspace");
+      } else {
+        dispatch(setWorkspaces(res));
+        dispatch(setCurrentWorkspace(res[0]));
+      }
+    });
+  }, []);
+
 
   return (
     <div

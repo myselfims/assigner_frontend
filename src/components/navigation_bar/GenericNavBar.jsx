@@ -29,18 +29,7 @@ const GenericNavBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchData("/workspaces").then((res) => {
-      if (res.length === 0) {
-        navigate("/select-workspace");
-      } else {
-        dispatch(setWorkspaces(res));
-        dispatch(setCurrentWorkspace(res[0]));
-        navigate("/projects");
-      }
-    });
-  }, []);
-
+ 
   return (
     <motion.div
       initial={{ x: -200, opacity: 0 }}
@@ -64,17 +53,17 @@ const GenericNavBar = () => {
         />
       </Card>
 
-      {!currentWorkspace && (
+      {!currentWorkspace? (
         <div className="flex flex-col items-center justify-center backdrop-blur-md w-full  text-white rounded-lg p-4 text-center">
           <CiLock className="w-10 h-10" />
           <h1 className="text-sm mt-2">
             Create a new workspace to get started.
           </h1>
         </div>
-      )}
+      ) 
+      :
 
-      {/* Navigation Links */}
-      <div className="space-y-2">
+      (<div className="space-y-2">
         {[
           { to: "/dashboard", label: "Dashboard", icon: AiOutlineDashboard },
           { to: "/projects", label: "Projects", icon: FaTasks },
@@ -117,7 +106,7 @@ const GenericNavBar = () => {
             </span>
           </Link>
         )}
-      </div>
+      </div>)}
 
     </motion.div>
   );

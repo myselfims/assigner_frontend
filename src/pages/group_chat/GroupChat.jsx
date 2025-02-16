@@ -29,6 +29,7 @@ const GroupChat = () => {
   const [messages, setMessages] = useState([]);
   const { projectId } = useParams();
   const { project } = useSelector((state) => state.actionItems);
+  const [typingUsers, setTypingUsers] = useState([])
 
   const users = [
     { id: 1, name: "John Doe" },
@@ -162,7 +163,7 @@ const GroupChat = () => {
         </div>
 
         {/* Tabs/Buttons */}
-        <div className="mt-4">
+        <div className="mt-4 text-sm">
           <button
             onClick={() => setActiveTab("messages")}
             className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
@@ -221,6 +222,7 @@ const GroupChat = () => {
               <ChatHeader
                 headline={`${project?.name} - Chat`}
                 selectedUser={selectedUser}
+                typingUsers={typingUsers}
               />
 
               {/* Render Chat Body */}
@@ -229,6 +231,7 @@ const GroupChat = () => {
                   setMessages={setMessages}
                   messages={messages}
                   onSend={addMessage}
+                  setTypingUsers={setTypingUsers}
                 />
               </div>
             </div>

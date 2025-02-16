@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaSave } from "react-icons/fa";
-import { postData } from "../../api";
+import { postData,updateData } from "../../api";
 import { useFormik } from "formik";
 import { SprintSchema } from "../../validation/validation_schema"; // Assuming you have a schema for sprint validation
 import { useDispatch } from "react-redux";
@@ -10,15 +10,16 @@ import Loader from "../../components/Loader";
 import InputField from "../../components/InputField";
 import { motion, AnimatePresence } from "motion/react";
 import { useParams } from "react-router-dom";
+import { setSelectedSprint } from "@/store/features/actionItemsSlice";
 
 const initialValues = {
   title: "",
-  description: "",
-  startDate: "",
-  endDate: "",
+  description: null,
+  startDate: null,
+  endDate: null,
 };
 
-const AddSprintModal = ({ setModal, addSprint }) => {
+const AddSprintModal = ({selectedSprint, setModal, addSprint, updatedSprint }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { projectId } = useParams();
@@ -28,6 +29,7 @@ const AddSprintModal = ({ setModal, addSprint }) => {
     errors,
     touched,
     handleChange,
+    setValues,
     handleBlur,
     handleSubmit,
   } = useFormik({
@@ -36,20 +38,45 @@ const AddSprintModal = ({ setModal, addSprint }) => {
     onSubmit: (data) => {
       setLoading(true);
       data["projectId"] = projectId;
-      postData(`/sprints/`, data)
-        .then((res) => {
-          setLoading(false);
-          setModal(false);
-          // You can dispatch actions to update your state here, if needed
-          addSprint(res); 
+
+      if (selectedSprint){
+        updateData(`/sprints/${data?.id}/`, data).then((res)=>{
+          console.log(res)
+          updatedSprint(data?.id, data)
+          dispatch(setSelectedSprint(null))
         })
-        .catch((error) => {
-            console.log(error)
-          setLoading(false);
-          dispatch(setAlert({ alert: true, type: "danger", message: "Server not responding!" }));
-        });
+      }else{
+        postData(`/sprints/`, data)
+          .then((res) => {
+            setLoading(false);
+            setModal(false);
+            // You can dispatch actions to update your state here, if needed
+            addSprint(res); 
+          })
+          .catch((error) => {
+              console.log(error)
+            setLoading(false);
+            dispatch(setAlert({ alert: true, type: "danger", message: "Server not responding!" }));
+          });
+      }
+
     },
   });
+
+  const formatDate = (isoString) => {
+    if (!isoString) return "";
+    return isoString.split("T")[0]; // Extracts only "yyyy-MM-dd"
+  };
+  
+  useEffect(() => {
+    if (selectedSprint) {
+      setValues({
+        ...selectedSprint,
+        startDate: formatDate(selectedSprint.startDate), // Convert date format
+        endDate: formatDate(selectedSprint.endDate),
+      });
+    }
+  }, [selectedSprint]);
 
   return (
     <AnimatePresence>

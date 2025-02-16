@@ -2,28 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 
-    workspaces : [
-        {
-          "id": "ws_001",
-          "name": "sdfa Inc",
-          "role": "Admin",
-          "subscription": {
-            "plan": "Pro",
-            "billingCycle": "Annual",
-            "nextBillingDate": "2025-02-10"
-          }
-        },
-        {
-          "id": "ws_002",
-          "name": "Freelance Hub",
-          "role": "Member",
-          "subscription": {
-            "plan": "Free",
-            "billingCycle": "N/A",
-            "nextBillingDate": null
-          }
-        }
-      ]
+    workspaces : []
       ,
     currentWorkspace : null
       

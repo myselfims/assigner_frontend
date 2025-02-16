@@ -42,7 +42,7 @@ const TaskRow = ({ task, updateItem }) => {
       <GoGrabber className="text-xl cursor-grabbing"/>
       </td>
       <td className="text-center py-2">
-        <h1>{item?.id}</h1>
+        <h1>{item?.index}</h1>
       </td>
       <td onClick={() => dispatch(setActiveTask(item))} className="">
         <h1 className="font-">{item?.title}</h1>

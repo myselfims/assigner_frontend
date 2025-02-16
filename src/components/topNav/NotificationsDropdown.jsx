@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchData } from "../../api";
+import { fetchData, updateData } from "../../api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,39 +7,92 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BiBell } from "react-icons/bi";
+import { io } from "socket.io-client";
+import { useSelector } from "react-redux";
+import {formatChatTimestamp} from '../../globalFunctions'
+
+const socket = io("http://localhost:3000");
 
 const NotificationsDropdown = () => {
   const [notifications, setNotifications] = useState([]);
   const [notiDropdown, setNotiDropdown] = useState(false);
+  const { user } = useSelector((state) => state.globalState);
+  const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
-    fetchData("/notifications").then((res) => setNotifications(res || []));
-  }, []);
+    if (!user) return; // Ensure user?.id is available
+
+    socket.connect();
+
+    // Join the notification room
+    socket.emit("join:notifications", user?.id);
+
+    // Fetch existing notifications from API
+    fetchData("/notifications").then((res) =>{
+      console.log(res)
+      setNotifications(res?.notifications || [])
+      setUnreadCount(res?.unread)
+    
+    });
+
+    // Listen for new notifications
+    socket.on("notification", (newNotification) => {
+      console.log("Received notification:", newNotification);
+      setNotifications([newNotification,...notifications]);
+    });
+
+    return () => {
+      socket.off("notification");
+      socket.disconnect();
+    };
+  }, [user?.id]); // Reconnect when user?.id changes
+
+  const handleClick = (id)=>{
+    updateData(`/notifications/${id}/read`).then((res)=>{
+      let notification = res?.notification;
+      let updatedData =  notifications?.map((n) =>
+        n.id === id ? notification : n
+      );
+      console.log(updatedData)
+      setNotifications(updatedData)
+      setUnreadCount(updatedData.filter((n)=>!n.isRead).length)
+    })
+  }
+
 
   return (
     <DropdownMenu open={notiDropdown} onOpenChange={setNotiDropdown}>
       <DropdownMenuTrigger asChild>
         <div className="relative w-[30px] h-[30px] cursor-pointer">
           <BiBell className="w-full h-full p-1 rounded-full hover:bg-slate-200" />
-          {notifications.length > 0 && (
+          {unreadCount > 0 && (
             <span className="absolute top-1 right-1 text-xs bg-red-500 p-1 rounded-full w-2 h-2"></span>
           )}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-96 max-h-96 overflow-y-auto">
-        {notifications.length > 0 ? (
-          notifications.map((notification, index) => (
-            <DropdownMenuItem key={index} className="border-b">
-              <div>
-                {notification.text.length > 90
-                  ? notification.text.slice(0, 90) + "..."
-                  : notification.text}
-                <p className="text-xs text-slate-500">{notification.timeAgo}</p>
+      <DropdownMenuContent
+        align="end"
+        className="w-96 max-h-96 overflow-y-auto scrollbar-none"
+      >
+        {notifications?.length > 0 ? (
+          notifications?.map((notification, index) => (
+            <DropdownMenuItem key={index} className="border-b px-4 py-2">
+              <div onClick={()=>handleClick(notification?.id)} className="w-full">
+                <p className={`${!notification?.isRead && 'font-semibold'}`}>
+                  {notification?.message?.length > 90
+                    ? notification?.message.slice(0, 90) + "..."
+                    : notification?.message}
+                </p>
+                <p className="text-xs text-slate-500 text-end">
+                  {formatChatTimestamp(notification?.createdAt)}
+                </p>
               </div>
             </DropdownMenuItem>
           ))
         ) : (
-          <DropdownMenuItem>No notifications</DropdownMenuItem>
+          <DropdownMenuItem className="px-4 py-2 text-center">
+            No notifications
+          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
