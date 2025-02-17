@@ -10,6 +10,7 @@ import { BiBell } from "react-icons/bi";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import {formatChatTimestamp} from '../../globalFunctions'
+import { redirect, useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:3000");
 
@@ -18,6 +19,7 @@ const NotificationsDropdown = () => {
   const [notiDropdown, setNotiDropdown] = useState(false);
   const { user } = useSelector((state) => state.globalState);
   const [unreadCount, setUnreadCount] = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!user) return; // Ensure user?.id is available
@@ -47,7 +49,7 @@ const NotificationsDropdown = () => {
     };
   }, [user?.id]); // Reconnect when user?.id changes
 
-  const handleClick = (id)=>{
+  const handleClick = (id, redirectUrl)=>{
     updateData(`/notifications/${id}/read`).then((res)=>{
       let notification = res?.notification;
       let updatedData =  notifications?.map((n) =>
@@ -57,6 +59,8 @@ const NotificationsDropdown = () => {
       setNotifications(updatedData)
       setUnreadCount(updatedData.filter((n)=>!n.isRead).length)
     })
+    redirectUrl && navigate(redirectUrl)
+    
   }
 
 
@@ -77,7 +81,7 @@ const NotificationsDropdown = () => {
         {notifications?.length > 0 ? (
           notifications?.map((notification, index) => (
             <DropdownMenuItem key={index} className="border-b px-4 py-2">
-              <div onClick={()=>handleClick(notification?.id)} className="w-full">
+              <div onClick={()=>handleClick(notification?.id, notification?.redirectUrl)} className="w-full">
                 <p className={`${!notification?.isRead && 'font-semibold'}`}>
                   {notification?.message?.length > 90
                     ? notification?.message.slice(0, 90) + "..."

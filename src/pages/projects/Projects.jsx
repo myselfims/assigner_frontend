@@ -100,7 +100,7 @@ const Projects = () => {
       </Button>
       </div>
       <div className="w-full grid grid-cols-3 gap-4">
-        {!loading && filteredProjects.length==0 &&
+        {!loading && projects?.length==0 &&
         <NoProjectsCard />}
         {loading
           ? Array(3)

@@ -7,40 +7,45 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../../store/features/appGlobalSlice";
 
-
 const AddProject = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const {currentWorkspace} = useSelector(state => state.workspaceState)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { currentWorkspace } = useSelector((state) => state.workspaceState);
   const formik = useFormik({
     initialValues: {
       name: "",
-      lead: 1,
+      lead: 0,
       startDate: "",
       status: "Ongoing",
       priority: "Medium",
       budget: "",
       deadline: "",
       description: "",
-      workspaceId: currentWorkspace.id,
+      workspaceId: currentWorkspace?.id,
     },
     onSubmit: (values) => {
       console.log("New Project Data:", values);
       setLoading(true);
-      values.lead = 1;
-      postData("/projects/", values).then((res) => {
-        setLoading(false);
-        navigate('/projects')
-      }).catch((error)=>{
-        console.log(error)
-        setLoading(false)
-        dispatch(setAlert({alert:true,type:'danger',message:error.response.data}))
-
-      })
+      postData("/projects/", values)
+        .then((res) => {
+          setLoading(false);
+          navigate("/projects");
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+          dispatch(
+            setAlert({
+              alert: true,
+              type: "danger",
+              message: error.response.data,
+            })
+          );
+        });
     },
   });
-
+  console.log(formik.values)
   return (
     <div className="w-full max-w-5xl mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Add New Project</h2>
@@ -60,16 +65,10 @@ const AddProject = () => {
 
           {/* Project Lead */}
           <label className="font-bold">Project Lead</label>
-          <UserSearchBox/>
-          {/* <input
-            type="text"
-            name="lead"
-            disabled={loading}
-            value={formik.values.lead}
-            onChange={formik.handleChange}
-            className="border-2 px-3 py-2 rounded-md w-full"
-            required
-          /> */}
+          <UserSearchBox
+            onSelect={(user)=>formik.setFieldValue('lead', user[0].id)}
+            allowMultiple={false}
+          />
 
           {/* Start Date */}
           <label className="font-bold">Start Date</label>
@@ -150,7 +149,7 @@ const AddProject = () => {
             type="submit"
             className="bg-[#4285F4] text-white font-bold py-2 px-6 rounded-md hover:opacity-80 flex items-center"
           >
-            Add Project {loading && <Loader className={'ml-2'}/>}
+            Add Project {loading && <Loader className={"ml-2"} />}
           </button>
         </div>
       </form>
