@@ -48,19 +48,19 @@ const Navigation = () => {
 
   return (
     <div
-      className={`flex max-sm:absolute h-full top-0 ${
+      className={`flex overflow-hidden max-sm:absolute h-full top-0 ${
         sidebar ? "max-sm:right-0" : "max-sm:right-[1200px]"
       } transition-all relative`}
     >
       <div
-        className={`text-white overflow-y-scroll scrollbar-none max-sm:w-screen max-sm:h-screen flex flex-col transition-all justify-between ${
-          close ? "w-0 p-0" : "w-[300px] p-[50px] "
+        className={`text-white scrollbar-none max-sm:w-screen max-sm:h-screen flex flex-col transition-all justify-between ${
+          close ? "w-0 p-0" : "w-72 p-[10px] "
         }  h-screen bg-blue-600`}
       >
       
         <div className="">
           {!close &&
-          <div className="fixed top-0 pt-8 bg-blue-600 flex items-center">
+          <div className="flex items-center px-4">
             <img width={50} className="rounded-full mr-2" src={logo} />
             <h1 className="text-3xl font-bold ">EasyAssigns</h1>
           </div>}
@@ -71,10 +71,6 @@ const Navigation = () => {
           />
           
           {isProjectRoute ? <ProjectNavbar /> : <GenericNavBar />}
-        </div>
-        <div className="flex justify-start items-start flex-col">
-          <button className="my-[20px]">Help</button>
-          <button>Contact Us</button>
         </div>
       </div>
       <div className="h-full flex items-center">

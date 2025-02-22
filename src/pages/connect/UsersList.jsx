@@ -1,7 +1,11 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate, useParams } from "react-router-dom";
+import { postData } from "@/api";
 
-const UsersList = ({ users, setSelectedUser }) => {
+const UsersList = ({ users, setSelectedUser, unreadCounts, setUnreadCounts }) => {
+  const navigate = useNavigate();
+  const { workspaceId } = useParams();
   // Function to generate random color
   const getRandomColor = () => {
     const colors = [
@@ -14,13 +18,25 @@ const UsersList = ({ users, setSelectedUser }) => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
+  const handleClick = (user) => {
+    setSelectedUser(user);
+    postData(`/chat/mark-as-read/${user?.id}`).then((res) => {
+      console.log(res);
+      setUnreadCounts({ ...unreadCounts, [user.id]: null });
+    });
+    navigate(`/${workspaceId}/connect/${user?.id}`);
+  };
+
   return (
     <div className="overflow-y-scroll h-full">
+      {users?.length == 0 && (
+        <h1 className="text-center my-4 font-semibold">Users not found!</h1>
+      )}
       {users.map((user) => (
         <div
           key={user.id}
-          className="flex relative items-center p-4  cursor-pointer dark:hover:bg-gray-700 hover:bg-gray-100 border-b"
-          onClick={() => setSelectedUser(user)}
+          className="flex relative items-center p-4  cursor-pointer dark:hover:bg-gray-700 active:bg-gray-200 hover:bg-gray-100 border-b"
+          onClick={() => handleClick(user)}
         >
           {/* const isOnline = true; // Change this dynamically based on user status */}
           <Avatar
@@ -40,7 +56,11 @@ const UsersList = ({ users, setSelectedUser }) => {
               {user.recentMessage || "No recent messages"}
             </p>
           </div>
-          <span className="absolute right-8 text-xs bg-blue-400 p-1 rounded-full font-semibold w-5 h-5 flex items-center justify-center">3</span>
+          {unreadCounts && unreadCounts[user?.id] && (
+            <span className="absolute right-8 text-xs bg-blue-400 p-1 rounded-full font-semibold w-5 h-5 flex items-center justify-center">
+              {unreadCounts[user?.id]}
+            </span>
+          )}
         </div>
       ))}
     </div>

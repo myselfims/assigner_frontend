@@ -1,6 +1,11 @@
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
 
+export const getRoomId = (user1, user2) => {
+    return [user1, user2].sort().join("_");
+};
+  
+
 export const formatDate = (dateString)=>{
     try{
         const date = new Date(dateString);

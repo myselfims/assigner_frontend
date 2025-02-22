@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useSelector } from "react-redux";
+import { formatDate } from "@/globalFunctions";
 
 const MemberRow = ({ member, roles }) => {
   const [selectedRole, setSelectedRole] = useState(member?.role);
@@ -73,11 +74,11 @@ const MemberRow = ({ member, roles }) => {
       </TableCell>
       <TableCell>
         <div className="flex flex-col">
-          <h1>{member?.name}</h1>
-          <p className="text-sm text-gray-500">Frontend Developer</p>
+          <h1 className="font-semibold mb-1">{member?.name}</h1>
+          <p className="text-[12px] text-gray-500">Frontend Developer</p>
           <a
             href={`mailto:${member?.email}`}
-            className="text-blue-600 text-sm hover:underline"
+            className="text-blue-600 text-[12px] hover:underline"
           >
             <AiOutlineMail className="inline-block mr-1" />
             {member?.email}
@@ -110,6 +111,7 @@ const MemberRow = ({ member, roles }) => {
           </button>
         </div>
       </TableCell>
+      <TableCell>{formatDate(member?.createdAt)}</TableCell>
       {confirmModal && (
         <ConfirmModal
           onSelect={handleConfirm}

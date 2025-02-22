@@ -7,17 +7,18 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import TypingIndicator from "./TypingIndicator";
 import { debounce } from "lodash";
+import { getRoomId } from "@/globalFunctions";
 
 const socket = io("http://localhost:3000"); // Replace with your server URL
 
-const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
+const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCounts=null}) => {
   const [message, setMessage] = useState("");
   const { user } = useSelector((state) => state.globalState);
-  const { projectId } = useParams();
+  const { projectId, userId } = useParams();
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
   const [showNewMessageButton, setShowNewMessageButton] = useState(false);
-  const [inputRows, setInputRows] = useState(1)
+  const [inputRows, setInputRows] = useState(1);
 
   const removeMessage = (id) => {
     setMessages(messages?.filter((m) => m.id !== id));
@@ -25,12 +26,25 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
   };
 
   useEffect(() => {
-    if (!projectId) return;
+    // if (!projectId || !userId) return;
     console.log("Joining chat");
-    socket.emit("join:chat", projectId);
+    let joiningId;
+    if (userId) {
+      joiningId = getRoomId(userId, user?.id);
+    } else {
+      joiningId = projectId;
+    }
+    console.log("joiningId", joiningId);
+    socket.emit("join:chat", joiningId);
 
     const handleMessage = (newMessage) => {
       console.log("Received:", newMessage);
+      let senderId = newMessage?.senderId
+      setUnreadCounts && setUnreadCounts((prevCounts) => ({
+        ...prevCounts,
+        [senderId]: (prevCounts?.[senderId] || 0) + 1
+      }));
+      
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
@@ -47,13 +61,31 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
 
     socket.on("message", handleMessage);
     socket.on("typing", handleTyping);
+    socket.on("all_messages_seen", ()=>{
+      console.log('all Messages seen')
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => ({ ...msg, isRead: true }))
+      );
+      
+    });
+    socket.on("message:seen", ({ messageId, userId }) => {
+      console.log('Message seen', messageId)
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === messageId ? { ...msg, isRead: true } : msg
+        )
+      );
+    });
+  
 
     return () => {
-      socket.emit("leave:chat", projectId);
+      console.log('Leaving the chat')
+      socket.emit("leave:chat", joiningId);
       socket.off("message", handleMessage);
       socket.off("typing", handleTyping);
+      socket.off("message:seen" );
     };
-  }, [projectId]);
+  }, [projectId, userId]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -74,6 +106,7 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
       const data = {
         type: "text",
         projectId: parseInt(projectId),
+        receiverId: parseInt(userId),
         content: message,
         senderId: user?.id,
         sender: user,
@@ -88,39 +121,45 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers}) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (e.shiftKey) {
+        // Shift + Enter → Move to a new line
+        setInputRows((prev) => prev + 1);
+      } else {
+        // Enter (without Shift) → Send message
+        e.preventDefault();
+        handleSendMessage();
+      }
+    } else if (e.key === "Backspace") {
+      const { selectionStart, selectionEnd, value } = e.target;
 
-const handleKeyDown = (e) => {
-  if (e.key === "Enter") {
-    if (e.shiftKey) {
-      // Shift + Enter → Move to a new line
-      setInputRows((prev) => prev + 1);
-    } else {
-      // Enter (without Shift) → Send message
-      e.preventDefault();
-      handleSendMessage();
+      // If entire text is selected (Ctrl+A) and Backspace is pressed, reset to 1 row
+      if (selectionStart === 0 && selectionEnd === value.length) {
+        setInputRows(1);
+      }
+      // Reduce rows when deleting a newline at the end
+      else if (value.endsWith("\n")) {
+        setInputRows((prev) => (prev > 1 ? prev - 1 : 1)); // Prevent going below 1
+      }
     }
-  } else if (e.key === "Backspace") {
-    const { selectionStart, selectionEnd, value } = e.target;
-
-    // If entire text is selected (Ctrl+A) and Backspace is pressed, reset to 1 row
-    if (selectionStart === 0 && selectionEnd === value.length) {
-      setInputRows(1);
-    } 
-    // Reduce rows when deleting a newline at the end
-    else if (value.endsWith("\n")) {
-      setInputRows((prev) => (prev > 1 ? prev - 1 : 1)); // Prevent going below 1
-    }
-  }
-};
-
-  
-  
+  };
 
   const sendTypingStatus = debounce(() => {
     if (message?.length > 0) {
       socket.emit("typing", { name: user?.name, projectId });
     }
   }, 500);
+
+  const handleSeenMessage = (messageId) => {
+    if (!messageId) return;
+    console.log('Sending seen update message to room')
+    socket.emit("message:seen", {
+      messageId,
+      roomId: getRoomId(userId, user?.id),
+      userId: user?.id,
+    });
+  };
 
   return (
     <div className="flex w-full flex-col flex-grow h-full">
@@ -136,6 +175,7 @@ const handleKeyDown = (e) => {
               self={m?.sender?.id === user?.id}
               message={m}
               removeMessage={removeMessage}
+              handleSeenMessage={handleSeenMessage}
             />
           ))}
           <div ref={messagesEndRef}></div>
@@ -151,9 +191,7 @@ const handleKeyDown = (e) => {
           </button>
         )}
       </div>
-
       <div className="flex relative items-center p-4 dark:bg-gray-900 bg-gray-100 border-t">
-       
         <button className="p-2 text-gray-500 hover:text-blue-500">
           <FiPlus size={20} />
         </button>

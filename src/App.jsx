@@ -40,8 +40,7 @@ function App() {
         darkMode ? "dark" : ""
       } dark:bg-gray-900`}
     >
-
-      <div className="max-sm:my-10 dark:bg-gray-800 dark:text-white max-sm:p-0 w-full h-screen">
+      <div className="max-sm:my-10 overflow-hidden dark:bg-gray-800 dark:text-white max-sm:p-0 w-full h-screen">
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Auth page="login" />} />
@@ -58,14 +57,8 @@ function App() {
               path="/project/:projectId/action-items/"
               element={<ActionItems />}
             />
-            <Route
-              path="/activity-logs/"
-              element={<ActivityLogs />}
-            />
-            <Route
-              path="/project/:projectId/board/"
-              element={<Board />}
-            />
+            <Route path="/activity-logs/" element={<ActivityLogs />} />
+            <Route path="/project/:projectId/board/" element={<Board />} />
             <Route
               path="/project/:projectId/team-members/"
               element={<TeamMembers />}
@@ -78,14 +71,15 @@ function App() {
               path="/project/:projectId/group-chat/"
               element={<GroupChat />}
             />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/mnjusers" element={<ManageUsers />} />
+            <Route path="/:workspaceId/projects" element={<Projects />} />
+            <Route path="/:workspaceId/mnjusers" element={<TeamMembers />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/view-user" element={<ViewUser />} />
             {/* <Route path="/share-knowledge" element={<ShareKnowledge />} /> */}
             <Route path="/add-project" element={<AddProject />} />
-            <Route path="/connect" element={<Connect />} />
+            <Route path="/:workspaceId/connect" element={<Connect />} />
+            <Route path="/:workspaceId/connect/:userId" element={<Connect />} />
           </Route>
         </Routes>
       </div>

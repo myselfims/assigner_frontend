@@ -20,6 +20,7 @@ const ProjectNavBar = () => {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
   const { project } = useSelector((state) => state.actionItems);
+  const { currentWorkspace } = useSelector((state) => state.workspaceState);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -56,11 +57,11 @@ const ProjectNavBar = () => {
         initial={{ x: -200, opacity: 0 }}
         animate={{ x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeInOut" } }}
         exit={{ x: 400, opacity: 0, transition: { duration: 0.5, ease: "easeInOut" } }}
-        className="w-64 p-4 space-y-4 rounded-lg mt-8"
+        className="w-64 space-y-4 rounded-lg mt-6"
       >
         <Card className="p-4">
           <Button variant="link" asChild className="text-blue-600 p-0">
-            <Link to="/projects" className="flex items-center">
+            <Link to={`/${currentWorkspace?.id}/projects`} className="flex items-center">
               <IoIosArrowBack /> <span>Back</span>
             </Link>
           </Button>

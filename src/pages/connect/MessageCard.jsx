@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiMoreVertical, FiEye, FiTrash, FiMessageSquare } from "react-icons/fi";
 import Tooltip from "../../components/Tooltip";
 import { formatChatTimestamp } from "../../globalFunctions";
@@ -7,12 +7,20 @@ import { MdOutlineEdit } from "react-icons/md";
 import { BsReplyAll } from "react-icons/bs";
 import { deleteData, postData } from "../../api"; // Import postData for pinning
 import { useParams } from "react-router-dom";
+import { FaRegEye } from "react-icons/fa";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 
-const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
+const MessageCard = ({ self = false, message, removeMessage, receiverId, handleSeenMessage}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(message?.pinned || false); // Track pinned status
   const {projectId} = useParams()
+
+  useEffect(() => {
+    if (!self && message && !message.isRead) {
+      handleSeenMessage(message.id);
+    }
+  }, [message]);
 
   const deleteMessage = async () => {
     try {
@@ -44,7 +52,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
       {!self && (
         <div className="text-xs select-none flex my-1 items-center">
           <Tooltip content="online">
-            <div className="w-6 h-6 mr-2 border-2 border-green-500 bg-gray-700 text-white flex justify-center items-center rounded-full text-sm font-semibold">
+            <div className="w-5 h-5 mr-2 border-2 border-green-500 bg-gray-700 text-white flex justify-center items-center rounded-full text-xs font-semibold">
               {message?.sender?.name?.charAt(0).toUpperCase()}
             </div>
           </Tooltip>
@@ -59,10 +67,11 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId }) => {
         className={`p-3 min-w-28 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
       >
         {message?.content}
-
+      
         {/* Timestamp */}
-        <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500">
+        <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500 flex items-center">
           {formatChatTimestamp(message?.createdAt)}
+          {self && (message?.isRead ? <FaRegEye className=" right-1 bottom-1 text-black text-sm ml-1 mt-1"/> : <IoCheckmarkDoneSharp className=" right-1 bottom-1 text-black text-sm ml-1 mt-1"/>)}
         </span>
 
         {/* Hover Actions */}

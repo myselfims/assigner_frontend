@@ -32,7 +32,7 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="w-full relative">
+    <div className="w-full relative overflow-y-scroll h-screen">
       <div className="top-nav sticky z-10 flex items-center justify-between py-6 px-8">
         <div className="flex items-center">
           <img className="w-[100px]" src={logo} alt="" />

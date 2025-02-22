@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSidebar } from "../../store/features/appGlobalSlice";
 import {
@@ -18,6 +18,7 @@ import { RxActivityLog } from "react-icons/rx";
 import { FaRegCreditCard } from "react-icons/fa6";
 import { CiLock } from "react-icons/ci";
 import WorkspaceSelector from "./WorkspaceSelector";
+import { setMembers } from "@/store/features/actionItemsSlice";
 
 const GenericNavBar = () => {
   const { currentPage, auth_info, user } = useSelector(
@@ -28,6 +29,18 @@ const GenericNavBar = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {workspaceId} = useParams()
+
+    useEffect(()=>{
+      console.log('Users fetched...')
+      if (workspaceId){
+        fetchData(`/workspaces/${currentWorkspace?.id}/users`).then((res)=>{
+          console.log(res.workspaceUsers)
+          let users = res.workspaceUsers.map((u) => ({ ...u.user, role: u.role.name, createdAt : u.createdAt }));
+          dispatch(setMembers(users))
+        })
+      }
+    },[currentWorkspace?.id])
 
  
   return (
@@ -43,7 +56,7 @@ const GenericNavBar = () => {
         opacity: 0,
         transition: { duration: 0.3, ease: "easeInOut" },
       }}
-      className="w-64 mt-8 h-screen p-4 flex flex-col"
+      className="w-64 mt-8 h-screen p-4 flex flex-col select-none"
     >
       {/* Workspace Selection */}
       <Card className="mb-4 p-3 shadow-md">
@@ -66,8 +79,8 @@ const GenericNavBar = () => {
       (<div className="space-y-2">
         {[
           { to: "/dashboard", label: "Dashboard", icon: AiOutlineDashboard },
-          { to: "/projects", label: "Projects", icon: FaTasks },
-          { to: "/connect", label: "Connect", icon: LuMessageSquare },
+          { to: `/${currentWorkspace?.id}/projects`, label: "Projects", icon: FaTasks },
+          { to: `/${currentWorkspace?.id}/connect`, label: "Connect", icon: LuMessageSquare },
           { to: "/activity-logs", label: "Activity Logs", icon: RxActivityLog },
           { to: "/settings", label: "Settings", icon: LuSettings },
         ].map(({ to, label, icon: Icon }) => (
@@ -84,14 +97,14 @@ const GenericNavBar = () => {
             <span className="font-medium">{label}</span>
           </Link>
         ))}
-        {auth_info.isAdmin && (
+        {currentWorkspace?.owner?.id === user?.id && (
           <Link
-            to="/mnjusers"
-            className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 hover:text-slate-700 text-black"
+            to={`/${currentWorkspace?.id}/mnjusers`}
+            className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 hover:text-slate-700 text-white"
             onClick={() => dispatch(setSidebar(false))}
           >
-            <LuUserCog className="w-5 h-5 text-white" />
-            <span className="text-white font-medium">Manage Users</span>
+            <LuUserCog className="w-5 h-5" />
+            <span className="font-medium">Manage Users</span>
           </Link>
         )}
         {currentWorkspace?.owner?.id === user?.id && (

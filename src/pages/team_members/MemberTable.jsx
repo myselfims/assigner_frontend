@@ -9,9 +9,10 @@ const MemberTable = ({ roles, filteredMembers }) => {
           <TableRow>
             <TableHead>Avatar</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Permissions</TableHead>
-            <TableHead>Assigned Tasks</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Access</TableHead>
+            <TableHead>Assigned tasks</TableHead>
+            <TableHead>Last active</TableHead>
+            <TableHead>Date added</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -14,6 +14,7 @@ const WorkspaceSelector = ({ workspaces, currentWorkspace }) => {
 
   return (
     <Select onValueChange={handleWorkspaceChange} value={currentWorkspace}>
+      <h1 className="text-sm mb-1 font-semibold">Workspace</h1>
       <SelectTrigger className="w-full bg-white text-black">
         <SelectValue placeholder="Select Workspace">
           {workspaces.find((ws) => ws.id === currentWorkspace?.id)?.name || "Select Workspace"}

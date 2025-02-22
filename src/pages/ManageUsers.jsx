@@ -7,12 +7,15 @@ import { setAddUserModal, setUsers } from "../store/features/usersSlice";
 import UserRow from "../components/UserRow";
 import SearchBar from "../components/SearchBar";
 import AddUserModal from "../components/AddUserModal";
-import { AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineSearch, AiOutlineUserAdd } from "react-icons/ai";
+import MemberTable from "./team_members/MemberTable";
+import { useIsWorkspaceOwner } from "@/customHooks";
 
 const ManageUsers = () => {
   const { confModal } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { users, loading, addUserModal } = useSelector((state) => state.users);
+  const isOwner = useIsWorkspaceOwner();
 
   const search = (query) => {
     fetchData("/users/").then((res) => {
@@ -38,52 +41,40 @@ const ManageUsers = () => {
   return (
     <div className="w-full">
       <div className="head flex max-sm:flex-col justify-between items-center">
-        <h1>
-          You have total <strong>{users?.length}</strong> Users
+        <h1 className="text-nowrap text-lg">
+          <span className="font-semibold">All users </span>
+          {users?.length}20
         </h1>
         <div className="flex relative w-full justify-center">
-          <SearchBar handler={search} />
-          <button
-            onClick={() => dispatch(setAddUserModal(true))}
-            className="p-2 float-right absolute right-0 font-bold bg-[#4285F4] rounded text-white hover:opacity-70"
-          >
-            <AiOutlineUserAdd />
-          </button>
-
+          <div className="flex items-center w-6/12 bg-gray-100 px-3 py-2 rounded-md">
+            <AiOutlineSearch className="mr-2 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search team members..."
+              className="bg-transparent outline-none w-8/12"
+              value={"searchQuery"}
+              onChange={(e) => console.log(e)}
+            />
+          </div>
         </div>
+
+          {isOwner && (
+            <button
+              // onClick={handleAddMember}
+              className="flex items-center bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-nowrap"
+            >
+              <AiOutlineUserAdd className="mr-2" />
+              Add Member
+            </button>
+          )}
       </div>
-      <div className="flex flex-col my-4">
-        <table className="table-auto max-sm:text-xs w-full">
-          <thead>
-            <tr className="bg-blue-100">
-              <th className="border-2 border-slate-400 p-2 w-[600px]">Name</th>
-              <th className="border-2 border-slate-400  p-2 w-[150px]">
-                Email
-              </th>
-              <th className="border-2 border-slate-400  p-2 w-[150px]">
-                Assigned Tasks
-              </th>
-              <th className="border-2 border-slate-400  p-2 w-[150px]">
-                isAdmin
-              </th>
-            </tr>
-          </thead>
-          <tbody className="overflow-scroll h-40 bg-red">
-            {users?.map((item) => {
-              return <UserRow key={item.id} user={item} />;
-            })}
-            
-          </tbody>
-        </table>
-        {users?.length==0?
-            <div className="flex my-10 flex-col w-full items-center justify-center bg-">
-              <img className="w-40 h-40" src={noDataImage}/>
-
-              <h1 className="text-2xl font-bold">No records found!</h1>
-
-            </div>
-            :null
-          }
+      <div className="flex flex-col mt-8">
+        <MemberTable />
+        {users?.length == 0 ? (
+          <div className="flex my-10 flex-col w-full items-center justify-center bg-">
+            <h1 className="text-2xl font-bold">No records found!</h1>
+          </div>
+        ) : null}
         {loading ? (
           <div className="flex my-3 justify-center">
             <Loader />
