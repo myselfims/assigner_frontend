@@ -7,6 +7,7 @@ const initialState = {
     sidebar : false,
     auth_info : {token:null},
     user : JSON.parse(localStorage.getItem("user")) || null, 
+    notifications : []
 }
 
 export const appGlobalSlice = createSlice({
@@ -15,6 +16,12 @@ export const appGlobalSlice = createSlice({
     reducers : {
         setUser : (state, action)=>{
             state.user = action.payload
+        },
+        setNotifications : (state, action) =>{
+            state.notifications = action.payload
+        },
+        addNotification : (state, action) =>{
+            state.notifications.push(action.payload)
         },
         setCurrentPage : (state, action)=>{
             state.currentPage = action.payload
@@ -34,5 +41,5 @@ export const appGlobalSlice = createSlice({
     }
 })
 
-export const {setCurrentPage,setUser, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
+export const {setCurrentPage,setUser, setNotifications, addNotification, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
 export default  appGlobalSlice.reducer

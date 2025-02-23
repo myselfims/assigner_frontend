@@ -64,14 +64,14 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
       <div
         onMouseEnter={() => setShowOptions(true)}
         onMouseLeave={() => setShowOptions(false)}
-        className={`p-3 min-w-28 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
+        className={`p-3 min-w-28 max-w-72 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
       >
         {message?.content}
       
         {/* Timestamp */}
         <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500 flex items-center">
           {formatChatTimestamp(message?.createdAt)}
-          {self && (message?.isRead ? <FaRegEye className=" right-1 bottom-1 text-black text-sm ml-1 mt-1"/> : <IoCheckmarkDoneSharp className=" right-1 bottom-1 text-black text-sm ml-1 mt-1"/>)}
+          {self && (message?.isRead ? <FaRegEye className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/> : <IoCheckmarkDoneSharp className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/>)}
         </span>
 
         {/* Hover Actions */}

@@ -14,17 +14,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../../store/features/appGlobalSlice";
 import { fetchData, postData } from "@/api";
 import { setUser } from "@/store/features/userDetailsSlice";
+import { setRecentMessages, setUnreadCounts } from "@/store/features/connectSlice";
+import { useParams } from "react-router-dom";
 
 const Connect = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
   const { currentWorkspace } = useSelector((state) => state.workspaceState);
   const { members } = useSelector((state) => state.actionItems);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [query, setQuery] = useState("");
-  const [unreadCounts, setUnreadCounts] = useState(null);
+  const { unreadCounts, selectedUser } = useSelector(
+    (state) => state.connectState
+  );
 
   const [messages, setMessages] = useState([]);
   const dispatch = useDispatch();
+  const {workspaceId} = useParams()
 
   const getMessages = async () => {
     console.log("fetching messages for ", selectedUser?.id);
@@ -65,8 +69,16 @@ const Connect = () => {
   useEffect(() => {
     fetchData(`/chat/unread-counts`).then((res) => {
       console.log(res);
-      setUnreadCounts(res);
+      dispatch(setUnreadCounts(res));
     });
+    fetchData(`/chat/recent-messages?workspaceId=${workspaceId}`)
+      .then((res) => {
+        console.log(res);
+        dispatch(setRecentMessages(res))
+      })
+      .catch((error) => {
+        console.error("Error fetching recent messages:", error);
+      });
   }, []);
 
   return (
@@ -90,7 +102,6 @@ const Connect = () => {
           setUnreadCounts={setUnreadCounts}
           unreadCounts={unreadCounts}
           users={filteredUsers}
-          setSelectedUser={setSelectedUser}
         />
       </div>
 
