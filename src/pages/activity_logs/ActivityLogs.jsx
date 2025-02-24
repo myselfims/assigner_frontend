@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDispatch } from "react-redux";
 import { setCurrentPage } from "@/store/features/appGlobalSlice";
+import { Toggle } from "@/components/ui/toggle";
 
 const activities = [
   {
@@ -97,7 +98,25 @@ const ActivityLogs = () => {
           onChange={(e) => setDateFilter(e.target.value)}
         />
       </div>
+      <div className="">
+      <Toggle
+        className="px-4 py-2"
+      >
+        Projects
+      </Toggle>
 
+      <Toggle
+        className="px-4 py-2"
+      >
+        Tasks
+      </Toggle>
+
+      <Toggle
+        className="px-4 py-2"
+      >
+        Actions
+      </Toggle>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>

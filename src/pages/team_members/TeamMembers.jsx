@@ -76,7 +76,7 @@ const TeamMembers = ({ }) => {
       {/* Search and Actions */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-        <h1 className="mr-8 text-lg"><span className="font-semibold">All users</span> 120</h1>
+        <h1 className="mr-8 text-lg"><span className="font-semibold">All users</span> {members?.length}</h1>
           <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md">
             <AiOutlineSearch className="mr-2 text-gray-500" />
             <input

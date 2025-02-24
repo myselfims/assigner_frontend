@@ -11,6 +11,8 @@ import {
 import { setCurrentPage } from "@/store/features/appGlobalSlice";
 import { useDispatch } from "react-redux";
 import AddWorkspaceModal from "./AddWorkspaceModal";
+import { setWeek } from "date-fns";
+import { setWorkspaceModal } from "@/store/features/workspaceSlice";
 
 const WorkspaceSelection = ({
   workspaces,
@@ -47,7 +49,13 @@ const WorkspaceSelection = ({
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
                   Create a new workspace to get started.
                 </p>
-                
+                  <Button
+                    onClick={() => dispatch(setWorkspaceModal(true))}
+                    className="bg-blue-600 dark:bg-slate-700"
+                  >
+                    Create Workspace
+                  </Button>
+
                 <AddWorkspaceModal />
               </div>
             ) : (

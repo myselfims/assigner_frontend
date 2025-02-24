@@ -4,7 +4,8 @@ const initialState = {
 
     workspaces : []
       ,
-    currentWorkspace : null
+    currentWorkspace : null,
+    workspaceModal : false,
       
 }
 
@@ -17,9 +18,12 @@ export const workspaceSlice = createSlice({
         },
         setWorkspaces : (state, action) => {
             state.workspaces = action.payload
+        }, 
+        setWorkspaceModal : (state, action)=>{
+            state.workspaceModal = action.payload
         }
     }
 })
 
-export const {setWorkspaces, setCurrentWorkspace} = workspaceSlice.actions
+export const {setWorkspaces, setCurrentWorkspace, setWorkspaceModal} = workspaceSlice.actions
 export default  workspaceSlice.reducer

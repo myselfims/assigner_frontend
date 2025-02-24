@@ -20,15 +20,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentWorkspace, setWorkspaces } from "@/store/features/workspaceSlice";
+import { setCurrentWorkspace, setWorkspaceModal, setWorkspaces } from "@/store/features/workspaceSlice";
 import { useNavigate } from "react-router-dom";
 import { postData } from "@/api";
 
 const AddWorkspaceModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const {workspaces} = useSelector(state => state.workspaceState)
+  const {workspaces, workspaceModal} = useSelector(state => state.workspaceState)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +46,7 @@ const AddWorkspaceModal = () => {
       console.log(data)
       postData('/workspaces', data).then((res)=>{
         console.log(res)
-        setIsOpen(false);
+        dispatch(setWorkspaceModal(false))
         dispatch(setWorkspaces([...workspaces, res.workspace]))
         dispatch(setCurrentWorkspace(values))
         // navigate('/projects')
@@ -61,24 +59,16 @@ const AddWorkspaceModal = () => {
 
   return (
     <Dialog
-      open={isOpen}
-      onOpenChange={(open) => !hasUnsavedChanges && setIsOpen(open)}
+      open={workspaceModal}
+      onOpenChange={(open) => !hasUnsavedChanges && dispatch(setWorkspaceModal(open))}
     >
-      <DialogTrigger asChild>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="bg-blue-600 dark:bg-slate-700"
-        >
-          Create Workspace
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Workspace</DialogTitle>
           <DialogClose asChild>
             <Button
               onClick={() => {
-                setIsOpen(false);
+                dispatch(setWorkspaceModal(false));
                 formik.resetForm();
               }}
               variant="ghost"

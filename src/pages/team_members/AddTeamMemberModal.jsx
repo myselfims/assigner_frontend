@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import ModalBase from "../../components/ModalBase";
 import InputBox from "../../components/InputBox";
 import { AiOutlineClose } from "react-icons/ai";
-import Button from "../../components/Button";
+// import Button from "../../components/Button";
+import {Button} from "@/components/ui/button";
 import { useFormik } from "formik";
 import {postData} from '../../api'
 import { useParams } from "react-router-dom";
@@ -10,12 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import Dropdown from "../../components/Dropdown";
 import { setMembers } from "@/store/features/actionItemsSlice";
+import Loader from "@/components/Loader";
 
 const AddTeamMemberModal = ({ setModal }) => {
   const {projectId } = useParams()
   const dispatch = useDispatch()
   const {currentWorkspace} = useSelector(state=>state.workspaceState)
   const {members} = useSelector(state=>state.actionItems)
+  const [loading, setLoading] = useState(false)
   const { values, errors, handleBlur, handleChange, handleSubmit, resetForm } = useFormik({
     initialValues: {
       name: "",
@@ -24,6 +27,7 @@ const AddTeamMemberModal = ({ setModal }) => {
     },
     onSubmit: (data) => {
       console.log(data);
+      setLoading(true)
       data['projectId'] = projectId;
       // data['roleId'] = 1;
       data['workspaceId'] = currentWorkspace.id;
@@ -33,7 +37,9 @@ const AddTeamMemberModal = ({ setModal }) => {
         dispatch(setMembers([...members, res]))
         resetForm()
         dispatch(setAlert({ alert: true, message: "User successfully added!", type: "success" }));
+        setLoading(false)
       }).catch((error)=>{
+        setLoading(false)
         dispatch(setAlert({ alert: true, message: error.response.data, type: "danger" }));
       })
     },
@@ -72,7 +78,7 @@ const AddTeamMemberModal = ({ setModal }) => {
               className='w-full'
             />
             <div className="flex justify-between mt-6">
-              <Button btnType="submit" className="mr-2 w-full">Save</Button>
+              <Button disabled={loading} className="mr-2 w-full text-white bg-blue-600">Save {loading && <Loader />}</Button>
               <button onClick={handleAddAnother} className="ml-2 w-full hover:bg-slate-100 rounded-lg">Save and add another</button>
             </div>
           </form>

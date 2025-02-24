@@ -16,6 +16,7 @@ const UsersList = ({ users }) => {
   const { unreadCounts, recentMessages, onlineUsers } = useSelector(
     (state) => state.connectState
   );
+  const selfUser = useSelector(state => state.globalState.user)
 
   const handleClick = (user) => {
     dispatch(setSelectedUser(user));
@@ -56,7 +57,7 @@ const UsersList = ({ users }) => {
           {/* User Details */}
           <div className="ml-4">
             <h2 className="text-lg font-medium text-gray-800 dark:text-white">
-              {user.name}
+              {user?.name} {user?.id === selfUser?.id && <span className="font-light">(You)</span>}
             </h2>
             <p className="text-sm text-gray-500 w-full truncate overflow-hidden text-ellipsis whitespace-nowrap">
               {truncateText(recentMessages[user?.id]?.content, 35) || "No recent messages"}
