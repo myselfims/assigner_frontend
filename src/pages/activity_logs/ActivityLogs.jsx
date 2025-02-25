@@ -9,9 +9,12 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "@/store/features/appGlobalSlice";
 import { Toggle } from "@/components/ui/toggle";
+import DateRangePicker from "@/components/DateRangePicker";
+import { fetchData } from "@/api";
+import { formatChatTimestamp, formatDate } from "@/globalFunctions";
 
 const activities = [
   {
@@ -41,10 +44,22 @@ const ActivityLogs = () => {
   const [search, setSearch] = useState("");
   const [userFilter, setUserFilter] = useState("all");
   const [taskType, setTaskType] = useState("all");
-  const [dateFilter, setDateFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState({ from: null, to: null });
+  const {currentWorkspace} = useSelector(state => state.workspaceState);
+  const [logs, setLogs] = useState([])
+  const [filteredLogs, setFilteredLogs] = useState([])
+
   const dispatch = useDispatch()
 
-  const filteredActivities = activities.filter((activity) => {
+  useEffect(()=>{
+    fetchData(`/workspaces/${currentWorkspace?.id}/activity-logs`).then((res)=>{
+      console.log(res)
+      setLogs(res)
+      setFilteredLogs(res)
+    })
+  },[currentWorkspace?.id])
+
+  const filteredActivities = logs?.filter((activity) => {
     return (
       (search === "" ||
         activity.message.toLowerCase().includes(search.toLowerCase())) &&
@@ -91,12 +106,8 @@ const ActivityLogs = () => {
             <SelectItem value="Assignment">Assignment</SelectItem>
           </SelectContent>
         </Select>
+      <DateRangePicker dateFilter={dateFilter} setDateFilter={setDateFilter} />
 
-        <Input
-          type="date"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-        />
       </div>
       <div className="">
       <Toggle
@@ -123,9 +134,9 @@ const ActivityLogs = () => {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {filteredActivities.length > 0 ? (
-              filteredActivities.map((activity) => (
-                <li key={activity.id} className="text-sm border-b py-1">
+            {filteredLogs.length > 0 ? (
+              filteredLogs.map((activity) => (
+                <li key={activity.id} className="text-sm border-b py-1 hover:bg-slate-100">
                   <div className="">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center hover:text-blue-500 cursor-pointer">
@@ -135,9 +146,9 @@ const ActivityLogs = () => {
                           <AvatarImage src="https://github.com/shadcn.png" />
                           <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
-                        <h1 className="text-xs">Imran Shaikh</h1>
+                        <h1 className="text-xs">{activity?.user?.name}</h1>
                       </div>
-                      <h1 className="text-xs">02:39 AM 22 Feb</h1>
+                      <h1 className="text-xs">{formatChatTimestamp(activity?.createdAt)}</h1>
                     </div>
                     {activity.message}
                   </div>

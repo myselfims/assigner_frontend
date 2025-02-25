@@ -9,7 +9,10 @@ import { FaAngleRight } from "react-icons/fa6";
 import GenericNavBar from "./GenericNavBar";
 import ProjectNavbar from "./ProjectNavbar";
 import logo from "../../assets/logo.png";
-import { setCurrentWorkspace, setWorkspaces } from "@/store/features/workspaceSlice";
+import {
+  setCurrentWorkspace,
+  setWorkspaces,
+} from "@/store/features/workspaceSlice";
 
 const Navigation = () => {
   const { currentPage, sidebar, auth_info } = useSelector(
@@ -39,12 +42,18 @@ const Navigation = () => {
       if (res.length === 0) {
         navigate("/select-workspace");
       } else {
-        dispatch(setWorkspaces(res));
-        dispatch(setCurrentWorkspace(res[0]));
+        let defaultWorkspace = res?.find((w) => w.isDefault); // Use find instead of filter
+
+        if (defaultWorkspace) {
+          dispatch(setWorkspaces(res));
+          dispatch(setCurrentWorkspace(defaultWorkspace?.workspace)); // Use the default workspace
+        } else {
+          dispatch(setWorkspaces(res));
+          dispatch(setCurrentWorkspace(res[0])); // Fallback to the first workspace
+        }
       }
     });
   }, []);
-
 
   return (
     <div
@@ -57,19 +66,19 @@ const Navigation = () => {
           close ? "w-0 p-0" : "w-72 p-[10px] "
         }  h-screen bg-blue-600`}
       >
-      
         <div className="">
-          {!close &&
-          <div className="flex items-center px-4">
-            <img width={50} className="rounded-full mr-2" src={logo} />
-            <h1 className="text-3xl font-bold ">EasyAssigns</h1>
-          </div>}
+          {!close && (
+            <div className="flex items-center px-4">
+              <img width={50} className="rounded-full mr-2" src={logo} />
+              <h1 className="text-3xl font-bold ">EasyAssigns</h1>
+            </div>
+          )}
 
           <AiOutlineClose
             onClick={() => dispatch(setSidebar(false))}
             className="absolute w-[30px] h-[30px] hidden max-sm:flex right-5 top-5"
           />
-          
+
           {isProjectRoute ? <ProjectNavbar /> : <GenericNavBar />}
         </div>
       </div>
