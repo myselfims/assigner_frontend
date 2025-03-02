@@ -42,7 +42,7 @@ const CalendarPage = () => {
   },[])
 
   return (
-    <div className="calendar-page container mx-auto p-4">
+    <div className="calendar-page container mx-auto md:p-4">
       <div className="flex items-center justify-between mb-6">
         <Tooltip content={'previous'} position={'bottom'}>
           <button

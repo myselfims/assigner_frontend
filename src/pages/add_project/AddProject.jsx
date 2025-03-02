@@ -11,6 +11,7 @@ const AddProject = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { members } = useSelector((state) => state.actionItems);
   const { currentWorkspace } = useSelector((state) => state.workspaceState);
   const formik = useFormik({
     initialValues: {
@@ -30,7 +31,7 @@ const AddProject = () => {
       postData("/projects/", values)
         .then((res) => {
           setLoading(false);
-          navigate("/projects");
+          navigate(`/${currentWorkspace?.id}/projects`);
         })
         .catch((error) => {
           console.log(error);
@@ -68,6 +69,7 @@ const AddProject = () => {
           <UserSearchBox
             onSelect={(user)=>formik.setFieldValue('lead', user[0].id)}
             allowMultiple={false}
+            passedUsers={members}
           />
 
           {/* Start Date */}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaCheck } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
+import { updateData } from "@/api";
 
 const StatusCard = ({ status, index, onUpdate, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -13,7 +14,9 @@ const StatusCard = ({ status, index, onUpdate, onDelete }) => {
 
   const handleSaveClick = () => {
     setIsEditing(false);
-    onUpdate(index, { ...status, id:status.value, name: editedName });
+    updateData(`/projects/statuses/${status?.id}/`,{name : editedName}).then((res)=>{
+      onUpdate(index, { ...status, id:status.value, name: editedName });
+    })
   };
 
 

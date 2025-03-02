@@ -14,6 +14,7 @@ import { formatDate } from "@/globalFunctions";
 const MemberRow = ({ member, roles }) => {
   const [selectedRole, setSelectedRole] = useState(member?.role);
   const { user } = useSelector((state) => state.globalState);
+  const { onlineUsers } = useSelector((state) => state.connectState);
   const [pendingRole, setPendingRole] = useState(null);
   const [confirmModal, setConfirmModal] = useState(false);
   const { projectId } = useParams();
@@ -65,9 +66,13 @@ const MemberRow = ({ member, roles }) => {
   };
 
   return (
-    <TableRow>
+    <TableRow className="relative">
       <TableCell>
-        <Avatar>
+        <Avatar className={`border-[2px] ${
+              onlineUsers[member?.id]?.status
+                ? "border-green-500"
+                : "border-red-500"
+            }`}>
           <AvatarImage src={member?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -93,23 +98,16 @@ const MemberRow = ({ member, roles }) => {
           options={roles}
           onSelect={handleRoleUpdate}
           disabled={member?.id === user?.id}
+          className={'z-30'}
         />
       </TableCell>
       <TableCell>{member?.taskCounts?.totalTasks}</TableCell>
       <TableCell>
-        <div className="flex">
-          <button className="bg-blue-600 text-white rounded-lg p-2 hover:opacity-70 flex items-center justify-center mr-2">
-            <LuMessagesSquare className="w-[18px] h-[18px] mr-1" />
-            Connect
-          </button>
-          <button
-            className="text-red-600 hover:text-red-800 flex items-center"
-            onClick={() => handleRemoveUser(member?.id)}
-          >
-            <FaTrashAlt className="mr-2" />
-            Remove
-          </button>
-        </div>
+          <h1>{
+              onlineUsers[member?.id]?.status
+                ? "Online"
+                : member?.lastActive
+            }</h1>
       </TableCell>
       <TableCell>{formatDate(member?.createdAt)}</TableCell>
       {confirmModal && (

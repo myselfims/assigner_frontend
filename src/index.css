@@ -34,6 +34,11 @@ body {
   scrollbar-width: none; /* Hides scrollbar for Firefox */
 }
 
+.relative.w-full.overflow-auto {
+  overflow: visible !important;
+}
+
+
 @keyframes ripple {
   to {
     transform: scale(4);

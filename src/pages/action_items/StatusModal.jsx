@@ -1,40 +1,29 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import ModalBase from "../../components/ModalBase";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStatuses } from "../../store/features/actionItemsSlice";
-import StatusCard from "./StatusCard";
 import { postData } from "../../api";
 import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import StatusCard from "./StatusCard";
 
-const StatusModal = ({ closeModal, onSave }) => {
+const StatusModal = ({ closeModal }) => {
   const { statuses } = useSelector((state) => state.actionItems);
   const [localStatuses, setLocalStatuses] = useState(statuses);
   const [newStatus, setNewStatus] = useState("");
   const dispatch = useDispatch();
-  const {projectId} = useParams();
+  const { projectId } = useParams();
 
   const handleAddStatus = () => {
     if (newStatus.trim()) {
-      setLocalStatuses([
-        ...localStatuses,
-        { id: null, name: newStatus, isDefault: false },
-      ]);
-      setNewStatus("");
-    
+      postData(`/projects/statuses/${projectId}/`, { name: newStatus }).then((res) => {
+        setLocalStatuses([...localStatuses, res]);
+        dispatch(setStatuses([...localStatuses, res]));
+        setNewStatus("");
+      });
     }
-  };
-
-
-
-  const handleSave = () => {
-    console.log(localStatuses)
-    postData(`/projects/statuses/${projectId}/`, { statuses: localStatuses })
-      .then(() => {
-        dispatch(setStatuses(localStatuses)); // Update Redux store
-        closeModal(); // Close modal
-      })
-      .catch((err) => console.error(err));
   };
 
   const handleUpdateStatus = (index, updatedStatus) => {
@@ -47,50 +36,35 @@ const StatusModal = ({ closeModal, onSave }) => {
     setLocalStatuses(localStatuses.filter((_, i) => i !== index));
   };
 
-
   return (
-    <ModalBase>
-      <div className="modal-content p-4">
-        <h3 className="font-semibold mb-8">Manage Project Statuses</h3>
-        <ul>
+    <Dialog open onOpenChange={closeModal}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Manage Project Statuses</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
           {localStatuses.map((status, index) => (
-            <StatusCard
-              key={index}
-              status={status}
-              index={index}
-              onUpdate={handleUpdateStatus}
-              onDelete={handleDeleteStatus}
-            />
+            <Card key={index} className="p-4">
+              <StatusCard
+                status={status}
+                index={index}
+                onUpdate={handleUpdateStatus}
+                onDelete={handleDeleteStatus}
+              />
+            </Card>
           ))}
-        </ul>
-        <div className="mt-4">
-          <input
-            type="text"
-            placeholder="New Status"
-            value={newStatus}
-            onChange={(e) => setNewStatus(e.target.value)}
-            className="border px-2 py-1 rounded"
-          />
-          <button
-            onClick={handleAddStatus}
-            className="ml-2 px-4 py-1 bg-blue-500 rounded-lg font-semibold text-white"
-          >
-            Add
-          </button>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="New Status"
+              value={newStatus}
+              onChange={(e) => setNewStatus(e.target.value)}
+            />
+            <Button onClick={handleAddStatus}>Add</Button>
+          </div>
         </div>
-        <div className="mt-8">
-          <button
-            className="px-4 py-1 bg-blue-500 rounded-lg font-semibold text-white"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          <button className="px-4 py-1" onClick={closeModal}>
-            Close
-          </button>
-        </div>
-      </div>
-    </ModalBase>
+      </DialogContent>
+    </Dialog>
   );
 };
 

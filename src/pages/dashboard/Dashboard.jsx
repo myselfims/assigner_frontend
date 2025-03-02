@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "../../store/features/appGlobalSlice";
 import { fetchData } from "../../api";
 import { setUsers } from "../../store/features/usersSlice";
@@ -20,6 +20,7 @@ const Dashboard = () => {
     pending: 0,
   });
   const [projects, setProjects] = useState([])
+  const {members} = useSelector(state=>state.actionItems)
 
   useEffect(() => {
     dispatch(setCurrentPage("Dashboard"));

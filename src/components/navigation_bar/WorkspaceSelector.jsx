@@ -16,7 +16,6 @@ const WorkspaceSelector = ({ workspaces, currentWorkspace }) => {
   const dispatch = useDispatch();
 
   const handleWorkspaceChange = (ws) => {
-    console.log(ws);
     dispatch(setCurrentWorkspace(ws));
   };
 

@@ -8,6 +8,7 @@ import workspaceSlice from "./features/workspaceSlice";
 import socketMiddleware from "@/socket/socketMiddleware";
 import workspaceSocketMiddleware from "@/socket/workspaceSocketMiddleware";
 import connectSlice  from "./features/connectSlice";
+import activityLogsSlice from "./features/activityLogsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,7 +18,8 @@ export const store = configureStore({
     users: usersSlice,
     currentUser: userDetailsSlice,
     workspaceState: workspaceSlice,
-    connectState : connectSlice
+    connectState : connectSlice,
+    activityLogsState : activityLogsSlice
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(socketMiddleware,workspaceSocketMiddleware),

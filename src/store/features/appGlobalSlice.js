@@ -6,6 +6,7 @@ const initialState = {
     darkMode : false,
     sidebar : false,
     auth_info : {token:null},
+    role : null,
     user : JSON.parse(localStorage.getItem("user")) || null, 
     notifications : []
 }
@@ -16,6 +17,9 @@ export const appGlobalSlice = createSlice({
     reducers : {
         setUser : (state, action)=>{
             state.user = action.payload
+        },
+        setRole : (state, action)=>{
+            state.role = action.payload
         },
         setNotifications : (state, action) =>{
             state.notifications = action.payload
@@ -41,5 +45,5 @@ export const appGlobalSlice = createSlice({
     }
 })
 
-export const {setCurrentPage,setUser, setNotifications, addNotification, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
+export const {setCurrentPage,setUser, setRole, setNotifications, addNotification, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
 export default  appGlobalSlice.reducer

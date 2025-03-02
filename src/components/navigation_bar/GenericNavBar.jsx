@@ -1,15 +1,9 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSidebar } from "../../store/features/appGlobalSlice";
-import {
-  setCurrentWorkspace,
-  setWorkspaces,
-} from "../../store/features/workspaceSlice";
+import { setSidebar, setRole } from "../../store/features/appGlobalSlice";
 import { fetchData } from "@/api";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { FaTasks } from "react-icons/fa";
@@ -19,10 +13,11 @@ import { FaRegCreditCard } from "react-icons/fa6";
 import { CiLock } from "react-icons/ci";
 import WorkspaceSelector from "./WorkspaceSelector";
 import { setMembers } from "@/store/features/actionItemsSlice";
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
+import { hasPermission } from "@/access/role_permissions";
 
 const GenericNavBar = () => {
-  const { currentPage, auth_info, user } = useSelector(
+  const { currentPage, role, user } = useSelector(
     (state) => state.globalState
   );
   const { workspaces, currentWorkspace } = useSelector(
@@ -33,13 +28,14 @@ const GenericNavBar = () => {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
 
-  const totalUnreadCount = Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
+  const totalUnreadCount = Object.values(unreadCounts).reduce(
+    (sum, count) => sum + count,
+    0
+  );
 
   useEffect(() => {
-    console.log("Users fetched...");
     if (workspaceId) {
       fetchData(`/workspaces/${currentWorkspace?.id}/users`).then((res) => {
-        console.log(res.workspaceUsers);
         let users = res.workspaceUsers.map((u) => ({
           ...u.user,
           role: u.role.name,
@@ -47,8 +43,46 @@ const GenericNavBar = () => {
         }));
         dispatch(setMembers(users));
       });
+      fetchData(`/workspaces/${currentWorkspace?.id}/role`).then((res)=>{
+        console.log(res?.role)
+        dispatch(setRole(res?.role))
+      })
     }
   }, [currentWorkspace?.id]);
+
+  // Define nav items with a required permission property.
+  const navItems = [
+    {
+      to: "/dashboard",
+      label: "Dashboard",
+      icon: AiOutlineDashboard,
+      permission: "view:dashboard",
+    },
+    {
+      to: `/${currentWorkspace?.id}/projects`,
+      label: "Projects",
+      icon: FaTasks,
+      permission: "view:projects",
+    },
+    {
+      to: `/${currentWorkspace?.id}/connect`,
+      label: "Connect",
+      icon: LuMessageSquare,
+      permission: "view:connect", // add this permission in your ROLE_PERMISSIONS if needed
+    },
+    {
+      to: `/${currentWorkspace?.id}/activity-logs`,
+      label: "Activity Logs",
+      icon: RxActivityLog,
+      permission: "view:activityLogs",
+    },
+    {
+      to: "/settings",
+      label: "Settings",
+      icon: LuSettings,
+      permission: "view:workspace", // adjust based on your needs
+    },
+  ];
 
   return (
     <motion.div
@@ -74,7 +108,7 @@ const GenericNavBar = () => {
       </Card>
 
       {!currentWorkspace ? (
-        <div className="flex flex-col items-center justify-center backdrop-blur-md w-full  text-white rounded-lg p-4 text-center">
+        <div className="flex flex-col items-center justify-center backdrop-blur-md w-full text-white rounded-lg p-4 text-center">
           <CiLock className="w-10 h-10" />
           <h1 className="text-sm mt-2">
             Create a new workspace to get started.
@@ -82,42 +116,28 @@ const GenericNavBar = () => {
         </div>
       ) : (
         <div className="space-y-2">
-          {[
-            { to: "/dashboard", label: "Dashboard", icon: AiOutlineDashboard },
-            {
-              to: `/${currentWorkspace?.id}/projects`,
-              label: "Projects",
-              icon: FaTasks,
-            },
-            {
-              to: `/${currentWorkspace?.id}/connect`,
-              label: "Connect",
-              icon: LuMessageSquare,
-            },
-            {
-              to: "/activity-logs",
-              label: "Activity Logs",
-              icon: RxActivityLog,
-            },
-            { to: "/settings", label: "Settings", icon: LuSettings },
-          ].map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`flex items-center gap-3 px-4 py-2 rounded-md transition  ${
-                currentPage === label
-                  ? "bg-[#f1f5f9] text-black"
-                  : "hover:bg-gray-100 hover:text-slate-700"
-              }`}
-              onClick={() => dispatch(setSidebar(false))}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium ">{label}</span>
-              {label==="Connect" &&
-              <Badge>{totalUnreadCount}</Badge>}
-            </Link>
-          ))}
-          {currentWorkspace?.owner?.id === user?.id && (
+          {navItems.map(({ to, label, icon: Icon, permission }) => {
+            // Check if user has the permission to view this link.
+            if (!hasPermission(role?.name, permission)) return null;
+            return (
+              <Link
+                key={to}
+                to={to}
+                className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+                  currentPage === label
+                    ? "bg-[#f1f5f9] text-black"
+                    : "hover:bg-gray-100 hover:text-slate-700"
+                }`}
+                onClick={() => dispatch(setSidebar(false))}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="font-medium ">{label}</span>
+                {label === "Connect" && <Badge>{totalUnreadCount}</Badge>}
+              </Link>
+            );
+          })}
+          {/* Custom Links for Manage Users and Billing, with their own permission logic */}
+          {hasPermission(role?.name, "manage:users") && (
             <Link
               to={`/${currentWorkspace?.id}/mnjusers`}
               className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 hover:text-slate-700 text-white"
@@ -127,7 +147,7 @@ const GenericNavBar = () => {
               <span className="font-medium">Manage Users</span>
             </Link>
           )}
-          {currentWorkspace?.owner?.id === user?.id && (
+          {hasPermission(role?.name, "view:subscription") && (
             <Link
               to="/billing"
               className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 hover:text-slate-700 text-white"

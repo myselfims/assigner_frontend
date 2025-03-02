@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { addOnlineUser, incrementUnreadCount, removeOnlineUser } from "@/store/features/connectSlice";
+import { addLog } from "@/store/features/activityLogsSlice";
 
 const workspaceSocketMiddleware = (store) => {
   let socket = null;
@@ -22,6 +23,11 @@ const workspaceSocketMiddleware = (store) => {
       socket.on("user:offline", (data) => {
         console.log(`User offline in workspace ${data}:`, data);
         store.dispatch(removeOnlineUser(data));
+      });
+
+      socket.on("activityLog", (data) => {
+        console.log(`User offline in workspace ${data}:`, data);
+        store.dispatch(addLog(data))
       });
 
   

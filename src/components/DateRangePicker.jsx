@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { FaCalendarAlt } from "react-icons/fa";
 
 export default function DateRangePicker({ dateFilter, setDateFilter }) {
   const [open, setOpen] = useState(false);
@@ -13,8 +18,11 @@ export default function DateRangePicker({ dateFilter, setDateFilter }) {
       <PopoverTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
           {dateFilter?.from && dateFilter?.to
-            ? `${format(dateFilter.from, "dd/MM/yyyy")} - ${format(dateFilter.to, "dd/MM/yyyy")}`
-            : "Select Date Range"}
+            ? `${format(dateFilter.from, "dd/MM/yyyy")} - ${format(
+                dateFilter.to,
+                "dd/MM/yyyy"
+              )}`
+            : <> <FaCalendarAlt /> Select Date Range</>}
           {dateFilter?.from && dateFilter?.to && (
             <X
               className="w-4 h-4 cursor-pointer text-gray-500 hover:text-gray-700"

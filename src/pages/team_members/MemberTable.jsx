@@ -3,7 +3,7 @@ import MemberRow from "./MemberRow";
 
 const MemberTable = ({ roles, filteredMembers }) => {
   return (
-    <div className="w-full scrollbar-none rounded-lg border shadow-md">
+    <div className="w-full scrollbar-none rounded-lg border shadow-md overflow-visible">
       <Table>
         <TableHeader>
           <TableRow>

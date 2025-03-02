@@ -14,22 +14,27 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { RxActivityLog } from "react-icons/rx";
+import { hasPermission } from "@/access/role_permissions"; // Your RBAC utility
+import { useIsWorkspaceOwner } from "@/customHooks";
 
 const ProjectNavBar = () => {
   const { projectId } = useParams();
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-  const { project } = useSelector((state) => state.actionItems);
+  // Assuming that the user's role within the project is stored here.
+  const { project, role } = useSelector((state) => state.actionItems);
   const { currentWorkspace } = useSelector((state) => state.workspaceState);
+  const isOwner = useIsWorkspaceOwner();
+  console.log('workspace is ', isOwner)
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
         let res = await fetchData(`/projects/${projectId}`);
         let members = await fetchData(`/projects/team/${projectId}`);
-        let role = await fetchData(`/projects/${projectId}/member/role/`);
+        let roleRes = await fetchData(`/projects/${projectId}/member/role/`);
         dispatch(setMembers(members));
-        dispatch(setRole(role));
+        dispatch(setRole(roleRes));
         dispatch(setProject(res));
       } catch (error) {
         console.log(error);
@@ -39,16 +44,18 @@ const ProjectNavBar = () => {
   }, [projectId]);
 
   const isActive = (path) => pathname.includes(path);
+
+  // Define nav items with required permissions.
   const navItems = [
-    { to: "/projects/overview", icon: <AiOutlineDashboard />, label: "Overview" },
-    { to: `/project/${projectId}/action-items`, icon: <FaTasks />, label: "Action Items" },
-    { to: `/project/${projectId}/board`, icon: <PiKanbanDuotone />, label: "Board" },
-    { to: `/project/${projectId}/team-members`, icon: <FaUsersCog />, label: "Team Members" },
-    { to: `/project/${projectId}/group-chat`, icon: <LuMessageSquare />, label: "Group Chat" },
-    { to: `/project/${projectId}/calendar`, icon: <IoIosCalendar />, label: "Calendar" },
-    { to: "/projects/reports", icon: <LuClipboard />, label: "Reports" },
-    { to: "/projects/activity-logs", icon: <RxActivityLog />, label: "Activity Logs" },
-    { to: "/projects/settings", icon: <LuSettings />, label: "Settings" },
+    { to: "/projects/overview", icon: <AiOutlineDashboard />, label: "Overview", permission: "view:overview" },
+    { to: `/project/${projectId}/action-items`, icon: <FaTasks />, label: "Action Items", permission: "view:actionItems" },
+    { to: `/project/${projectId}/board`, icon: <PiKanbanDuotone />, label: "Board", permission: "view:projects" },
+    { to: `/project/${projectId}/team-members`, icon: <FaUsersCog />, label: "Team Members", permission: "view:teamMembers" },
+    { to: `/project/${projectId}/group-chat`, icon: <LuMessageSquare />, label: "Group Chat", permission: "view:connect" },
+    { to: `/project/${projectId}/calendar`, icon: <IoIosCalendar />, label: "Calendar", permission: "view:calendar" },
+    { to: "/projects/reports", icon: <LuClipboard />, label: "Reports", permission: "view:reports" },
+    { to: `/project/${projectId}/activity-logs`, icon: <RxActivityLog />, label: "Activity Logs", permission: "view:activityLogs" },
+    { to: "/projects/settings", icon: <LuSettings />, label: "Settings", permission: "view:settings" },
   ];
 
   return (
@@ -67,23 +74,25 @@ const ProjectNavBar = () => {
           </Button>
           <h1 className="text-lg font-semibold">{project?.name}</h1>
         </Card>
-
         <Separator className="my-2" />
-
         <div className="space-y-2">
-          {navItems.map(({ to, icon, label }) => (
-            <Button
-              key={to}
-              variant={isActive(to) ? "secondary" : "ghost"}
-              asChild
-              className="w-full justify-start gap-3 text-sm"
-              onClick={() => dispatch(setSidebar(false))}
-            >
-              <Link to={to} className="flex items-center">
-                {icon} {label}
-              </Link>
-            </Button>
-          ))}
+          {navItems.map(({ to, icon, label, permission }) => {
+            // Only render if the user's role has the required permission.
+            if (!hasPermission(role, permission) && !isOwner) return null;
+            return (
+              <Button
+                key={to}
+                variant={isActive(to) ? "secondary" : "ghost"}
+                asChild
+                className="w-full justify-start gap-3 text-sm"
+                onClick={() => dispatch(setSidebar(false))}
+              >
+                <Link to={to} className="flex items-center">
+                  {icon} {label}
+                </Link>
+              </Button>
+            );
+          })}
         </div>
       </motion.div>
     </AnimatePresence>

@@ -220,8 +220,7 @@ const GroupChat = () => {
             <div className="h-full flex flex-col">
               {/* Render Chat Header */}
               <ChatHeader
-                headline={`${project?.name} - Chat`}
-                selectedUser={selectedUser}
+                heading={`${project?.name} - Chat`}
                 typingUsers={typingUsers}
               />
 

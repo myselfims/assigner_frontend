@@ -57,7 +57,6 @@ function App() {
               path="/project/:projectId/action-items/"
               element={<ActionItems />}
             />
-            <Route path="/activity-logs/" element={<ActivityLogs />} />
             <Route path="/project/:projectId/board/" element={<Board />} />
             <Route
               path="/project/:projectId/team-members/"
@@ -71,9 +70,11 @@ function App() {
               path="/project/:projectId/group-chat/"
               element={<GroupChat />}
             />
+            <Route path="/project/:projectId/activity-logs/" element={<ActivityLogs />} />
             <Route path="/:workspaceId/projects" element={<Projects />} />
             <Route path="/:workspaceId/mnjusers" element={<TeamMembers />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/:workspaceId/activity-logs/" element={<ActivityLogs />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/view-user" element={<ViewUser />} />
             {/* <Route path="/share-knowledge" element={<ShareKnowledge />} /> */}
