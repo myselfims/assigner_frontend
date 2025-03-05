@@ -15,12 +15,13 @@ import {
   setTasks,
 } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import FilterBar from "./FilterBar";
 import SprintTable from "./SprintTable";
 import SprintTableSkeleton from "./skeletons/SprintTableSkeleton";
 import AddSprintModal from "./AddSprintModal";
 import StatusModal from "./StatusModal";
+import { setActiveTask } from "@/store/features/taskDetailsSlice";
 
 const ActionItems = ({ setCurrent }) => {
   const dispatch = useDispatch();
@@ -30,6 +31,26 @@ const ActionItems = ({ setCurrent }) => {
   const { projectId } = useParams();
   const [loading, setLoading] = useState(false);
   const [customStatusModal, setCustomStatusModal] = useState(false);
+  const [searchParams] = useSearchParams()
+  const selectedItem = searchParams.get('selectedItem');
+
+
+  useEffect(() => {
+    if (selectedItem) {
+      let task;
+  
+      // Iterate through all sprints and find the task
+      Object.values(tasks)?.some((sprintTasks) => {
+        task = sprintTasks?.find((t) => t.id == selectedItem);
+        return task; // Stop iteration if task is found
+      });
+  
+      if (task) {
+        dispatch(setActiveTask(task));
+      }
+    }
+  }, [selectedItem, tasks]);
+  
 
   const handleModal = (task) => {
     setModal(true);

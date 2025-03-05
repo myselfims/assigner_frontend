@@ -3,7 +3,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import Loader from "./Loader";
 import { fetchData } from "../api";
 
-const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers = null, selected = [], disabled = false }) => {
+const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers = null, selected = [], disabled = false, className }) => {
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState(passedUsers ? passedUsers : []);
   const [selectedUsers, setSelectedUsers] = useState(selected);
@@ -70,9 +70,9 @@ const UserSearchBox = ({ onSelect, allowMultiple = false, passedUsers = null, se
   };
 
   return (
-    <div ref={ref} className="relative z-30 flex border p-1 rounded items-center flex-wrap bg-white shadow-sm w-52 h-full">
+    <div ref={ref} className={`relative z-30 flex border p-1 rounded items-center flex-wrap bg-white shadow-sm w-52 h-full ${className}`}>
       {selectedUsers.map((user) => (
-        <p key={user.id} className="text-sm mr-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center">
+        <p key={user.id} className="text-sm mr-1 my-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center">
           {user.name}
           {!disabled && (
             <IoCloseCircleOutline

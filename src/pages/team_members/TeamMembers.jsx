@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentPage } from "@/store/features/appGlobalSlice";
 import { useIsWorkspaceOwner } from "@/customHooks";
 import { setMembers } from "@/store/features/actionItemsSlice";
+import Loader from "@/components/Loader";
 
 const TeamMembers = ({ }) => {
   const dispatch = useDispatch()
@@ -19,6 +20,7 @@ const TeamMembers = ({ }) => {
   const [roles, setRoles] = useState([])
   const isOwner = useIsWorkspaceOwner();
   const {workspaceId} = useParams()
+  const [loading, setLoading] = useState(false)
 
   // Filtered team members
 
@@ -100,7 +102,10 @@ const TeamMembers = ({ }) => {
       </div>
 
       <MemberTable roles={roles} filteredMembers={filteredMembers}/>
-
+      {loading &&
+      <div className="flex justify-center my-2 items-center text-lg">
+        <Loader />
+      </div>}
       {/* No results */}
       {filteredMembers.length === 0 && (
         <div className="text-gray-500 text-center mt-8">No members found</div>
