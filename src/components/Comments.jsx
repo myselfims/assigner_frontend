@@ -1,77 +1,113 @@
 import React, { useEffect, useState } from "react";
-import { baseUrl } from "../api";
 import { useDispatch, useSelector } from "react-redux";
-import { addComment } from "../store/features/taskDetailsSlice";
 import { BsFillSendFill } from "react-icons/bs";
-import { io } from "socket.io-client";
-import Loader from "./Loader";
+import { fetchData, postData } from "@/api";
+import socketService from "@/api/socket";
+import { formatChatTimestamp } from "@/globalFunctions";
+import { MentionsInput, Mention } from "react-mentions";
 
 const Comments = () => {
-  const { comments, modal } = useSelector((state) => state.taskDetails);
+  const [comments, setComments] = useState([]);
   const task = useSelector((state) => state.taskDetails.activeTask);
-  const { user } = useSelector((state) => state.currentUser);
+  const { user } = useSelector((state) => state.globalState);
+  const { members } = useSelector((state) => state.actionItems);
   const [comment, setComment] = useState("");
-  const [commentBtn, setCommentBtn] = useState(false);
-  const dispatch = useDispatch();
-  const socket = io(baseUrl);
+  const socket = socketService.connect();
 
   useEffect(() => {
     socket.emit("join:comment", task.id);
+    socket.on("comment", (data) => {
+      setComments((prev) => [...prev, data]);
+    });
 
-    // return ()=>{
-    //   socket.disconnect()
-    // }
+    return () => {
+      socketService.disconnect();
+    };
   }, []);
 
-  socket.on("comment", (data) => {
-    new Audio(
-      "https://audio-previews.elements.envatousercontent.com/files/184508/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22D2HAXJZ-new-message-cling.mp3%22"
-    ).play();
-    setCommentBtn(false);
-    dispatch(addComment(data));
-  });
+  useEffect(() => {
+    fetchData(`/tasks/${task?.id}/comments`).then((res) => {
+      setComments(res);
+    });
+  }, [task]);
 
   const postComment = () => {
-    setCommentBtn(true);
-    socket.emit("comment", { comment: comment, task: task.id, user: user.id });
-    setComment("");
+    if (comment.trim().length > 2) {
+      postData(`/tasks/${task?.id}/comments`, { comment }).then(() => {
+        setComment("");
+      });
+    }
   };
 
+  const highlightMentions = (text) => {
+    const mentionRegex = /\@\[(.+?)\]\(\d+\)/g; // Match @ followed by [Name](ID)
+    return text.split(mentionRegex).map((part, index) =>
+      index % 2 === 1 ? (
+        <span key={index} className="text-blue-500 font-bold">
+          @{part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+  
+  
+
   return (
-    <div className="comments my-4">
-      <div className="my-[24px] h-60 overflow-y-auto flex flex-col">
-        {comments?.map((item) => {
-          return (
-            <div key={item?.id} className="border p-2 my-1 rounded bg-blue-100">
-              <h1 className="font-bold">{item.comment}</h1>
-              <div className="flex justify-between">
-                <p className="text-xs text-slate-500">{item?.userId}</p>
-                <p className="text-xs text-slate-500">
-                  {String(item?.createdAt).slice(11, -8)}
-                </p>
-              </div>
+    <div className="comments my-4 flex flex-col">
+      <div className="h-[40vh] overflow-y-auto flex flex-col">
+        {comments?.map((item) => (
+          <div key={item.id} className="border p-2 my-1 rounded bg-blue-100">
+            <p className="text-xs text-slate-500">
+              {user?.id === item.user?.id ? "You" : item.user?.name}
+            </p>
+            <div className="flex justify-between">
+              <h1 className="font-bold">{highlightMentions(item.comment)}</h1>
+              <p className="text-xs text-slate-500">
+                {formatChatTimestamp(item.createdAt)}
+              </p>
             </div>
-          );
-        })}
-        {comments?.length == 0 ? <p>No comments!</p> : null}
+          </div>
+        ))}
+        {comments?.length === 0 && <p>No comments!</p>}
       </div>
-      <div className="flex border-2 rounded p-2 my-3">
-        <input
+
+      <div className="border-2 rounded p-2 my-3 flex">
+        <MentionsInput
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="Type your comment here..."
           className="w-full outline-none"
-          type="text"
-        />
-        <button
-          disabled={commentBtn}
-          onClick={postComment}
-          className="justify-center items-center font-semibold text-[#3E84F8] "
+          style={{
+            input: {
+              outline: "none",
+              border: "none",
+              width: "100%",
+            },
+            suggestions: {
+              list: {
+                backgroundColor: "white",
+                border: "1px solid #ccc",
+                zIndex: 10,
+              },
+              item: {
+                padding: "5px 10px",
+                cursor: "pointer",
+              },
+            },
+          }}
         >
-          {commentBtn ? <Loader /> : <BsFillSendFill className="w-6 h-6" />}
+          <Mention
+            trigger="@"
+            data={members.map((u) => ({ id: u.id, display: u.name }))}
+            markup="@[__display__](__id__)"
+            className="text-blue-500 font-bold"
+          />
+        </MentionsInput>
+        <button onClick={postComment} className="text-[#3E84F8]">
+          <BsFillSendFill className="w-6 h-6" />
         </button>
       </div>
-      <div className="comments"></div>
     </div>
   );
 };

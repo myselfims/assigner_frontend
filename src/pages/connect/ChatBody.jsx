@@ -8,8 +8,9 @@ import io from "socket.io-client";
 import TypingIndicator from "./TypingIndicator";
 import { debounce } from "lodash";
 import { getRoomId } from "@/globalFunctions";
+import socketService from "@/api/socket";
 
-const socket = io("http://localhost:3000"); // Replace with your server URL
+// const socket = io("http://localhost:3000"); // Replace with your server URL
 
 const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCounts=null}) => {
   const [message, setMessage] = useState("");
@@ -19,6 +20,7 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCoun
   const chatContainerRef = useRef(null);
   const [showNewMessageButton, setShowNewMessageButton] = useState(false);
   const [inputRows, setInputRows] = useState(1);
+  const socket = socketService.connect()
 
   const removeMessage = (id) => {
     setMessages(messages?.filter((m) => m.id !== id));
@@ -84,6 +86,7 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCoun
       socket.off("message", handleMessage);
       socket.off("typing", handleTyping);
       socket.off("message:seen" );
+      socketService.disconnect();
     };
   }, [projectId, userId]);
 

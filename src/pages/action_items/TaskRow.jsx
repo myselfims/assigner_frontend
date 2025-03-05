@@ -8,6 +8,7 @@ import { updateData } from "../../api";
 import { GoGrabber } from "react-icons/go";
 import { setSelectedSprint } from "@/store/features/actionItemsSlice";
 import CustomAvatar from "@/components/Avatar";
+import { useSearchParams } from "react-router-dom";
 
 const TaskRow = ({ task, updateItem, sprint }) => {
   const { users } = useSelector((state) => state.users);
@@ -16,7 +17,7 @@ const TaskRow = ({ task, updateItem, sprint }) => {
     () => users?.filter((item) => item.id == task?.assignedById)[0],
     [users, task?.assignedById]
   );
-  console.log(role)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [item, setItem] = useState(task);
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const TaskRow = ({ task, updateItem, sprint }) => {
     console.log(sprint)
     dispatch(setActiveTask(task))
     dispatch(setSelectedSprint(sprint))
+    setSearchParams({ selectedItem: task?.id });
   }
 
   return (

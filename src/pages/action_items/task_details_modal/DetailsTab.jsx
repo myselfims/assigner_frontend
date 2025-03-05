@@ -18,6 +18,8 @@ import UserSearchBox from "@/components/UserSearchBox";
 import Dropdown from "@/components/Dropdown";
 import LogCard from "@/pages/activity_logs/LogCard";
 import Tooltip from "@/components/Tooltip";
+import CustomAvatar from "@/components/Avatar";
+import { getInitials } from "@/globalFunctions";
 
 const files = [
   {
@@ -106,7 +108,7 @@ const DetailsTab = () => {
   const [currentForm, setCurrentForm] = useState("details");
   const task = useSelector((state) => state.taskDetails.activeTask);
   const { members, statuses } = useSelector((state) => state.actionItems);
-  const [logs, setLogs] = useState([])
+  const [logs, setLogs] = useState([]);
   const [edit, setEdit] = useState(false);
   const isOwner = useIsWorkspaceOwner();
 
@@ -146,20 +148,17 @@ const DetailsTab = () => {
     setFieldValue("status", status[0]);
   };
 
-  const fetchActivity = async ()=>{
-    try{
-      let response = await fetchData(`/tasks/${task?.id}/activity-logs/`)
-      console.log(response)
-      setLogs(response)
+  const fetchActivity = async () => {
+    try {
+      let response = await fetchData(`/tasks/${task?.id}/activity-logs/`);
+      console.log(response);
+      setLogs(response);
+    } catch (error) {}
+  };
 
-    }catch(error){
-
-    }
-  }
-
-  useEffect(()=>{
-    fetchActivity()
-  },[])
+  useEffect(() => {
+    fetchActivity();
+  }, []);
 
   return (
     <TabsContent value="details" className="mt-4 h-full">
@@ -176,12 +175,10 @@ const DetailsTab = () => {
                       onClick={() => setEdit(true)}
                     />
                   </Tooltip>
-                
-                <Tooltip content="Delete">
-                <AiFillDelete className="ml-2 text-red-600 w-7 h-7 rounded-full hover:bg-slate-300 active:bg-slate-300 cursor-pointer p-1" />
 
-                </Tooltip>
-             
+                  <Tooltip content="Delete">
+                    <AiFillDelete className="ml-2 text-red-600 w-7 h-7 rounded-full hover:bg-slate-300 active:bg-slate-300 cursor-pointer p-1" />
+                  </Tooltip>
                 </div>
               )}
             </div>
@@ -211,29 +208,50 @@ const DetailsTab = () => {
 
         <div className="flex flex-col mb-4">
           <label className="text-sm font-medium">Description</label>
-          <Textarea
-            name="description"
-            placeholder="Description here"
-            value={values.description}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            disabled={!edit}
-            className="mt-1"
-            rows={6}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col">
-            <label className="text-sm font-medium">Deadline</label>
-            <Input
-              name="deadline"
-              type="date"
-              value={values.deadline}
+          <div className="relative">
+            <Textarea
+              name="description"
+              placeholder="Description here"
+              value={values.description}
               onChange={handleChange}
               onBlur={handleBlur}
-              disabled={!edit}
+              className="mt-1 text-black bg-gray-100 opacity-100"
+              rows={6}
             />
+            {!edit && (
+              <div className="absolute inset-0 cursor-not-allowed bg-transparent"></div>
+            )}
+          </div>
+        </div>
+
+        <div className="my-4">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="font-medium">Attachments</h1>
+            <Button>Add Attachments</Button>
+          </div>
+          <div className="flex w-full overflow-x-auto">
+            {files?.map((file, idx) => (
+              <FileCard key={idx} className={"mx-2 min-w-[250px]"} file={file} />
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-7">
+          <div className="flex flex-col">
+            <label className="text-sm font-medium">Deadline</label>
+            <div className="relative">
+              <Input
+                name="deadline"
+                type="date"
+                value={values.deadline}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="bg-white text-black" // Ensure consistent text and background color
+              />
+              {!edit && (
+                <div className="absolute inset-0 cursor-not-allowed bg-transparent"></div>
+              )}
+            </div>
           </div>
           <div className="flex flex-col">
             <label
@@ -255,8 +273,10 @@ const DetailsTab = () => {
 
         <div className=" mt-8">
           <h1 className="font-medium">Reporter</h1>
-
-          <p>{task?.assignedBy?.name}</p>
+          <div className="flex items-center">
+            <CustomAvatar fallback={getInitials(task?.assignedBy?.name)} className={'w-7 h-7 mr-1 font-medium border border-slate-400 p-2 tex-xs'}/>
+            <p>{task?.assignedBy?.name}</p>
+          </div>
         </div>
 
         {edit && (
@@ -268,24 +288,12 @@ const DetailsTab = () => {
         )}
       </form>
 
-      <div className="my-8">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="font-medium">Attachments</h1>
-          <Button>Add Attachments</Button>
-        </div>
-        <div className="flex w-full overflow-x-auto">
-          {files?.map((file) => (
-            <FileCard className={"mx-2 min-w-[250px]"} file={file} />
-          ))}
-        </div>
-      </div>
-
       <Separator className="mt-8" />
       <div className="mt-8">
         <h1 className="font-medium">Activity Logs</h1>
         <div>
-          {logs?.map((l)=>(
-            <LogCard key={l?.id} log={l}/>
+          {logs?.map((l) => (
+            <LogCard key={l?.id} log={l} />
           ))}
         </div>
       </div>
