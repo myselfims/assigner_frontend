@@ -15,6 +15,8 @@ import {
 // import Button from "../../components/Button";
 import { Button } from "../../components/ui/button";
 import { useIsWorkspaceOwner } from "@/customHooks";
+import { hasPermission } from "@/access/role_permissions";
+import { getInitials } from "@/globalFunctions";
 
 const FilterBar = ({
   handleDateFilter,
@@ -56,25 +58,27 @@ const FilterBar = ({
             {members?.map((m) => (
               <div className="group relative cursor-pointer">
                 <div className="w-8 h-8 hover:border-2 border-black text-white bg-purple-700 p-2 flex justify-center rounded-full items-center">
-                  {m?.name?.slice(0, 2)?.toUpperCase()}
+                  {getInitials(m?.name)}
                 </div>
                 <div className="absolute text-nowrap hidden group-hover:flex bg-white shadow-lg rounded-md p-2 flex-col">
                   <h1 className="text-sm">{m?.name}</h1>
-                  {m?.taskCounts &&
-                  <>
-                  {Object.keys(m?.taskCounts).map((key) => (
+                  {m?.taskCounts && (
                     <>
-                    {key.includes('totalTasks') ?
-                    <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
-                      Total tasks <span>{m?.taskCounts[key]}</span> 
-                    </a>:
-                    <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
-                      {key} <span>{m?.taskCounts[key]}</span> 
-                    </a>}
+                      {Object.keys(m?.taskCounts).map((key) => (
+                        <>
+                          {key.includes("totalTasks") ? (
+                            <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
+                              Total tasks <span>{m?.taskCounts[key]}</span>
+                            </a>
+                          ) : (
+                            <a className="hover:text-blue-700 text-xs text-slate-700 flex justify-between">
+                              {key} <span>{m?.taskCounts[key]}</span>
+                            </a>
+                          )}
+                        </>
+                      ))}
                     </>
-                  ))}
-                  </>
-                  }
+                  )}
                 </div>
               </div>
             ))}
@@ -120,13 +124,11 @@ const FilterBar = ({
       />
 
       <div className="mx-2">
-        {role?.roleId == 2 ||
-          (isOwner && (
-            <Button className={"py-1"} onClick={() => setAddTask(true)}>
-              {" "}
-              Start Sprint
-            </Button>
-          ))}
+        {(isOwner || hasPermission(role?.name, "create:sprints")) && (
+          <Button className="py-1" onClick={() => setAddTask(true)}>
+            Start Sprint
+          </Button>
+        )}
       </div>
     </div>
   );

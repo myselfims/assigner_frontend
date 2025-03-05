@@ -8,8 +8,9 @@ import { updateData, deleteData } from "../../api"; // Import deleteData functio
 import { useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/globalFunctions";
+import { setAlert } from "@/store/features/appGlobalSlice";
 
 const MemberRow = ({ member, roles }) => {
   const [selectedRole, setSelectedRole] = useState(member?.role);
@@ -17,8 +18,9 @@ const MemberRow = ({ member, roles }) => {
   const { onlineUsers } = useSelector((state) => state.connectState);
   const [pendingRole, setPendingRole] = useState(null);
   const [confirmModal, setConfirmModal] = useState(false);
-  const { projectId } = useParams();
+  const { projectId, workspaceId } = useParams();
   const [deleteModal, setDeleteModal] = useState(false); // Fixed delete modal state
+  const dispatch = useDispatch()
 
   const handleRoleUpdate = (value) => {
     const role = roles?.find((r) => r?.value === value[0]);
@@ -37,18 +39,23 @@ const MemberRow = ({ member, roles }) => {
 
   const onUpdateRole = () => {
     try {
-      updateData(`/projects/team/${projectId}/${member?.id}`, {
+      let url = workspaceId
+        ? `/workspaces/${workspaceId}/members/${member?.id}`
+        : `/projects/team/${projectId}/${member?.id}`;
+      updateData(url, {
         roleId: pendingRole.value,
       }).then((res) => {
-        console.log(res);
+        dispatch(
+          setAlert({
+            alert: true,
+            type: "success",
+            message: "Successfully updated!",
+          })
+        );
       });
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const handleRemoveUser = (userId) => {
-    setDeleteModal(true);
   };
 
   const confirmRemoveUser = (isConfirmed) => {
@@ -68,11 +75,13 @@ const MemberRow = ({ member, roles }) => {
   return (
     <TableRow className="relative">
       <TableCell>
-        <Avatar className={`border-[2px] ${
-              onlineUsers[member?.id]?.status
-                ? "border-green-500"
-                : "border-red-500"
-            }`}>
+        <Avatar
+          className={`border-[2px] ${
+            onlineUsers[member?.id]?.status
+              ? "border-green-500"
+              : "border-red-500"
+          }`}
+        >
           <AvatarImage src={member?.avatar} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
@@ -98,16 +107,14 @@ const MemberRow = ({ member, roles }) => {
           options={roles}
           onSelect={handleRoleUpdate}
           disabled={member?.id === user?.id}
-          className={'z-30'}
+          className={"z-30"}
         />
       </TableCell>
       <TableCell>{member?.taskCounts?.totalTasks}</TableCell>
       <TableCell>
-          <h1>{
-              onlineUsers[member?.id]?.status
-                ? "Online"
-                : member?.lastActive
-            }</h1>
+        <h1>
+          {onlineUsers[member?.id]?.status ? "Online" : member?.lastActive}
+        </h1>
       </TableCell>
       <TableCell>{formatDate(member?.createdAt)}</TableCell>
       {confirmModal && (

@@ -9,6 +9,7 @@ const ROLE_PERMISSIONS = {
       "view:activityLogs",
       "view:overview",
       "create:sprints", "edit:sprints", "delete:sprints", "view:sprints",
+      "view:settings",
       "create:actionItems", "edit:actionItems", "delete:actionItems", "view:actionItems",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
@@ -18,8 +19,11 @@ const ROLE_PERMISSIONS = {
       "create:projects", "edit:projects", "delete:projects", "view:projects",
       "create:teamMembers", "edit:teamMembers", "delete:teamMembers", "view:teamMembers",
       "view:activityLogs",
+      "view:overview",
       "create:sprints", "edit:sprints", "delete:sprints", "view:sprints",
       "create:actionItems", "edit:actionItems", "delete:actionItems", "view:actionItems",
+      "view:connect",
+      "view:settings",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
     manager: [
@@ -28,6 +32,8 @@ const ROLE_PERMISSIONS = {
         "create:projects", "edit:projects", "view:projects",
         "create:sprints", "edit:sprints", "view:sprints",
         "create:actionItems", "edit:actionItems", "view:actionItems",
+        "view:connect",
+        "view:settings",
         "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
     contributor: [
@@ -36,6 +42,7 @@ const ROLE_PERMISSIONS = {
       "view:projects",
       "view:sprints", 
       "create:actionItems", "edit:actionItems", "view:actionItems",
+      "view:connect",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
     viewer: [
@@ -43,6 +50,10 @@ const ROLE_PERMISSIONS = {
       "view:workspace",
       "view:projects",
       "view:sprints",
+      "view:teamMembers",
+      "view:overview",
+      "view:connect",
+      "view:settings",
       "view:actionItems",
       "view:comments",
     ],
@@ -50,6 +61,5 @@ const ROLE_PERMISSIONS = {
 
 
 export const hasPermission = (role, action) => {
-    console.log('checking for role', role)
     return ROLE_PERMISSIONS[role]?.includes(action);
 };

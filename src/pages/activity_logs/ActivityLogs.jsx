@@ -20,6 +20,7 @@ import ToggleBtn from "@/components/ToggleBtn";
 import LogCard from "./LogCard";
 import { setLogs } from "@/store/features/activityLogsSlice";
 import { useParams } from "react-router-dom";
+import Loader from "@/components/Loader";
 
 const ActivityLogs = () => {
   const [search, setSearch] = useState("");
@@ -30,15 +31,18 @@ const ActivityLogs = () => {
   const {logs} = useSelector(state=>state.activityLogsState)
   const [filteredLogs, setFilteredLogs] = useState([]);
   const { members } = useSelector((state) => state.actionItems);
-  const {projectId} = useParams()
-  const dispatch = useDispatch()
+  const {projectId} = useParams();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
+    setLoading(true)
     let url = projectId ? `/projects/${projectId}/activity-logs` : `/workspaces/${currentWorkspace?.id}/activity-logs`
     fetchData(url).then(
       (res) => {
         console.log(res);
+        setLoading(false)
         dispatch(setLogs(res))
         setFilteredLogs(res);
       }
@@ -191,6 +195,10 @@ const ActivityLogs = () => {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
+            {loading &&
+            <li className="flex items-center">
+              <Loader className={'mr-2'}/>Fetching
+            </li>}
             {filteredLogs.length > 0 ? (
               filteredLogs.map((log) => <LogCard key={log?.id} log={log} />)
             ) : (

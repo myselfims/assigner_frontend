@@ -47,3 +47,5 @@ export function boldText(text) {
   const regex = /\*\*(.*?)\*\*/g; // Regex to match text between **
   return text.replace(regex, "<strong>$1</strong>");
 }
+
+export const getInitials = (name) => name ? name.split(" ").map(n => n[0]).join("").toUpperCase() : "?";

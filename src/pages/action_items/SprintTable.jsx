@@ -15,9 +15,11 @@ import {
   setTasks,
   updateTask,
 } from "../../store/features/actionItemsSlice";
+import { hasPermission } from "@/access/role_permissions";
+import { useIsWorkspaceOwner } from "@/customHooks";
 
 const SprintTable = ({ sprint, handleModal, localTasks }) => {
-  const { selectedStatusOptions, searchQuery, tasks } = useSelector(
+  const { selectedStatusOptions, searchQuery, tasks, role } = useSelector(
     (state) => state.actionItems
   );
   const [items, setItems] = useState(localTasks);
@@ -26,6 +28,7 @@ const SprintTable = ({ sprint, handleModal, localTasks }) => {
   const [isOpen, setIsOpen] = useState(true); // State to control collapse/expand
   const [addtask, setAddTask] = useState(false);
   const dispatch = useDispatch();
+  const isOwner = useIsWorkspaceOwner()
 
   const updateItem = (id, updatedData) => {
     // Find the tasks associated with the sprintId
@@ -104,22 +107,29 @@ const SprintTable = ({ sprint, handleModal, localTasks }) => {
         </div>
 
         {/* Button placed after text content */}
-        <Button
-          onClick={handleAddItem}
-          className="px-1 h-8 bg-white text-black hover:bg-blue-100"
-          type="filled"
-        >
-          <FaPlusCircle className="mr-1" />
-          Add Item
-        </Button>
-        <Button
-          onClick={() => {dispatch(setSelectedSprint(sprint)); dispatch(setEditSprintModal(true))}}
-          className="px-1 h-8 ml-2 bg-white text-black hover:bg-blue-100"
-          type="filled"
-        >
-          <MdEdit className="" />
-          Edit
-        </Button>
+        {(isOwner || hasPermission(role?.name, "create:actionItems")) && (
+          <Button
+            onClick={handleAddItem}
+            className="px-3 h-8 bg-white text-black hover:bg-blue-100"
+            type="filled"
+          >
+            <FaPlusCircle className="mr-1" />
+            Add Item
+          </Button>
+        )}
+        {(isOwner || hasPermission(role?.name, "edit:sprints")) && (
+          <Button
+            onClick={() => {
+              dispatch(setSelectedSprint(sprint));
+              dispatch(setEditSprintModal(true));
+            }}
+            className="px-3 h-8 ml-2 bg-white text-black hover:bg-blue-100"
+            type="filled"
+          >
+            <MdEdit className="" />
+            Edit
+          </Button>
+        )}
 
         {/* Collapsible Icon */}
         <button
@@ -168,6 +178,7 @@ const SprintTable = ({ sprint, handleModal, localTasks }) => {
                   handleModal={handleModal}
                   key={item.id}
                   task={item}
+                  sprint={sprint}
                 />
               ))}
           </tbody>

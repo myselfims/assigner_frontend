@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import { fetchData, getAuthInfo } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
-import { setSidebar } from "../../store/features/appGlobalSlice";
+import { setRole, setSidebar } from "../../store/features/appGlobalSlice";
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
 import GenericNavBar from "./GenericNavBar";
@@ -15,14 +15,14 @@ import {
 } from "@/store/features/workspaceSlice";
 
 const Navigation = () => {
-  const { currentPage, sidebar, auth_info } = useSelector(
+  const { currentWorkspace, sidebar } = useSelector(
     (state) => state.globalState
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const [close, setClose] = useState(false);
-  const isProjectRoute = useMatch("/project/:project_id/*");
+  const isProjectRoute = useMatch("/:workspaceId/project/:project_id/*");
 
   useEffect(() => {
     if (
@@ -42,18 +42,23 @@ const Navigation = () => {
       if (res.length === 0) {
         navigate("/select-workspace");
       } else {
-        let defaultWorkspace = res?.find((w) => w.isDefault); // Use find instead of filter
-
-        if (defaultWorkspace) {
-          dispatch(setWorkspaces(res));
-          dispatch(setCurrentWorkspace(defaultWorkspace?.workspace)); // Use the default workspace
-        } else {
-          dispatch(setWorkspaces(res));
-          dispatch(setCurrentWorkspace(res[0])); // Fallback to the first workspace
+        let defaultWorkspace = res?.find((w) => w.isDefault);
+        dispatch(setWorkspaces(res));
+  
+        const workspace = defaultWorkspace?.workspace || res[0];
+        dispatch(setCurrentWorkspace(workspace));
+  
+        pathname === "/dashboard" && navigate(`/${workspace?.id}/dashboard`);
+  
+        if (workspace?.id) {
+          fetchData(`/workspaces/${workspace.id}/role`).then((res) => {
+            dispatch(setRole(res?.role));
+          });
         }
       }
     });
   }, []);
+  
 
   return (
     <div

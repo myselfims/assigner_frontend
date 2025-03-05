@@ -17,9 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { hasPermission } from "@/access/role_permissions";
 
 const GenericNavBar = () => {
-  const { currentPage, role, user } = useSelector(
-    (state) => state.globalState
-  );
+  const { currentPage, role, user } = useSelector((state) => state.globalState);
   const { workspaces, currentWorkspace } = useSelector(
     (state) => state.workspaceState
   );
@@ -34,7 +32,7 @@ const GenericNavBar = () => {
   );
 
   useEffect(() => {
-    if (workspaceId) {
+    if (currentWorkspace?.id) {
       fetchData(`/workspaces/${currentWorkspace?.id}/users`).then((res) => {
         let users = res.workspaceUsers.map((u) => ({
           ...u.user,
@@ -43,10 +41,8 @@ const GenericNavBar = () => {
         }));
         dispatch(setMembers(users));
       });
-      fetchData(`/workspaces/${currentWorkspace?.id}/role`).then((res)=>{
-        console.log(res?.role)
-        dispatch(setRole(res?.role))
-      })
+    } else {
+      dispatch(setRole("guest")); // Default role when no workspaceId is available
     }
   }, [currentWorkspace?.id]);
 
@@ -77,7 +73,7 @@ const GenericNavBar = () => {
       permission: "view:activityLogs",
     },
     {
-      to: "/settings",
+      to: `/${currentWorkspace?.id}/settings`,
       label: "Settings",
       icon: LuSettings,
       permission: "view:workspace", // adjust based on your needs
@@ -137,7 +133,7 @@ const GenericNavBar = () => {
             );
           })}
           {/* Custom Links for Manage Users and Billing, with their own permission logic */}
-          {hasPermission(role?.name, "manage:users") && (
+          {hasPermission(role?.name, "view:teamMembers") && (
             <Link
               to={`/${currentWorkspace?.id}/mnjusers`}
               className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 hover:text-slate-700 text-white"

@@ -1,6 +1,6 @@
 import { formatDate } from "../../globalFunctions";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { PiUsersThreeDuotone } from "react-icons/pi";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
@@ -8,6 +8,7 @@ import { MdAttachMoney } from "react-icons/md";
 const AgileProjectCard = ({ project }) => {
   const { id, name, leadUser, teamSize, startDate, status, priority, budget, deadline, description, role } = project;
   const navigate = useNavigate();
+  const {workspaceId} = useParams();
 
   // Status colors
   const statusColors = {
@@ -28,7 +29,7 @@ const AgileProjectCard = ({ project }) => {
 
   return (
     <div
-      onClick={() => navigate(`/project/${id}/action-items`)}
+      onClick={() => navigate(`/${workspaceId}/project/${id}/action-items`)}
       className="w-[90%] p-5 my-4 bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl cursor-pointer transition-all duration-300"
     >
       {/* Project Header */}
@@ -53,7 +54,7 @@ const AgileProjectCard = ({ project }) => {
       {/* Team Size & Priority */}
       <div className="flex justify-between items-center mt-3">
         <p className="text-sm text-gray-600 flex items-center">
-          <PiUsersThreeDuotone className="text-gray-500 mr-1" /> Team: {teamSize}
+          <PiUsersThreeDuotone className="text-gray-500 mr-1" /> Members: {teamSize}
         </p>
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[priority]}`}>
           Priority: {priority}

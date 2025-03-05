@@ -33,8 +33,9 @@ const ProjectNavBar = () => {
         let res = await fetchData(`/projects/${projectId}`);
         let members = await fetchData(`/projects/team/${projectId}`);
         let roleRes = await fetchData(`/projects/${projectId}/member/role/`);
+        console.log(roleRes?.role)
         dispatch(setMembers(members));
-        dispatch(setRole(roleRes));
+        dispatch(setRole(roleRes?.role));
         dispatch(setProject(res));
       } catch (error) {
         console.log(error);
@@ -48,14 +49,14 @@ const ProjectNavBar = () => {
   // Define nav items with required permissions.
   const navItems = [
     { to: "/projects/overview", icon: <AiOutlineDashboard />, label: "Overview", permission: "view:overview" },
-    { to: `/project/${projectId}/action-items`, icon: <FaTasks />, label: "Action Items", permission: "view:actionItems" },
-    { to: `/project/${projectId}/board`, icon: <PiKanbanDuotone />, label: "Board", permission: "view:projects" },
-    { to: `/project/${projectId}/team-members`, icon: <FaUsersCog />, label: "Team Members", permission: "view:teamMembers" },
-    { to: `/project/${projectId}/group-chat`, icon: <LuMessageSquare />, label: "Group Chat", permission: "view:connect" },
-    { to: `/project/${projectId}/calendar`, icon: <IoIosCalendar />, label: "Calendar", permission: "view:calendar" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/action-items`, icon: <FaTasks />, label: "Action Items", permission: "view:actionItems" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/board`, icon: <PiKanbanDuotone />, label: "Board", permission: "view:projects" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/team-members`, icon: <FaUsersCog />, label: "Team Members", permission: "view:teamMembers" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/group-chat`, icon: <LuMessageSquare />, label: "Group Chat", permission: "view:connect" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/calendar`, icon: <IoIosCalendar />, label: "Calendar", permission: "view:calendar" },
     { to: "/projects/reports", icon: <LuClipboard />, label: "Reports", permission: "view:reports" },
-    { to: `/project/${projectId}/activity-logs`, icon: <RxActivityLog />, label: "Activity Logs", permission: "view:activityLogs" },
-    { to: "/projects/settings", icon: <LuSettings />, label: "Settings", permission: "view:settings" },
+    { to: `/${currentWorkspace?.id}/project/${projectId}/activity-logs`, icon: <RxActivityLog />, label: "Activity Logs", permission: "view:activityLogs" },
+    { to: "/${currentWorkspace?.id}/projects/settings", icon: <LuSettings />, label: "Settings", permission: "view:settings" },
   ];
 
   return (
@@ -78,7 +79,7 @@ const ProjectNavBar = () => {
         <div className="space-y-2">
           {navItems.map(({ to, icon, label, permission }) => {
             // Only render if the user's role has the required permission.
-            if (!hasPermission(role, permission) && !isOwner) return null;
+            if (!hasPermission(role?.name, permission) && !isOwner) return null;
             return (
               <Button
                 key={to}

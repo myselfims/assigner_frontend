@@ -3,7 +3,7 @@ import { fetchData, getAuthInfo } from "../../api";
 import TaskRow from "./TaskRow";
 import noDataImage from "../../assets/no data.png";
 import Loader from "../../components/Loader";
-import Modal from "./TaskDetailsModal";
+import Modal from "./task_details_modal/TaskDetailsModal";
 import AddTaskModal from "./AddTaskModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,8 +15,7 @@ import {
   setTasks,
 } from "../../store/features/actionItemsSlice";
 import { setAlert, setCurrentPage } from "../../store/features/appGlobalSlice";
-import { AnimatePresence } from "motion/react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import FilterBar from "./FilterBar";
 import SprintTable from "./SprintTable";
 import SprintTableSkeleton from "./skeletons/SprintTableSkeleton";
@@ -45,35 +44,6 @@ const ActionItems = ({ setCurrent }) => {
     dispatch(setSprints(updatedSprints));
   };
 
-  // useEffect(() => {
-  //   console.log(getAuthInfo());
-  //   dispatch(setCurrentPage("Action Items"));
-  //   setLoading(true);
-
-  //   const fetchProjectData = async () => {
-  //     // Renamed to avoid conflict
-  //     try {
-  //       let sprints = await fetchData(`/sprints/project/${projectId}/`);
-  //       let statuses = await fetchData(`/projects/statuses/${projectId}`);
-  //       const formattedStatuses = statuses.map((status) => ({
-  //         name: status.name, // Assuming `name` contains the display name
-  //         // icon: AiOutlineSortAscending,    // Set the icon for all
-  //         value: status.slug || status.id, // Use `slug` or `id` as value
-  //         id: status.id,
-  //       }));
-  //       console.log(statuses);
-  //       setSprints(sprints);
-  //       dispatch(setStatuses(formattedStatuses));
-  //       setLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //       dispatch(setAlert({ alert: true, message: err.error, type: "danger" }));
-  //       dispatch(setTasks([]));
-  //     }
-  //   };
-
-  //   fetchProjectData();
-  // }, [dispatch, projectId]);
 
   useEffect(() => {
     dispatch(setCurrentPage("Action Items"));

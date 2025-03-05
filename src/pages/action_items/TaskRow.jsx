@@ -6,8 +6,10 @@ import { AiOutlineSortAscending } from "react-icons/ai";
 import { setAlert } from "../../store/features/appGlobalSlice";
 import { updateData } from "../../api";
 import { GoGrabber } from "react-icons/go";
+import { setSelectedSprint } from "@/store/features/actionItemsSlice";
+import CustomAvatar from "@/components/Avatar";
 
-const TaskRow = ({ task, updateItem }) => {
+const TaskRow = ({ task, updateItem, sprint }) => {
   const { users } = useSelector((state) => state.users);
   const {statuses, role} = useSelector(state=>state.actionItems)
   const user = useMemo(
@@ -36,6 +38,12 @@ const TaskRow = ({ task, updateItem }) => {
     });
   };
 
+  const handleClick = ()=>{
+    console.log(sprint)
+    dispatch(setActiveTask(task))
+    dispatch(setSelectedSprint(sprint))
+  }
+
   return (
     <tr key={item.id} className="hover:bg-slate-100 text-sm  cursor-pointer relative">
       <td>
@@ -44,7 +52,7 @@ const TaskRow = ({ task, updateItem }) => {
       <td className="text-center py-2">
         <h1>{item?.index}</h1>
       </td>
-      <td onClick={() => dispatch(setActiveTask(item))} className="">
+      <td onClick={handleClick} className="">
         <h1 className="font-">{item?.title}</h1>
       </td>
       <td className="text-gray-500 text-sm">
@@ -69,7 +77,7 @@ const TaskRow = ({ task, updateItem }) => {
       </td> */}
       <td className="">
         <div className="flex items-center">
-          <img src={user?.avatar} className="w-6 h-6 rounded-full" alt="" />
+          <CustomAvatar src={''} className={'w-6 h-6'} fallback={'DM'}/>
           <p className="text-center mx-1 text-sm">{task?.assignedTo?.name}</p>
         </div>
       </td>

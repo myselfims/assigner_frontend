@@ -56,7 +56,8 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
   });
 
   const handleUserSelect = (user) => {
-    setFieldValue("assignedToId", user[0].id);
+    console.log("user", user)
+    setFieldValue("assignedToId", user[0]?.id);
   };
 console.log(errors)
   return (

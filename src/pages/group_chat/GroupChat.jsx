@@ -174,15 +174,6 @@ const GroupChat = () => {
             Messages
           </button>
           <button
-            onClick={() => setActiveTab("members")}
-            className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
-              activeTab === "members" ? "border-b-2 border-blue-500" : ""
-            }`}
-          >
-            <FiUsers className="inline-block mr-2 w-6 h-6" />
-            Members
-          </button>
-          <button
             onClick={() => setActiveTab("files")}
             className={`flex w-full items-center py-4 p-4 cursor-pointer hover:bg-gray-100 border-b ${
               activeTab === "files" ? "border-b-2 border-blue-500" : ""

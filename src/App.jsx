@@ -29,6 +29,7 @@ import Board from "./pages/board/Board";
 import GroupChat from "./pages/group_chat/GroupChat";
 import ActivityLogs from "./pages/activity_logs/ActivityLogs";
 import WorkspaceSelection from "./pages/workspace_selection/WorkspaceSelection";
+import WorkspaceSettings from "./pages/workspace_settings/WorkspaceSettings";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -51,31 +52,32 @@ function App() {
           <Route path="/organization-form" element={<Auth />} />
           <Route path="/verify-otp" element={<Auth />} />
           <Route element={<BaseLayout />}>
+            <Route path="/:workspaceId/dashboard" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/select-workspace" element={<WorkspaceSelection />} />
             <Route
-              path="/project/:projectId/action-items/"
+              path="/:workspaceId/project/:projectId/action-items/"
               element={<ActionItems />}
             />
-            <Route path="/project/:projectId/board/" element={<Board />} />
+            <Route path="/:workspaceId/project/:projectId/board/" element={<Board />} />
             <Route
-              path="/project/:projectId/team-members/"
+              path="/:workspaceId/project/:projectId/team-members/"
               element={<TeamMembers />}
             />
             <Route
-              path="/project/:projectId/calendar/"
+              path="/:workspaceId/project/:projectId/calendar/"
               element={<CalendarPage />}
             />
             <Route
-              path="/project/:projectId/group-chat/"
+              path="/:workspaceId/project/:projectId/group-chat/"
               element={<GroupChat />}
             />
-            <Route path="/project/:projectId/activity-logs/" element={<ActivityLogs />} />
+            <Route path="/:workspaceId/project/:projectId/activity-logs/" element={<ActivityLogs />} />
             <Route path="/:workspaceId/projects" element={<Projects />} />
             <Route path="/:workspaceId/mnjusers" element={<TeamMembers />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/:workspaceId/activity-logs/" element={<ActivityLogs />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/:workspaceId/settings" element={<WorkspaceSettings />} />
             <Route path="/view-user" element={<ViewUser />} />
             {/* <Route path="/share-knowledge" element={<ShareKnowledge />} /> */}
             <Route path="/add-project" element={<AddProject />} />

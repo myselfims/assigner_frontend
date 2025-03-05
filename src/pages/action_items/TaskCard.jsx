@@ -6,6 +6,9 @@ const TaskCard = ({task}) => {
     const {users} = useSelector(state=>state.users)
     const user = users?.filter((item)=>item.id==task.assignedById)[0]
     const dispatch = useDispatch()
+
+    
+
   return (
     <div onClick={()=>dispatch(setActiveTask(task))}  className="task-card border rounded-md my-4 p-2 w-full">
       <h1 className="font-bold text-xl">{task?.title}</h1>

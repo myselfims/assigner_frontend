@@ -61,11 +61,6 @@ const SignupLogin = () => {
             dispatch(setAuthInfo(res));
             localStorage.setItem("auth_info", JSON.stringify(res));
             navigate("/dashboard");
-            // if (user.accountTypeId) {
-            //   navigate("/dashboard");
-            // } else {
-            //   navigate("/role-selection");
-            // }
           } else {
             // setVerify(true);
             localStorage.setItem("userEmail", data.email);
