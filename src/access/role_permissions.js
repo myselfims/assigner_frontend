@@ -10,6 +10,7 @@ const ROLE_PERMISSIONS = {
       "view:overview",
       "create:sprints", "edit:sprints", "delete:sprints", "view:sprints",
       "view:settings",
+      "send:message",
       "create:actionItems", "edit:actionItems", "delete:actionItems", "view:actionItems",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
@@ -22,7 +23,7 @@ const ROLE_PERMISSIONS = {
       "view:overview",
       "create:sprints", "edit:sprints", "delete:sprints", "view:sprints",
       "create:actionItems", "edit:actionItems", "delete:actionItems", "view:actionItems",
-      "view:connect",
+      "view:connect", "send:message",
       "view:settings",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
@@ -32,7 +33,7 @@ const ROLE_PERMISSIONS = {
         "create:projects", "edit:projects", "view:projects",
         "create:sprints", "edit:sprints", "view:sprints",
         "create:actionItems", "edit:actionItems", "view:actionItems",
-        "view:connect",
+        "view:connect","send:message",
         "view:settings",
         "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
@@ -42,7 +43,7 @@ const ROLE_PERMISSIONS = {
       "view:projects",
       "view:sprints", 
       "create:actionItems", "edit:actionItems", "view:actionItems",
-      "view:connect",
+      "view:connect","send:message",
       "create:comments", "edit:comments", "delete:comments", "view:comments",
     ],
     viewer: [
@@ -61,5 +62,6 @@ const ROLE_PERMISSIONS = {
 
 
 export const hasPermission = (role, action) => {
+  console.log(role)
     return ROLE_PERMISSIONS[role]?.includes(action);
 };

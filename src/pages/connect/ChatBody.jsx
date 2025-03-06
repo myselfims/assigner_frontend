@@ -9,12 +9,14 @@ import TypingIndicator from "./TypingIndicator";
 import { debounce } from "lodash";
 import { getRoomId } from "@/globalFunctions";
 import socketService from "@/api/socket";
+import { hasPermission } from "@/access/role_permissions";
 
 // const socket = io("http://localhost:3000"); // Replace with your server URL
 
 const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCounts=null}) => {
   const [message, setMessage] = useState("");
   const { user } = useSelector((state) => state.globalState);
+  const {role} = useSelector((state)=>state.actionItems)
   const { projectId, userId } = useParams();
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
@@ -199,6 +201,7 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCoun
           <FiPlus size={20} />
         </button>
         <textarea
+          disabled={!hasPermission(role?.name, "send:message")}
           placeholder="Type your message..."
           value={message}
           onChange={(e) => {

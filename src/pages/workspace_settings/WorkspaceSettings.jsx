@@ -5,8 +5,17 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentPage } from "@/store/features/appGlobalSlice";
 
 export default function WorkspaceSettings() {
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(setCurrentPage('Workspace Settings'))
+  },[])
+
   return (
     <div className="container mx-auto p-6">
       <Card>

@@ -74,7 +74,7 @@ const GenericNavBar = () => {
     },
     {
       to: `/${currentWorkspace?.id}/settings`,
-      label: "Settings",
+      label: "Workspace Settings",
       icon: LuSettings,
       permission: "view:workspace", // adjust based on your needs
     },

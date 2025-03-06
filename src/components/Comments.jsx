@@ -63,7 +63,7 @@ const Comments = () => {
               {user?.id === item.user?.id ? "You" : item.user?.name}
             </p>
             <div className="flex justify-between">
-              <h1 className="font-bold">{highlightMentions(item.comment)}</h1>
+              <h1 className="font-medium">{highlightMentions(item.comment)}</h1>
               <p className="text-xs text-slate-500">
                 {formatChatTimestamp(item.createdAt)}
               </p>

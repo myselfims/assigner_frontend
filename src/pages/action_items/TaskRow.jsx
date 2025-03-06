@@ -43,7 +43,7 @@ const TaskRow = ({ task, updateItem, sprint }) => {
     console.log(sprint)
     dispatch(setActiveTask(task))
     dispatch(setSelectedSprint(sprint))
-    setSearchParams({ selectedItem: task?.id });
+    setSearchParams({ selectedItem: task?.id, selectedTab : 'details' });
   }
 
   return (

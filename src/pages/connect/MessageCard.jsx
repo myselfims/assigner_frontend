@@ -5,16 +5,21 @@ import { formatChatTimestamp } from "../../globalFunctions";
 import { BsPinAngleFill, BsPinAngle } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import { BsReplyAll } from "react-icons/bs";
-import { deleteData, postData } from "../../api"; // Import postData for pinning
-import { useParams } from "react-router-dom";
+import { deleteData, postData, updateData } from "../../api"; // Import postData for pinning
+import { useMatch, useParams } from "react-router-dom";
 import { FaRegEye } from "react-icons/fa";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
+import { GiCheckMark } from "react-icons/gi";
+import { MdClose } from "react-icons/md";
 
 const MessageCard = ({ self = false, message, removeMessage, receiverId, handleSeenMessage}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(message?.pinned || false); // Track pinned status
   const {projectId} = useParams()
+  const isGroupChat = useMatch('/:workspaceId/project/:projectId/group-chat')
+  const [edit, setEdit] = useState(false)
+  const [messageText, setMessageText] = useState(message?.content)
 
   useEffect(() => {
     if (!self && message && !message.isRead) {
@@ -45,6 +50,12 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
     }
   };
 
+  const handleEdit = ()=>{
+    updateData(`/chat/${message?.id}/`, {message : messageText}).then((res)=>{
+      setEdit(false)
+    })
+  }
+
 
   return (
     <div className={`flex items-start mb-4 flex-col relative w-full my-4 ${self && "items-end"}`}>
@@ -62,25 +73,28 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
 
       {/* Message Content */}
       <div
-        onMouseEnter={() => setShowOptions(true)}
-        onMouseLeave={() => setShowOptions(false)}
-        className={`p-3 min-w-28 max-w-72 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
+        className={`min-w-28 max-w-72 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
       >
-        {message?.content}
-      
-        {/* Timestamp */}
-        <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500 flex items-center">
-          {formatChatTimestamp(message?.createdAt)}
-          {self && (message?.isRead ? <FaRegEye className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/> : <IoCheckmarkDoneSharp className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/>)}
-        </span>
-
-        {/* Hover Actions */}
-        {showOptions && (
+        {edit?
+        <div>
+          <input onChange={(e)=>setMessageText(e.target.value)} className="text-black rounded-lg h-full w-full p-2" value={messageText}/>
+          <div className="absolute bg-white flex items-center rounded-md mt-1 shadow-md">
+          <GiCheckMark onClick={handleEdit} className="p-2 w-8 h-8 hover:text-blue-600 cursor-pointer"/>
+          <MdClose onClick={()=>setEdit(false)} className="w-6 h-6 hover:text-red-600 cursor-pointer"/>
+          </div>
+        </div>
+        :
+        <div onMouseEnter={() => setShowOptions(true)}
+        onMouseLeave={() => setShowOptions(false)} className="p-2">{messageText}
+        
+           {/* Hover Actions */}
+           {showOptions && (
           <div className={`absolute -top-8 ${self ? 'right-0' : 'left-0'} flex space-x-2 text-black bg-white p-1 shadow-lg rounded-md`}>
+            {isGroupChat &&
             <button className="p-1 text-xs text-nowrap flex hover:bg-gray-200 rounded">
               12
               <FiEye size={16} title="Seen by Users" className="ml-1" />
-            </button>
+            </button>}
             <button className="p-1 hover:bg-gray-200 rounded" onClick={pinMessage}>
               {isPinned ? <BsPinAngleFill size={16} title="Pinned" /> : <BsPinAngle size={16} title="Pin Message" />}
             </button>
@@ -89,7 +103,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
             </button>
             {self && (
               <>
-                <button className="p-1 hover:bg-gray-200 rounded">
+                <button onClick={()=>setEdit(true)} className="p-1 hover:bg-gray-200 rounded">
                   <MdOutlineEdit size={16} title="Edit Message" />
                 </button>
                 <button onClick={deleteMessage} className="p-1 hover:bg-gray-200 rounded text-red-600">
@@ -104,6 +118,15 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
             </button>
           </div>
         )}
+        
+        
+        </div>
+        }
+        {/* Timestamp */}
+        <span className="absolute text-nowrap bottom-[-18px] right-1 text-[10px] text-gray-500 flex items-center">
+          {formatChatTimestamp(message?.createdAt)}
+          {self && (message?.isRead ? <FaRegEye className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/> : <IoCheckmarkDoneSharp className=" right-1 bottom-1 text-black text-sm ml-1 mt-1 w-3 h-3"/>)}
+        </span>
       </div>
 
       {/* Dropdown Menu on Three-dot Click */}

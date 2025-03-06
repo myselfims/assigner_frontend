@@ -5,7 +5,7 @@ import Dropdown from "../../components/Dropdown";
 import { LuMessagesSquare } from "react-icons/lu";
 import ConfirmModal from "../../components/ConfirmModal";
 import { updateData, deleteData } from "../../api"; // Import deleteData function
-import { useParams } from "react-router-dom";
+import { useMatch, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,8 @@ const MemberRow = ({ member, roles }) => {
   const [confirmModal, setConfirmModal] = useState(false);
   const { projectId, workspaceId } = useParams();
   const [deleteModal, setDeleteModal] = useState(false); // Fixed delete modal state
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const isProject = useMatch("/:workspaceId/project/:projectId/team-members");
 
   const handleRoleUpdate = (value) => {
     const role = roles?.find((r) => r?.value === value[0]);
@@ -39,9 +40,9 @@ const MemberRow = ({ member, roles }) => {
 
   const onUpdateRole = () => {
     try {
-      let url = workspaceId
-        ? `/workspaces/${workspaceId}/members/${member?.id}`
-        : `/projects/team/${projectId}/${member?.id}`;
+      let url = isProject
+        ? `/projects/team/${projectId}/${member?.id}`
+        : `/workspaces/${workspaceId}/members/${member?.id}`;
       updateData(url, {
         roleId: pendingRole.value,
       }).then((res) => {

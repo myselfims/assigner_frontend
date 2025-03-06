@@ -19,7 +19,7 @@ import Dropdown from "@/components/Dropdown";
 import LogCard from "@/pages/activity_logs/LogCard";
 import Tooltip from "@/components/Tooltip";
 import CustomAvatar from "@/components/Avatar";
-import { getInitials } from "@/globalFunctions";
+import { formatDate, getInitials } from "@/globalFunctions";
 
 const files = [
   {
@@ -271,11 +271,18 @@ const DetailsTab = () => {
           </div>
         </div>
 
-        <div className=" mt-8">
-          <h1 className="font-medium">Reporter</h1>
-          <div className="flex items-center">
-            <CustomAvatar fallback={getInitials(task?.assignedBy?.name)} className={'w-7 h-7 mr-1 font-medium border border-slate-400 p-2 tex-xs'}/>
-            <p>{task?.assignedBy?.name}</p>
+        <div className="flex mt-4">
+          <div className="">
+            <h1 className="font-medium">Reporter</h1>
+            <div className="flex items-center">
+              <CustomAvatar fallback={getInitials(task?.assignedBy?.name)} className={'w-7 h-7 mr-1 font-medium border border-slate-400 p-2 tex-xs'}/>
+              <p>{task?.assignedBy?.name}</p>
+            </div>
+          </div>
+
+          <div className="mx-4">
+            <h1 className="font-medium">Reporting date</h1>
+           <p>{formatDate(task?.createdAt)}</p>
           </div>
         </div>
 

@@ -23,8 +23,6 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { useIsWorkspaceOwner } from "@/customHooks";
 import DetailsTab from "./detailsTab";
 import { useSearchParams } from "react-router-dom";
@@ -37,6 +35,7 @@ const TaskDetailsModal = () => {
   const dispatch = useDispatch();
   const isOwner = useIsWorkspaceOwner();
   const [searchParams, setSearchParams] = useSearchParams();
+  const selectedTab = searchParams.get("selectedTab") || "details";
 
   // AI Assistant state
   const [query, setQuery] = useState("");
@@ -64,6 +63,7 @@ const TaskDetailsModal = () => {
     dispatch(setModal(open));
     if (!open) {
       searchParams.delete("selectedItem"); // Remove parameter
+      searchParams.delete("selectedTab"); // Remove parameter
       setSearchParams(searchParams); // Update URL
     }
   };
@@ -75,34 +75,36 @@ const TaskDetailsModal = () => {
           <DialogTitle>{selectedSprint?.title}</DialogTitle>
         </DialogHeader>
 
-        <Tabs defaultValue="details" className="mt-4 select-none sticky top-0">
+        <Tabs defaultValue={selectedTab} className="mt-4 select-none sticky top-0">
           <TabsList>
             <TabsTrigger
               value="details"
-              onClick={() => setCurrentForm("details")}
+              onClick={() => setSearchParams({ selectedItem : task?.id,  selectedTab: "details" })}
             >
               Details
             </TabsTrigger>
             <TabsTrigger
               value="comments"
-              onClick={() => setCurrentForm("comments")}
+              onClick={() => setSearchParams({ selectedItem : task?.id,  selectedTab: "comments" })}
             >
-              Comments{" "}
+              Comments
               <span className="ml-2 bg-green-200 rounded-full text-xs px-2">
                 {comments.length}
               </span>
             </TabsTrigger>
             <TabsTrigger
               value="assistant"
-              onClick={() => setCurrentForm("assistant")}
+              onClick={() => setSearchParams({ selectedItem : task?.id, selectedTab: "assistant" })}
             >
               AI Assistant
             </TabsTrigger>
           </TabsList>
 
-          <DetailsTab />
+          <TabsContent value="details" className="mt-4">
+            <DetailsTab />
+          </TabsContent>
 
-          <TabsContent value="comments" className=" mt-4 overflow-hidden">
+          <TabsContent value="comments" className="mt-4 overflow-hidden">
             <Comments />
           </TabsContent>
 
