@@ -15,9 +15,10 @@ import {
 } from "@/store/features/workspaceSlice";
 
 const Navigation = () => {
-  const { currentWorkspace, sidebar } = useSelector(
+  const { sidebar } = useSelector(
     (state) => state.globalState
   );
+  const {currentWorkspace} = useSelector(state=>state.workspaceState)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -50,14 +51,17 @@ const Navigation = () => {
   
         pathname === "/dashboard" && navigate(`/${workspace?.id}/dashboard`);
   
-        if (workspace?.id) {
-          fetchData(`/workspaces/${workspace.id}/role`).then((res) => {
-            dispatch(setRole(res?.role));
-          });
-        }
       }
     });
   }, []);
+
+  useEffect(()=>{
+    if (currentWorkspace?.id) {
+      fetchData(`/workspaces/${currentWorkspace.id}/role`).then((res) => {
+        dispatch(setRole(res?.role));
+      });
+    }
+  },[currentWorkspace?.id])
   
 
   return (

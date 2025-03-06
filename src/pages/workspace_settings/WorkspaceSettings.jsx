@@ -19,10 +19,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { IoMdCheckmark } from "react-icons/io";
 import { updateData } from "@/api";
 import { setCurrentWorkspace } from "@/store/features/workspaceSlice";
+import TransferOwnershipModal from "./TransferOwnershipModal";
 
 export default function WorkspaceSettings() {
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
+  const [modal, setModal] = useState(false)
   const {currentWorkspace} = useSelector(state=>state.workspaceState)
   const [type, setType] = useState(currentWorkspace?.type)
   const [name, setName] = useState(currentWorkspace?.name);
@@ -54,13 +56,13 @@ export default function WorkspaceSettings() {
             <div className="flex items-center">
               <CustomAvatar className={"mr-2 md:w-16 md:h-16 text-2xl font-semibold border border-slate-500"} fallback={getInitials(name)} />
               {edit ?
-              <Input onChange={(e)=>setName(e.target.value)} value={name} type="text" className="md:text-3xl w-fit"  />
+              <Input onChange={(e)=>setName(e.target.value)} value={name} type="text" className="md:text-3xl w-fit bg-white"  />
               :
               <h1 className="md:text-4xl text-xl font-bold">{name}</h1>}
             </div>
 
             {edit?
-             <Textarea onChange={(e)=>setDescription(e.target.value)} className="md:text-lg mt-2" value={description} />
+             <Textarea placeholder="Description" onChange={(e)=>setDescription(e.target.value)} className="md:text-lg mt-2 bg-white" value={description} />
              :
             <p className="my-4">
               {description}
@@ -107,7 +109,7 @@ export default function WorkspaceSettings() {
                 <p className="text-gray-500">Owner</p>
               </div>
             </div>
-            <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <button onClick={()=>setModal(true)} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Transfer Ownership
             </button>
           </div>
@@ -120,6 +122,8 @@ export default function WorkspaceSettings() {
 
         </CardContent>
       </Card>
+      {modal &&
+      <TransferOwnershipModal setModal={setModal} />}
     </div>
   );
 }
