@@ -11,6 +11,7 @@ import { FaRegEye } from "react-icons/fa";
 import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { GiCheckMark } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const MessageCard = ({ self = false, message, removeMessage, receiverId, handleSeenMessage}) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -20,6 +21,12 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
   const isGroupChat = useMatch('/:workspaceId/project/:projectId/group-chat')
   const [edit, setEdit] = useState(false)
   const [messageText, setMessageText] = useState(message?.content)
+  const {onlineUsers} = useSelector(state=>state.connectState)
+  const isOnline = onlineUsers[message?.sender?.id]?.status
+
+  console.log(onlineUsers)
+  console.log('sender', message?.sender?.id)
+  console.log('sender', isOnline)
 
   useEffect(() => {
     if (!self && message && !message.isRead) {
@@ -62,7 +69,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
       {/* Sender Info */}
       {!self && (
         <div className="text-xs select-none flex my-1 items-center">
-          <Tooltip content="online">
+          <Tooltip content={isOnline}>
             <div className="w-5 h-5 mr-2 border-2 border-green-500 bg-gray-700 text-white flex justify-center items-center rounded-full text-xs font-semibold">
               {message?.sender?.name?.charAt(0).toUpperCase()}
             </div>
@@ -73,7 +80,7 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
 
       {/* Message Content */}
       <div
-        className={`min-w-28 max-w-72 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
+        className={`${edit ? 'min-w-96' : 'min-w-28'} max-w-72 text-sm rounded-lg shadow-md relative ${self ? "bg-gray-200 text-black" : "bg-blue-600 text-white"}`}
       >
         {edit?
         <div>

@@ -9,7 +9,7 @@ import { useMatch, useParams } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useDispatch, useSelector } from "react-redux";
-import { formatDate } from "@/globalFunctions";
+import { formatDate, getInitials } from "@/globalFunctions";
 import { setAlert } from "@/store/features/appGlobalSlice";
 
 const MemberRow = ({ member, roles }) => {
@@ -84,7 +84,7 @@ const MemberRow = ({ member, roles }) => {
           }`}
         >
           <AvatarImage src={member?.avatar} />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{getInitials(member?.name)}</AvatarFallback>
         </Avatar>
       </TableCell>
       <TableCell>
