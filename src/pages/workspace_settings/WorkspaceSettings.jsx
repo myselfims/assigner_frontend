@@ -17,9 +17,11 @@ import { getInitials } from "@/globalFunctions";
 import { MdEdit } from "react-icons/md";
 import { Textarea } from "@/components/ui/textarea";
 import { IoMdCheckmark } from "react-icons/io";
-import { updateData } from "@/api";
+import { fetchData, updateData } from "@/api";
 import { setCurrentWorkspace } from "@/store/features/workspaceSlice";
 import TransferOwnershipModal from "./TransferOwnershipModal";
+import RequestCard from "@/components/RequestCard";
+import RequestModal from "@/components/RequestModal";
 
 export default function WorkspaceSettings() {
   const dispatch = useDispatch();
@@ -28,9 +30,17 @@ export default function WorkspaceSettings() {
   const {currentWorkspace} = useSelector(state=>state.workspaceState)
   const [type, setType] = useState(currentWorkspace?.type)
   const [name, setName] = useState(currentWorkspace?.name);
-  const [description, setDescription] = useState(currentWorkspace?.description)
+  const [description, setDescription] = useState(currentWorkspace?.description);
+  const [loading, setLoading] = useState(false);
+  const [transferRequest, setTransferRequest] = useState(null)
+
+
   useEffect(() => {
     dispatch(setCurrentPage("Workspace Settings"));
+    fetchData(`/workspaces/${currentWorkspace?.id}/transfer-request`).then((res)=>{
+      console.log(res)
+      setTransferRequest(res)
+    })
   }, []);
 
   const updateInfo = ()=>{
@@ -45,6 +55,13 @@ export default function WorkspaceSettings() {
   const updateType = (type)=>{
     updateData(`/workspaces/${currentWorkspace?.id}/`, {type}).then((res)=>{
       setType(type)
+    })
+  }
+
+  const handleCancelTransferRequest = ()=>{
+    updateData(`/global/requests/${transferRequest?.id}`, {status : 'cancelled'}).then((res)=>{
+      console.log(res)
+      setTransferRequest(null)
     })
   }
 
@@ -109,9 +126,18 @@ export default function WorkspaceSettings() {
                 <p className="text-gray-500">Owner</p>
               </div>
             </div>
+            {transferRequest?
+            <>
+              <button onClick={handleCancelTransferRequest} className="mt-4 px-4 py-2 border-red-600 border text-red-600 hover:text-white rounded-lg hover:bg-red-700 transition">
+                Cancel Transfer
+              </button>
+              <p className="text-sm text-gray-600 mt-2">An active workspace ownership transfer request has already been sent to <a className="text-blue-600 hover:underline" href={`mailto:${transferRequest?.target?.email}`}>{transferRequest?.target?.email}</a>  and is pending. Do you want to cancel the request?</p>
+            </>
+            :
             <button onClick={()=>setModal(true)} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
               Transfer Ownership
-            </button>
+            </button>}
+
           </div>
 
           <div className="mt-8 border-t pt-4">
@@ -123,7 +149,7 @@ export default function WorkspaceSettings() {
         </CardContent>
       </Card>
       {modal &&
-      <TransferOwnershipModal setModal={setModal} />}
+      <TransferOwnershipModal onSent={(res)=>setTransferRequest(res)} request={transferRequest} setModal={setModal} />}
     </div>
   );
 }

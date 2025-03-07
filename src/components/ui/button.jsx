@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:opacity-70",
+          "bg-primary text-primary-foreground shadow",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
@@ -35,10 +35,13 @@ const buttonVariants = cva(
 )
 
 const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : "button";
+  const hoverClass = className?.match(/bg-(\w+)-(\d+)/);
+  const hoverColor = hoverClass ? `hover:bg-${hoverClass[1]}-${parseInt(hoverClass[2]) + 100}` : "";
+
   return (
     (<Comp
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), hoverColor)}
       ref={ref}
       {...props} />)
   );

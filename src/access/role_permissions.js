@@ -16,7 +16,6 @@ const ROLE_PERMISSIONS = {
     ],
     admin: [
       "view:dashboard",
-      "edit:workspace", "delete:workspace", "view:workspace",
       "create:projects", "edit:projects", "delete:projects", "view:projects",
       "create:teamMembers", "edit:teamMembers", "delete:teamMembers", "view:teamMembers",
       "view:activityLogs",
@@ -29,7 +28,6 @@ const ROLE_PERMISSIONS = {
     ],
     manager: [
         "view:dashboard",
-        "view:workspace",
         "create:projects", "edit:projects", "view:projects",
         "create:sprints", "edit:sprints", "view:sprints",
         "create:actionItems", "edit:actionItems", "view:actionItems",
@@ -39,7 +37,6 @@ const ROLE_PERMISSIONS = {
     ],
     contributor: [
       "view:dashboard",
-      "view:workspace",
       "view:projects",
       "view:sprints", 
       "create:actionItems", "edit:actionItems", "view:actionItems",
@@ -48,7 +45,6 @@ const ROLE_PERMISSIONS = {
     ],
     viewer: [
       "view:dashboard",
-      "view:workspace",
       "view:projects",
       "view:sprints",
       "view:teamMembers",

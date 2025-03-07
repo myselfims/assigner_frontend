@@ -5,6 +5,7 @@ import Navigation from "../components/navigation_bar/Navigation";
 import MobileNav from "../components/MobileNav";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import RequestModal from "@/components/RequestModal";
 
 const BaseLayout = () => {
   const dispatch = useDispatch()
@@ -68,6 +69,7 @@ const BaseLayout = () => {
           </motion.div>
         </AnimatePresence>
       </div>
+      <RequestModal />
     </div>
   );
 };

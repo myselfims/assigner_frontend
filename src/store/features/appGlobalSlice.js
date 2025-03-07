@@ -8,7 +8,9 @@ const initialState = {
     auth_info : {token:null},
     role : null,
     user : JSON.parse(localStorage.getItem("user")) || null, 
-    notifications : []
+    notifications : [],
+    modals : {
+    },
 }
 
 export const appGlobalSlice = createSlice({
@@ -21,6 +23,10 @@ export const appGlobalSlice = createSlice({
         setRole : (state, action)=>{
             state.role = action.payload
         },
+        setModal: (state, action) => {
+            const { modalName, value } = action.payload;
+            state.modals = { ...state.modals, [modalName]: value }; // Square brackets to set dynamic key
+        },          
         setNotifications : (state, action) =>{
             state.notifications = action.payload
         },
@@ -45,5 +51,5 @@ export const appGlobalSlice = createSlice({
     }
 })
 
-export const {setCurrentPage,setUser, setRole, setNotifications, addNotification, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
+export const {setCurrentPage,setUser, setModal, setRole, setNotifications, addNotification, setAlert, setDarkMode, setSidebar, setAuthInfo} = appGlobalSlice.actions
 export default  appGlobalSlice.reducer

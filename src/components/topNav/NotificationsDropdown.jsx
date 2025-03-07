@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BiBell } from "react-icons/bi";
 import { io } from "socket.io-client";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {formatChatTimestamp} from '../../globalFunctions'
-import { redirect, useNavigate } from "react-router-dom";
+import { redirect, useNavigate, useSearchParams } from "react-router-dom";
+import { setModal } from "@/store/features/appGlobalSlice";
 
 const socket = io("http://localhost:3000");
 
@@ -20,6 +21,8 @@ const NotificationsDropdown = () => {
   const { user } = useSelector((state) => state.globalState);
   const [unreadCount, setUnreadCount] = useState(0)
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!user) return; // Ensure user?.id is available
@@ -55,11 +58,20 @@ const NotificationsDropdown = () => {
       let updatedData =  notifications?.map((n) =>
         n.id === id ? notification : n
       );
-      console.log(updatedData)
       setNotifications(updatedData)
       setUnreadCount(updatedData.filter((n)=>!n.isRead).length)
     })
-    redirectUrl && navigate(redirectUrl)
+
+    if (redirectUrl) {
+      if (redirectUrl.includes("showModal")) {
+        const modalName = redirectUrl.split("showModal=")[1];
+        console.log(modalName)
+        setSearchParams({ showModal: modalName }, { replace: true });
+        dispatch(setModal({ modalName: modalName, value: true }));
+      } else {
+        navigate(redirectUrl);
+      }
+    }
     
   }
 

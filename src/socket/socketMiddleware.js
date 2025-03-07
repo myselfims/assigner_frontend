@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
-// import { addNotification } from "./notificationSlice";
 import { incrementUnreadCount } from "@/store/features/connectSlice";
+import { setRole, addNotification } from "@/store/features/appGlobalSlice";
+import { setCurrentWorkspace } from "@/store/features/workspaceSlice";
 
 const socketMiddleware = (store) => {
   let socket = null;
@@ -15,11 +16,14 @@ const socketMiddleware = (store) => {
 
       // Listen for notifications
       socket.on("notification", (data) => {
-        // store.dispatch(addNotification(data)); // Update Redux store
+        store.dispatch(addNotification(data)); // Update Redux store
       });
-      socket.on("user:online", (data) => {
-        console.log(data)
-        // store.dispatch(addNotification(data)); // Update Redux store
+
+      socket.on("workspace:ownership", (data) => {
+        console.log('ownder tranfered',data)
+        store.dispatch(setRole(data.role))
+        store.dispatch(setCurrentWorkspace(data.workspace))
+        window.location.reload();
       });
 
       // Listen for chat messages

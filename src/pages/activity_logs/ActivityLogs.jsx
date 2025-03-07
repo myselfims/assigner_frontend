@@ -202,6 +202,7 @@ const ActivityLogs = () => {
             {filteredLogs.length > 0 ? (
               filteredLogs.map((log) => <LogCard key={log?.id} log={log} />)
             ) : (
+              !loading &&
               <li className="text-sm text-gray-500">No activities found.</li>
             )}
           </ul>

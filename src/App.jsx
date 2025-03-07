@@ -30,6 +30,7 @@ import GroupChat from "./pages/group_chat/GroupChat";
 import ActivityLogs from "./pages/activity_logs/ActivityLogs";
 import WorkspaceSelection from "./pages/workspace_selection/WorkspaceSelection";
 import WorkspaceSettings from "./pages/workspace_settings/WorkspaceSettings";
+import NotFound from "./pages/notfound/NotFound";
 
 function App() {
   const { alert, darkMode } = useSelector((state) => state.globalState);
@@ -51,6 +52,7 @@ function App() {
           <Route path="/industry-selection" element={<Auth />} />
           <Route path="/organization-form" element={<Auth />} />
           <Route path="/verify-otp" element={<Auth />} />
+          <Route path="*" element={<NotFound />} /> {/* Catch-all route */}
           <Route element={<BaseLayout />}>
             <Route path="/:workspaceId/dashboard" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
