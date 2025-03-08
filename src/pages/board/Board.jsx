@@ -62,7 +62,7 @@ const Board = () => {
   };
 
   return (
-    <div className="p-6 flex flex-col scrollbar-none h-full">
+    <div className="flex flex-col scrollbar-none h-full">
       {/* Sprint Navigation */}
       {sprints.length > 0 && (
         <div className="flex items-center justify-between mb-4">
@@ -98,15 +98,15 @@ const Board = () => {
       )}
 
       {/* Kanban Board */}
-      <div className="flex gap-6 overflow-x-auto flex-1">
+      <div className="flex gap-6 overflow-x-auto flex-1 pb-4">
         {statuses.map((status) => (
           <div
             key={status.value}
-            className="bg-gray-200 rounded-lg p-4 min-w-[300px] flex-1 shadow-md"
+            className="bg-gray-200 rounded-lg px-4 min-w-[300px] flex-1 shadow-md overflow-y-auto scrollbar-none"
             onDrop={(e) => handleDrop(e, status.value)}
             onDragOver={handleDragOver}
           >
-            <div className="flex justify-between">
+            <div className="flex justify-between pt-4 z-30 sticky top-0 bg-gray-200">
               <h3 className="text-lg font-semibold mb-4">{status.name}</h3>
               <span className="font-semibold mb-4 border-2 rounded-full w-5 h-5 flex justify-center items-center text-sm text-gray-700">
                 {

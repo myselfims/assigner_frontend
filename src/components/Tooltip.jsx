@@ -20,11 +20,11 @@ const Tooltip = ({ children, content, position = "top", className = "" }) => {
       {children}
       {visible && (
         <div
-          className={`absolute z-10 bg-black text-white text-sm p-1 rounded shadow-lg whitespace-nowrap ${positions[position]} ${className}`}
+          className={`absolute z-10 bg-slate-700 text-white text-sm p-1 rounded shadow-lg whitespace-nowrap ${positions[position]} ${className}`}
         >
           {content}
           <div
-            className={`absolute w-2 h-2 bg-black rotate-45 ${
+            className={`absolute w-2 h-2 bg-slate-700 rotate-45 ${
               position === "top"
                 ? "bottom-[-4px] left-1/2 transform -translate-x-1/2"
                 : position === "bottom"

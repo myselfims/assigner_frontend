@@ -67,7 +67,7 @@ const Connect = () => {
   }, [query]);
 
   useEffect(() => {
-    fetchData(`/chat/unread-counts`).then((res) => {
+    fetchData(`/chat/unread-counts?workspaceId=${workspaceId}`).then((res) => {
       console.log(res);
       dispatch(setUnreadCounts(res));
     });

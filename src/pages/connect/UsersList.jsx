@@ -7,7 +7,7 @@ import {
   resetUnreadCount,
   setSelectedUser,
 } from "@/store/features/connectSlice";
-import { truncateText } from "@/globalFunctions";
+import { getInitials, truncateText } from "@/globalFunctions";
 
 const UsersList = ({ users }) => {
   const navigate = useNavigate();
@@ -51,8 +51,8 @@ const UsersList = ({ users }) => {
                 : "border-red-500"
             }`}
           >
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={user?.avatar} />
+            <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
           </Avatar>
           {/* User Details */}
           <div className="ml-4">

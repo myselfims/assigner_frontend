@@ -89,7 +89,7 @@ const MemberRow = ({ member, roles }) => {
       </TableCell>
       <TableCell>
         <div className="flex flex-col">
-          <h1 className="font-semibold mb-1">{member?.name}</h1>
+          <h1 className="font-semibold mb-1">{member?.name}{user?.id===member?.id && <span className="font-normal"> (You)</span>}</h1>
           <p className="text-[12px] text-gray-500">Frontend Developer</p>
           <a
             href={`mailto:${member?.email}`}

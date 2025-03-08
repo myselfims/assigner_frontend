@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PiUsersThreeDuotone } from "react-icons/pi";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
+import CustomAvatar from "@/components/Avatar";
 
 const AgileProjectCard = ({ project }) => {
   const { id, name, leadUser, teamSize, startDate, status, priority, budget, deadline, description, role } = project;
@@ -41,11 +42,9 @@ const AgileProjectCard = ({ project }) => {
       </div>
 
       {/* Lead User & Role */}
-      <div className="flex items-center mt-2">
-        <div className="w-8 h-8 bg-gray-300 text-white flex items-center justify-center rounded-full text-sm font-semibold mr-2">
-          {getInitials(leadUser?.name)}
-        </div>
-        <div>
+      <div className="flex items-center mt-2 gap-2">
+        <CustomAvatar src={leadUser?.avatar} fallback={getInitials(leadUser?.name)}/>
+        <div >
           <p className="text-sm text-gray-700 font-medium">{leadUser?.name}</p>
           <p className="text-xs text-gray-500">{role}</p>
         </div>

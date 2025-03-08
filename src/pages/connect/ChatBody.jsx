@@ -22,7 +22,8 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCoun
   const chatContainerRef = useRef(null);
   const [showNewMessageButton, setShowNewMessageButton] = useState(false);
   const [inputRows, setInputRows] = useState(1);
-  const socket = socketService.connect()
+  const socket = socketService.connect();
+  const {workspaceId} = useParams()
 
   const removeMessage = (id) => {
     setMessages(messages?.filter((m) => m.id !== id));
@@ -112,6 +113,7 @@ const ChatBody = ({ onSend, messages, setMessages, setTypingUsers, setUnreadCoun
         type: "text",
         projectId: parseInt(projectId),
         receiverId: parseInt(userId),
+        workspaceId: parseInt(workspaceId),
         content: message,
         senderId: user?.id,
         sender: user,

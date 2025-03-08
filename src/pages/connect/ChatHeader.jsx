@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import UserInfoCard from "./UserInfoCard";
 import GroupInfoCard from "../group_chat/GroupInfoCard";
+import CustomAvatar from "@/components/Avatar";
+import { getInitials } from "@/globalFunctions";
 
 const ChatHeader = ({ selectedUser, heading, typingUsers }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -14,10 +16,7 @@ const ChatHeader = ({ selectedUser, heading, typingUsers }) => {
     <div className="flex items-center justify-between px-4 py-3 border-b dark:bg-gray-900 dark:text-white bg-gray-50">
       {/* Profile Picture or Placeholder */}
       <div className="flex items-center">
-        <Avatar>
-          <AvatarImage src={""} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <CustomAvatar src={selectedUser?.avatar} fallback={heading ? getInitials(heading) : getInitials(selectedUser?.name)}/>
 
         {/* User Name */}
         <div className="ml-3 justify-between relative">

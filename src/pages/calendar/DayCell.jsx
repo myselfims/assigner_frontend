@@ -1,45 +1,33 @@
 import React, { useState, useEffect } from "react";
 import DayHoverCard from "./DayHoverCard";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedDay } from "@/store/features/calendarSlice";
 
-const DayCell = ({ day, toggleModal }) => {
+const DayCell = ({ day, toggleModal, eventDate, isToday }) => {
   const [actionItems, setActionItems] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
+  const dispatch = useDispatch()
+  const {monthEvents} = useSelector(state=>state.calendarState);
+  const events = monthEvents[eventDate]?.events || [];
+  const eventCount = monthEvents[eventDate]?.count || 0;
 
-  useEffect(() => {
-    const fetchActionItems = () => {
-      if (day % 5 === 0) {
-        return [
-          { title: "Finish Task A", note: "Complete by 5 PM" },
-          { title: "Team Meeting", note: "Zoom link in email" },
-          { title: "Team Meeting", note: "Zoom link in email" },
-          { title: "Team Meeting", note: "Zoom link in email" },
-        ];
-      } else if (day % 7 === 0) {
-        return [{ title: "Submit Report", note: "Before EOD" }];
-      }
-      return [];
-    };
-
-    const items = fetchActionItems();
-    setActionItems(items);
-  }, [day]);
 
   return (
     <div
-      className="day-cell p-8 hover:bg-slate-200 text-center cursor-pointer relative border rounded-lg"
+      onClick={()=>dispatch(setSelectedDay(eventDate))}
+      className={`day-cell p-8 hover:bg-slate-200 text-center cursor-pointer relative border rounded-lg ${isToday && 'bg-blue-300'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => toggleModal(day, actionItems)}
     >
       <div>{day}</div>
-      {actionItems.length > 0 && (
+      {eventCount > 0 && (
         <div className="absolute font-semibold bottom-2 left-0 right-0 text-xs text-blue-500 flex items-center justify-center">
-          {actionItems.length} item(s)
+          {eventCount} item(s)
         </div>
       )}
 
       {/* Show hover card */}
-      {isHovered && actionItems.length > 0 && <DayHoverCard actionItems={actionItems} />}
+      {isHovered && eventCount > 0 && <DayHoverCard eventCount={eventCount} events={events} />}
     </div>
   );
 };

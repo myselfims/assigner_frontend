@@ -60,6 +60,7 @@ const SignupLogin = () => {
           if (user.isVerified) {
             dispatch(setAuthInfo(res));
             localStorage.setItem("auth_info", JSON.stringify(res));
+            localStorage.setItem("token", res?.token);
             navigate("/dashboard");
           } else {
             // setVerify(true);
@@ -77,7 +78,12 @@ const SignupLogin = () => {
     },
   });
 
-  console.log(values);
+ useEffect(()=>{
+   if (pathname?.includes('login') && localStorage.getItem('token')){
+      console.log(localStorage.getItem('token'))
+      navigate('/dashboard')
+   }
+ },[pathname])
 
   return (
     <div className="form">

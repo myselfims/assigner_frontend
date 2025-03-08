@@ -46,7 +46,8 @@ const Navigation = () => {
         let defaultWorkspace = res?.find((w) => w.isDefault);
         dispatch(setWorkspaces(res));
   
-        const workspace = defaultWorkspace?.workspace || res[0];
+        const workspace = defaultWorkspace?.workspace || res[0].workspace;
+        console.log(res[0])
         dispatch(setCurrentWorkspace(workspace));
   
         pathname === "/dashboard" && navigate(`/${workspace?.id}/dashboard`);

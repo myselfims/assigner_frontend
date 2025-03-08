@@ -20,7 +20,6 @@ const socketMiddleware = (store) => {
       });
 
       socket.on("workspace:ownership", (data) => {
-        console.log('ownder tranfered',data)
         store.dispatch(setRole(data.role))
         store.dispatch(setCurrentWorkspace(data.workspace))
         window.location.reload();

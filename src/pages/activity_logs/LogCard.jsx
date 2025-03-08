@@ -12,7 +12,7 @@ const LogCard = ({ log }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center hover:text-blue-500 text-gray-600 cursor-pointer">
             <CustomAvatar
-              src={"https://github.com/shadcn.png"}
+              src={log?.user?.avatar}
               fallback={"CN"}
               className={"cursor-pointer border-[3px] w-5 h-5"}
             />

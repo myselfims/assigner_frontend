@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiMoreVertical, FiEye, FiTrash, FiMessageSquare } from "react-icons/fi";
 import Tooltip from "../../components/Tooltip";
-import { formatChatTimestamp } from "../../globalFunctions";
+import { formatChatTimestamp, getInitials } from "../../globalFunctions";
 import { BsPinAngleFill, BsPinAngle } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import { BsReplyAll } from "react-icons/bs";
@@ -12,6 +12,7 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { GiCheckMark } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
 import { useSelector } from "react-redux";
+import CustomAvatar from "@/components/Avatar";
 
 const MessageCard = ({ self = false, message, removeMessage, receiverId, handleSeenMessage}) => {
   const [showOptions, setShowOptions] = useState(false);
@@ -67,12 +68,10 @@ const MessageCard = ({ self = false, message, removeMessage, receiverId, handleS
   return (
     <div className={`flex items-start mb-4 flex-col relative w-full my-4 ${self && "items-end"}`}>
       {/* Sender Info */}
-      {!self && (
+      {!self && isGroupChat && (
         <div className="text-xs select-none flex my-1 items-center">
           <Tooltip content={isOnline}>
-            <div className="w-5 h-5 mr-2 border-2 border-green-500 bg-gray-700 text-white flex justify-center items-center rounded-full text-xs font-semibold">
-              {message?.sender?.name?.charAt(0).toUpperCase()}
-            </div>
+            <CustomAvatar className={'w-5 h-5 mr-2 text-xs'} src={message?.sender?.avatar} fallback={getInitials(message?.sender?.name)} />
           </Tooltip>
           <p className="text-xs font-medium">{message?.sender?.name}</p>
         </div>

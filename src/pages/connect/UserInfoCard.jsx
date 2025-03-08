@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Mail, Phone } from "lucide-react";
+import CustomAvatar from "@/components/Avatar";
+import { getInitials } from "@/globalFunctions";
 
 const UserInfoCard = ({ user, onClose }) => {
   const slideDown = {
@@ -25,10 +27,7 @@ const UserInfoCard = ({ user, onClose }) => {
         </Button>
       </div>
       <div className="flex items-center gap-3 mb-3">
-        <Avatar>
-          <AvatarImage src={user.image} alt={user.name} />
-          <AvatarFallback>{user.name[0]}</AvatarFallback>
-        </Avatar>
+        <CustomAvatar src={user?.avatar} fallback={getInitials(user?.name)} />
         <div>
           <h2 className="font-medium text-base">{user.name}</h2>
           <p className="text-xs text-gray-500">Last active: {user.lastActive}</p>

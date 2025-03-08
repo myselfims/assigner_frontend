@@ -109,7 +109,7 @@ const ActivityLogs = () => {
               <SelectItem value={m?.id}>
                 <div className="flex items-center">
                   <CustomAvatar
-                    src={"https://github.com/shadcn.png"}
+                    src={m?.avatar}
                     fallback={"CN"}
                     className={"cursor-pointer border-[3px] w-6 h-6 mr-1"}
                   />

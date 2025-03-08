@@ -229,7 +229,7 @@ const DetailsTab = () => {
             <h1 className="font-medium">Attachments</h1>
             <Button>Add Attachments</Button>
           </div>
-          <div className="flex w-full overflow-x-auto">
+          <div className="flex w-full overflow-x-auto pb-2">
             {files?.map((file, idx) => (
               <FileCard key={idx} className={"mx-2 min-w-[250px]"} file={file} />
             ))}
@@ -271,16 +271,16 @@ const DetailsTab = () => {
           </div>
         </div>
 
-        <div className="flex mt-4">
+        <div className="flex mt-4 text-sm">
           <div className="">
             <h1 className="font-medium">Reporter</h1>
             <div className="flex items-center">
-              <CustomAvatar fallback={getInitials(task?.assignedBy?.name)} className={'w-7 h-7 mr-1 font-medium border border-slate-400 p-2 tex-xs'}/>
+              <CustomAvatar fallback={getInitials(task?.assignedBy?.name)} className={'w-4 h-4 mr-1 font-medium border border-slate-400 p-2 tex-[2px]'}/>
               <p>{task?.assignedBy?.name}</p>
             </div>
           </div>
 
-          <div className="mx-4">
+          <div className="mx-4 text-sm">
             <h1 className="font-medium">Reporting date</h1>
            <p>{formatDate(task?.createdAt)}</p>
           </div>

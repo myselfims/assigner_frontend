@@ -11,12 +11,20 @@ import { useDispatch } from "react-redux";
 import Button from "../Button";
 import AddWorkspaceModal from "@/pages/workspace_selection/AddWorkspaceModal";
 import { Badge } from "../ui/badge";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const WorkspaceSelector = ({ workspaces, currentWorkspace }) => {
+  const navigate = useNavigate();
+  const { workspaceId } = useParams(); // Get current workspaceId from URL
+  const {pathname} = useLocation(); // Get the full current path
   const dispatch = useDispatch();
 
   const handleWorkspaceChange = (ws) => {
     dispatch(setCurrentWorkspace(ws));
+
+    // Replace workspaceId while keeping the existing route
+    const newPath = pathname.replace(`/${workspaceId}`, `/${ws.id}`);
+    navigate(newPath);
   };
 
   return (

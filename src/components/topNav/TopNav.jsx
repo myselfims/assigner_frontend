@@ -12,15 +12,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getInitials } from "@/globalFunctions";
 
 const TopNav = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [notiDropdown, setNotiDropdown] = useState(false);
-  const current = useSelector((state) => state.globalState.currentPage);
+  const {currentPage, user} = useSelector((state) => state.globalState);
 
   const logout = () => {
-    localStorage.removeItem("auth_info");
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -28,7 +29,7 @@ const TopNav = () => {
     <>
       {pathname !== "/" && (
         <div className="head z-40 select-none justify-between items-center my-3 flex relative">
-          <h1 className="font-bold text-2xl">{current}</h1>
+          <h1 className="font-bold text-2xl">{currentPage}</h1>
           <div className="flex items-center">
             <div className="hidden items-center border-2 px-4 rounded-full">
               <input
@@ -46,8 +47,8 @@ const TopNav = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="cursor-pointer">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

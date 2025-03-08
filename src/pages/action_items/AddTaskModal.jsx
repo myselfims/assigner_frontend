@@ -24,7 +24,7 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { projectId } = useParams();
-  const { members } = useSelector((state) => state.actionItems);
+  const { members, statuses } = useSelector((state) => state.actionItems);
 
   const {
     values,
@@ -41,6 +41,8 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
       setLoading(true);
       data["projectId"] = projectId;
       data["sprintId"] = sprint?.id;
+      data["status"] = statuses[0].id;
+    
       postData(`/tasks/`, data)
         .then((res) => {
           setLoading(false);
@@ -59,7 +61,7 @@ const AddTaskModal = ({ setModal, sprint = null, addTask }) => {
     console.log("user", user)
     setFieldValue("assignedToId", user[0]?.id);
   };
-console.log(errors)
+
   return (
     <AnimatePresence>
       <motion.div
